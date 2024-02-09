@@ -18,6 +18,8 @@ from src.utils import lifespan
 from src.database.database import engine
 from src.admin.auth import authentication_backend
 from src.payment.routers import payment_router
+from src.footer.routers import footer_router
+from src.our_team.routers import team_router
 
 
 app = FastAPI(
@@ -31,6 +33,8 @@ admin = Admin(app, engine, authentication_backend=authentication_backend)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 api_routers = [
     payment_router,
+    footer_router,
+    team_router,
 ]
 
 [app.include_router(router, prefix=API_PREFIX) for router in api_routers]

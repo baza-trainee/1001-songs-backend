@@ -11,9 +11,7 @@ class PaymentAdmin(ModelView, model=PaymentDetails):
         PaymentDetails.patreon_url,
         PaymentDetails.qr_code_url,
     ]
-    column_details_exclude_list = [
-        "id"
-    ]
+    column_details_exclude_list = ["id"]
     can_export = False
     can_edit = True
     can_create = False
