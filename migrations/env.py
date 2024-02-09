@@ -9,6 +9,9 @@ from src.config import settings
 from src.database.database import Base
 from src.auth.models import *
 from src.payment.models import *
+from src.our_team.models import *
+from src.footer.models import *
+
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
@@ -74,9 +77,7 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
 
         with context.begin_transaction():
             context.run_migrations()

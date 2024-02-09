@@ -6,8 +6,10 @@ from src.config import settings
 from src.database.redis import init_redis, redis
 from src.auth.utils import create_user
 from src.auth.models import User
+from src.footer.utils import create_footer
+from src.our_team.utils import create_fake_team
 from src.payment.utils import create_payment
-from src.database.fake_data import PAYMENT_DATA
+from src.database.fake_data import FAKE_FOOTER, PAYMENT_DATA, FAKE_TEAM
 
 
 lock = redis.lock("my_lock")
@@ -22,6 +24,8 @@ async def lifespan(app: FastAPI):
             if user_count == 0:
                 await create_user(settings.ADMIN_USERNAME, settings.ADMIN_PASSWORD)
                 await create_payment(PAYMENT_DATA, s)
+                await create_fake_team(FAKE_TEAM, s)
+                await create_footer(FAKE_FOOTER, s)
 
     await lock.release()
     yield
