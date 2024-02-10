@@ -1,2 +1,5 @@
 NO_DATA_FOUND = "No data found."
 SERVER_ERROR = "Server error has occurred."
+INVALID_FILE = "Unsupported file type: %s. Supported types: %s."
+INVALID_PHOTO = "Unsupported media type: %s. Supported types: %s."
+OVERSIZE_FILE = f"File size exceeds the maximum allowed size 1 MB."
