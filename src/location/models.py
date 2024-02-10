@@ -12,6 +12,9 @@ class Country(Base):
     regions = relationship("Region", back_populates="country")
     cities = relationship("City", back_populates="country")
 
+    def __repr__(self) -> str:
+        return f"{self.name}"
+
 
 class Region(Base):
     __tablename__ = "regions"
@@ -22,6 +25,9 @@ class Region(Base):
 
     country = relationship("Country", back_populates="regions")
     cities = relationship("City", back_populates="region")
+
+    def __repr__(self) -> str:
+        return f"{self.name}"
 
 
 class City(Base):
@@ -36,3 +42,6 @@ class City(Base):
 
     region = relationship("Region", back_populates="cities")
     country = relationship("Country", back_populates="cities")
+
+    def __repr__(self) -> str:
+        return f"{self.name}"
