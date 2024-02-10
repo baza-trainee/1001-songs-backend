@@ -20,6 +20,7 @@ from src.admin.auth import authentication_backend
 from src.payment.routers import payment_router
 from src.footer.routers import footer_router
 from src.our_team.routers import team_router
+from src.education.routers import education_router
 
 
 app = FastAPI(
@@ -35,6 +36,7 @@ api_routers = [
     payment_router,
     footer_router,
     team_router,
+    education_router,
 ]
 
 [app.include_router(router, prefix=API_PREFIX) for router in api_routers]
