@@ -4,6 +4,9 @@ from src.payment.models import PaymentDetails
 
 
 class PaymentAdmin(ModelView, model=PaymentDetails):
+    name_plural = "Реквізити"
+    icon = "fa-solid fa-hand-holding-dollar"
+
     column_list = [
         PaymentDetails.info,
         PaymentDetails.iban,

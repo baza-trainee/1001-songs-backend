@@ -33,7 +33,7 @@ from .service import (
 )
 
 
-auth_router = APIRouter(prefix="/auth", tags=["Auth"])
+auth_router = APIRouter(prefix="/auth", tags=["Auth"], include_in_schema=False)
 
 
 @auth_router.post("/login", responses=login_responses)

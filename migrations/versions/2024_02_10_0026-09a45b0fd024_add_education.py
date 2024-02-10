@@ -10,7 +10,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-
+from migrations.custom_types import FileType
 
 # revision identifiers, used by Alembic.
 revision: str = "09a45b0fd024"
@@ -26,11 +26,11 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("title", sa.String(length=100), nullable=False),
         sa.Column("description", sa.String(length=5000), nullable=True),
-        sa.Column("media1", sa.String(length=500), nullable=True),
-        sa.Column("media2", sa.String(length=500), nullable=True),
-        sa.Column("media3", sa.String(length=500), nullable=True),
-        sa.Column("media4", sa.String(length=500), nullable=True),
-        sa.Column("media5", sa.String(length=500), nullable=True),
+        sa.Column("media1", FileType(), nullable=True),
+        sa.Column("media2", FileType(), nullable=True),
+        sa.Column("media3", FileType(), nullable=True),
+        sa.Column("media4", FileType(), nullable=True),
+        sa.Column("media5", FileType(), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###

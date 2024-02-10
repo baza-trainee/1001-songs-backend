@@ -1,7 +1,7 @@
-from fastapi import APIRouter, BackgroundTasks, status, Depends, HTTPException
+from fastapi import APIRouter, status, Depends, HTTPException
 from sqlalchemy.ext.asyncio import AsyncSession
-from src.about.models import About
 
+from src.about.models import About
 from src.database.database import get_async_session
 from sqlalchemy.orm.exc import NoResultFound
 
@@ -9,11 +9,11 @@ from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
 
 from .schemas import AboutSchema
 
-about_router = APIRouter(prefix="/hero", tags=["About"])
+about_router = APIRouter(prefix="/about", tags=["About"])
 
 
 @about_router.get("", response_model=AboutSchema)
-async def get_hero(
+async def get_about(
     session: AsyncSession = Depends(get_async_session),
 ):
     try:
