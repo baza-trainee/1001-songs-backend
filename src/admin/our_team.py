@@ -4,6 +4,9 @@ from src.our_team.models import OurTeam
 
 
 class OurTeamAdmin(ModelView, model=OurTeam):
+    name_plural = "Команда"
+    icon = "fa-solid fa-people-group"
+
     column_list = [
         OurTeam.full_name,
         OurTeam.photo,

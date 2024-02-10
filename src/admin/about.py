@@ -8,7 +8,9 @@ from src.about.models import About
 
 
 class AboutAdmin(ModelView, model=About):
-    name_plural = "About us"
+    name_plural = "Про нас"
+    icon = "fa-regular fa-address-card"
+
     column_list = [
         "content",
     ]

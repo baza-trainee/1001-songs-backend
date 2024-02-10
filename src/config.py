@@ -1,6 +1,8 @@
 from fastapi_mail import ConnectionConfig
 from pydantic_settings import BaseSettings, SettingsConfigDict
+from fastapi_storages import FileSystemStorage
 
+STORAGE = storage = FileSystemStorage(path="static/media")
 
 PHOTO_FORMATS = [
     "image/webp",

@@ -4,6 +4,9 @@ from src.footer.models import Footer
 
 
 class FooterAdmin(ModelView, model=Footer):
+    name_plural = "Футер"
+    icon = "fa-solid fa-shoe-prints"
+
     column_list = [
         Footer.reporting,
         Footer.privacy_policy,

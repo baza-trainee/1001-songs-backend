@@ -3,6 +3,7 @@ from uuid import uuid4
 import aiofiles
 from fastapi import FastAPI, HTTPException, UploadFile
 from sqlalchemy import func, select
+from wtforms import ValidationError
 from src.about.utils import create_about
 
 from src.database.database import get_async_session
@@ -45,54 +46,76 @@ async def lifespan(app: FastAPI):
     yield
 
 
-async def save_photo(
-    file: UploadFile,
-    model,
-    is_file=False,
-) -> str:
-    if not is_file and not file.content_type in PHOTO_FORMATS:
-        raise HTTPException(
-            status_code=415, detail=INVALID_PHOTO % (file.content_type, PHOTO_FORMATS)
-        )
-    if file.size > MAX_FILE_SIZE_MB * 1024 * 1024:
-        raise HTTPException(status_code=413, detail=OVERSIZE_FILE)
-    if is_file and not file.content_type in FILE_FORMATS:
-        raise HTTPException(
-            status_code=415, detail=INVALID_FILE % (file.content_type, FILE_FORMATS)
-        )
+# async def save_photo(
+#     file: UploadFile,
+#     model,
+#     is_file=False,
+# ) -> str:
+#     if not is_file and not file.content_type in PHOTO_FORMATS:
+#         raise HTTPException(
+#             status_code=415, detail=INVALID_PHOTO % (file.content_type, PHOTO_FORMATS)
+#         )
+#     if file.size > MAX_FILE_SIZE_MB * 1024 * 1024:
+#         raise HTTPException(status_code=413, detail=OVERSIZE_FILE)
+#     if is_file and not file.content_type in FILE_FORMATS:
+#         raise HTTPException(
+#             status_code=415, detail=INVALID_FILE % (file.content_type, FILE_FORMATS)
+#         )
 
-    folder_path = os.path.join(
-        "static", "media", model.__tablename__.lower().replace(" ", "_")
-    )
-    file_name = f'{uuid4().hex}.{file.filename.split(".")[-1]}'
-    file_path = os.path.join(folder_path, file_name)
+#     folder_path = os.path.join(
+#         "static", "media", model.__tablename__.lower().replace(" ", "_")
+#     )
+#     file_name = f'{uuid4().hex}.{file.filename.split(".")[-1]}'
+#     file_path = os.path.join(folder_path, file_name)
 
-    async def _save_photo(file_path: str):
-        os.makedirs(folder_path, exist_ok=True)
-        chunk_size = 256
-        async with aiofiles.open(file_path, "wb") as buffer:
-            while chunk := await file.read(chunk_size):
-                await buffer.write(chunk)
+#     async def _save_photo(file_path: str):
+#         os.makedirs(folder_path, exist_ok=True)
+#         chunk_size = 256
+#         async with aiofiles.open(file_path, "wb") as buffer:
+#             while chunk := await file.read(chunk_size):
+#                 await buffer.write(chunk)
 
-    await _save_photo(file_path)
-    return file_path
+#     await _save_photo(file_path)
+#     return file_path
 
 
-async def update_photo(
-    file: UploadFile,
-    record,
-    field_name: str,
-    is_file=False,
-) -> str:
-    old_photo_path = getattr(record, field_name, None)
-    new_photo = await save_photo(file, record, is_file)
-    if old_photo_path:
-        await delete_photo(old_photo_path)
-    return new_photo
+# async def update_photo(
+#     file: UploadFile,
+#     record,
+#     field_name: str,
+#     is_file=False,
+# ) -> str:
+#     old_photo_path = getattr(record, field_name, None)
+#     new_photo = await save_photo(file, record, is_file)
+#     if old_photo_path:
+#         await delete_photo(old_photo_path)
+#     return new_photo
 
 
 async def delete_photo(path: str) -> None:
-    if "media" in path:
+    if path and "media" in path:
         path_exists = os.path.exists(path)
         if path_exists:
             os.remove(path)
+
+
+class MediaValidator:
+    def __init__(self, is_file: bool = False) -> None:
+        self.is_file = is_file
+
+    def __call__(self, form, field):
+        file = field.data
+        if file and file.size:
+            file_size = round(file.size / 1024 / 1024, 2)
+            if file_size > MAX_FILE_SIZE_MB:
+                raise ValidationError(
+                    message=OVERSIZE_FILE % (file_size, MAX_FILE_SIZE_MB)
+                )
+            if not self.is_file and not file.content_type in PHOTO_FORMATS:
+                raise ValidationError(
+                    message=INVALID_PHOTO % (file.content_type, PHOTO_FORMATS)
+                )
+            if self.is_file and not file.content_type in FILE_FORMATS:
+                raise ValidationError(
+                    message=INVALID_FILE % (file.content_type, FILE_FORMATS)
+                )

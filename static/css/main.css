@@ -21,9 +21,11 @@ div[class^="ql-editor"] {
     border-radius: var(--tblr-border-radius);
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
+
 div[class^="ql-editor"] p {
     margin: 0 0 10px 0;
 }
+
 div[class^="ql-editor"]:focus {
     color: inherit;
     background-color: var(--tblr-bg-forms);
@@ -43,4 +45,24 @@ div[class^="ql-editor"]:focus {
 .markup-text p,
 .ql-editor p {
     margin: 0 0 10px 0;
+}
+
+.table th,
+.table td {
+    overflow: hidden;
+    white-space: normal;
+}
+
+.table th:nth-child(2),
+.table td:nth-child(2) {
+    min-width: 100px;
+}
+.table th:nth-child(n+3),
+.table td:nth-child(n+3) {
+    min-width: 200px;
+}
+
+.grid-item {
+    width: 80px;
+    padding: 2px;
 }
