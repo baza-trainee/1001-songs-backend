@@ -60,15 +60,22 @@ class EducationAdmin(ModelView, model=EducationSection):
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
+        field_to_del = []
         for field, field_data in data.items():
-            if field in MEDIA_FIELDS and field_data.size:
-                if is_created:
+            if field in MEDIA_FIELDS:
+                if field_data.size:
                     file_name = f'{uuid4().hex}.{field_data.filename.split(".")[-1]}'
-                    field_data[field].filename = file_name
+                    if is_created:
+                        data[field].filename = file_name
+                    else:
+                        model_data = getattr(model, field, None)
+                        if model_data and model_data != field_data.filename:
+                            data[field].filename = file_name
+                            await delete_photo(model_data)
                 else:
-                    model_data = getattr(model, field, None)
-                    if model_data and model_data != field_data.filename:
-                        await delete_photo(model_data)
+                    field_to_del.append(field)
+        for field in field_to_del:
+            del data[field]
         return await super().on_model_change(data, model, is_created, request)
 
     async def on_model_delete(self, model: Any, request: Request) -> None:
