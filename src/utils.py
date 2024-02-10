@@ -16,12 +16,16 @@ from src.footer.utils import create_footer
 from src.our_team.utils import create_fake_team
 from src.payment.utils import create_payment
 from src.education.utils import create_fake_education
+from src.location.utils import create_city, create_countries, create_regions
 from src.database.fake_data import (
     FAKE_ABOUT,
     FAKE_FOOTER,
     PAYMENT_DATA,
     FAKE_TEAM,
     FAKE_EDUCATION,
+    FAKE_COUNTRIES,
+    FAKE_REGIONS,
+    FAKE_CITY,
 )
 
 
@@ -41,6 +45,9 @@ async def lifespan(app: FastAPI):
                 await create_footer(FAKE_FOOTER, s)
                 await create_fake_education(FAKE_EDUCATION, s)
                 await create_about(FAKE_ABOUT, s)
+                await create_countries(FAKE_COUNTRIES, s)
+                await create_regions(FAKE_REGIONS, s)
+                await create_city(FAKE_CITY, s)
 
     await lock.release()
     yield

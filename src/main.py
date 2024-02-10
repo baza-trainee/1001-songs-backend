@@ -23,6 +23,7 @@ from src.footer.routers import footer_router
 from src.our_team.routers import team_router
 from src.education.routers import education_router
 from src.about.routers import about_router
+from src.location.routers import location_router
 
 app = FastAPI(
     swagger_ui_parameters=SWAGGER_PARAMETERS,
@@ -45,6 +46,7 @@ api_routers = [
     team_router,
     education_router,
     about_router,
+    location_router,
 ]
 
 [app.include_router(router, prefix=API_PREFIX) for router in api_routers]
