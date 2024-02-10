@@ -17,11 +17,12 @@ from src.admin import __all__ as views
 from src.utils import lifespan
 from src.database.database import engine
 from src.admin.auth import authentication_backend
+from src.auth.routers import auth_router
 from src.payment.routers import payment_router
 from src.footer.routers import footer_router
 from src.our_team.routers import team_router
 from src.education.routers import education_router
-
+from src.about.routers import about_router
 
 app = FastAPI(
     swagger_ui_parameters=SWAGGER_PARAMETERS,
@@ -29,14 +30,21 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
-admin = Admin(app, engine, authentication_backend=authentication_backend)
+admin = Admin(
+    app,
+    engine,
+    authentication_backend=authentication_backend,
+    title="1001-ADMIN",
+)
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 api_routers = [
+    auth_router,
     payment_router,
     footer_router,
     team_router,
     education_router,
+    about_router,
 ]
 
 [app.include_router(router, prefix=API_PREFIX) for router in api_routers]

@@ -1,0 +1,46 @@
+.table thead th {
+    text-transform: none;
+}
+
+div[class^="ql-editor"] {
+    display: block;
+    width: 100%;
+    min-height: 100px;
+    padding: .4375rem .75rem;
+    font-family: var(--tblr-font-sans-serif);
+    font-size: .875rem;
+    font-weight: 400;
+    line-height: 1.4285714286;
+    color: inherit;
+    background-color: var(--tblr-bg-forms);
+    background-clip: padding-box;
+    border: var(--tblr-border-width) solid var(--tblr-border-color);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border-radius: var(--tblr-border-radius);
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+div[class^="ql-editor"] p {
+    margin: 0 0 10px 0;
+}
+div[class^="ql-editor"]:focus {
+    color: inherit;
+    background-color: var(--tblr-bg-forms);
+    border-color: #90b5e2;
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(32, 107, 196, .25);
+}
+
+.markup-text {
+    color: #1d273b;
+    padding: 10px;
+    border: 1px solid rgba(29, 39, 59, 0.2);
+    overflow-x: auto;
+    white-space: wrap;
+}
+
+.markup-text p,
+.ql-editor p {
+    margin: 0 0 10px 0;
+}
