@@ -1,0 +1,42 @@
+<link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
+<div class="form-group mb-3">
+    <input {% if not null %}required{% endif %} type="text" class="form-control" name="{{ field.name }}" {% if disabled
+        %}disabled{% endif %} value="{{ field.object_data }}" hidden>
+    <div id="editor-{{ field.name }}">
+    </div>
+</div>
+<script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+<script>
+    Quill.prototype.getHTML = function () {
+        return this.container.querySelector('.ql-editor').innerHTML;
+    };
+    Quill.prototype.setHTML = function (html) {
+        this.container.querySelector('.ql-editor').innerHTML = html;
+    };
+    let toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'script': 'sub' }, { 'script': 'super' }],
+        [{ 'indent': '-1' }, { 'indent': '+1' }],
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'align': [] }],
+        ["link", "image", "video"],
+        ['clean']
+    ]
+
+    let quill = new Quill('#editor-{{ field.name }}', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        theme: 'snow'
+    });
+    {% if field.object_data %}
+    quill.setHTML('{{ field.object_data|safe }}');
+    {% endif %}
+
+    quill.on('text-change', function (delta, oldDelta, source) {
+        $('input[name={{ field.name }}]').val(quill.getHTML())
+    });
+</script>

@@ -3,6 +3,7 @@ from uuid import uuid4
 import aiofiles
 from fastapi import FastAPI, HTTPException, UploadFile
 from sqlalchemy import func, select
+from src.about.utils import create_about
 
 from src.database.database import get_async_session
 from src.config import FILE_FORMATS, MAX_FILE_SIZE_MB, PHOTO_FORMATS, settings
@@ -14,7 +15,13 @@ from src.footer.utils import create_footer
 from src.our_team.utils import create_fake_team
 from src.payment.utils import create_payment
 from src.education.utils import create_fake_education
-from src.database.fake_data import FAKE_FOOTER, PAYMENT_DATA, FAKE_TEAM, FAKE_EDUCATION
+from src.database.fake_data import (
+    FAKE_ABOUT,
+    FAKE_FOOTER,
+    PAYMENT_DATA,
+    FAKE_TEAM,
+    FAKE_EDUCATION,
+)
 
 
 lock = redis.lock("my_lock")
@@ -32,6 +39,7 @@ async def lifespan(app: FastAPI):
                 await create_fake_team(FAKE_TEAM, s)
                 await create_footer(FAKE_FOOTER, s)
                 await create_fake_education(FAKE_EDUCATION, s)
+                await create_about(FAKE_ABOUT, s)
 
     await lock.release()
     yield
