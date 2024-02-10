@@ -1,51 +1,41 @@
 from typing import List
-from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy import select
+
+from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import NoResultFound
+
 from src.database.database import get_async_session
-from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
-from .exceptions import NO_REGION_FOUND
-from .models import Country, Region
+from .service import get_record, get_records
+from .models import Country, Region, City
+from .schemas import BaseLocation, RegionSchema, CitySchema
 
 
 location_router = APIRouter(prefix="/location", tags=["Location"])
 
 
-@location_router.get("/countries")
+@location_router.get("/countries", response_model=List[BaseLocation])
 async def get_countries(session: AsyncSession = Depends(get_async_session)):
-    try:
-        records = await session.execute(select(Country))
-        result = records.scalars().all()
-        if not result:
-            raise NoResultFound
-        return result
-    except NoResultFound:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=SERVER_ERROR
-        )
+    return await get_records(Country, session)
 
 
-@location_router.get("/countries/{country_id}/regions")
+@location_router.get("/regions", response_model=List[RegionSchema])
+async def get_regions(session: AsyncSession = Depends(get_async_session)):
+    return await get_records(Region, session)
+
+
+@location_router.get("/cities", response_model=List[CitySchema])
+async def get_cities(session: AsyncSession = Depends(get_async_session)):
+    return await get_records(City, session)
+
+
+@location_router.get("/countries/{id}", response_model=List[RegionSchema])
 async def get_regions_by_country_id(
-    country_id: int, session: AsyncSession = Depends(get_async_session)
+    id: int, session: AsyncSession = Depends(get_async_session)
 ):
-    try:
-        records = await session.execute(
-            select(Region).where(Region.country_id == country_id)
-        )
-        result = records.scalars().all()
-        if not result:
-            raise NoResultFound
-        return result
-    except NoResultFound:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=NO_REGION_FOUND % country_id,
-        )
-    except Exception:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=SERVER_ERROR
-        )
+    return await get_record(Region, Region.country_id == id, session)
+
+
+@location_router.get("/regions/{id}", response_model=List[CitySchema])
+async def get_cities_by_region_id(
+    id: int, session: AsyncSession = Depends(get_async_session)
+):
+    return await get_record(City, City.region_id == id, session)
