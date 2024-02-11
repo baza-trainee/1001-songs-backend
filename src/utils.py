@@ -30,7 +30,9 @@ from src.database.fake_data import (
     FAKE_COUNTRIES,
     FAKE_REGIONS,
     FAKE_CITY,
+    FAKE_GENRE
 )
+from src.song.utils import create_genre
 
 
 lock = redis.lock("my_lock")
@@ -52,6 +54,7 @@ async def lifespan(app: FastAPI):
                 await create_countries(FAKE_COUNTRIES, s)
                 await create_regions(FAKE_REGIONS, s)
                 await create_city(FAKE_CITY, s)
+                await create_genre(FAKE_GENRE, s)
 
     await lock.release()
     yield

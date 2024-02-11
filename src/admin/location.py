@@ -8,7 +8,8 @@ class CountryAdmin(ModelView, model=Country):
     can_edit = True
     can_create = True
     can_export = False
-    category = "Location"
+    category = "Локації"
+    name_plural = "Країни"
 
     column_labels = {
         Country.name: "Країна",
@@ -26,7 +27,8 @@ class RegionAdmin(ModelView, model=Region):
     can_create = True
     can_delete = True
     can_export = False
-    category = "Location"
+    category = "Локації"
+    name_plural = "Області та регіони"
 
     column_list = [
         Region.name,
@@ -46,7 +48,8 @@ class CityAdmin(ModelView, model=City):
     can_edit = True
     can_create = True
     can_delete = True
-    category = "Location"
+    category = "Локації"
+    name_plural = "Міста та села"
 
     column_list = [
         City.name,
@@ -58,6 +61,10 @@ class CityAdmin(ModelView, model=City):
         City.region: "Область",
         City.country: "Країна",
     }
-    form_excluded_columns = [
-        City.country,
-    ]
+    form_excluded_columns = [City.country]
+    # form_ajax_refs = {
+    #     "region": {
+    #         "fields": ["name"],
+    #         "page_size": 10,
+    #     }
+    # }

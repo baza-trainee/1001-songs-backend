@@ -14,6 +14,7 @@ from src.footer.models import *
 from src.education.models import *
 from src.about.models import *
 from src.location.models import *
+from src.song.models import *
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
