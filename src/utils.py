@@ -30,7 +30,7 @@ from src.database.fake_data import (
     FAKE_COUNTRIES,
     FAKE_REGIONS,
     FAKE_CITY,
-    FAKE_GENRE
+    FAKE_GENRE,
 )
 from src.song.utils import create_genre
 

@@ -15,7 +15,12 @@ class Song(Base):
     archive = Column(String(255))
     bibliographic_reference = Column(String(1000))
     researcher_comment = Column(String(1000))
-    genres = relationship("Genre", secondary="song_genre_association", back_populates="songs")
+    genres = relationship(
+        "Genre", secondary="song_genre_association", back_populates="songs"
+    )
+
+    def __repr__(self) -> str:
+        return f"{self.title}"
 
 
 class Genre(Base):
@@ -23,7 +28,12 @@ class Genre(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     genre_name = Column(String(50))
-    songs = relationship("Song", secondary="song_genre_association", back_populates="genres")
+    songs = relationship(
+        "Song", secondary="song_genre_association", back_populates="genres"
+    )
+
+    def __repr__(self) -> str:
+        return f"{self.genre_name}"
 
 
 class SongToGenre(Base):

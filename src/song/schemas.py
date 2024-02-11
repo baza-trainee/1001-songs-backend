@@ -13,9 +13,11 @@ ARCHIVE_LEN = Song.archive.type.length
 REFERENCE_LEN = Song.bibliographic_reference.type.length
 COMMENT_LEN = Song.researcher_comment.type.length
 
+
 class Genre(BaseModel):
     id: int = Field(..., ge=1)
     title: str = Field(..., max_length=TITLE_LEN)
+
 
 class SongSchema(BaseModel):
     id: int = Field(..., ge=1)
