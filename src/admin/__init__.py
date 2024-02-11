@@ -6,11 +6,11 @@ from .about import AboutAdmin
 from .location import CountryAdmin, RegionAdmin, CityAdmin
 
 __all__ = [
-    PaymentAdmin,
-    OurTeamAdmin,
-    FooterAdmin,
     EducationAdmin,
     AboutAdmin,
+    OurTeamAdmin,
+    FooterAdmin,
+    PaymentAdmin,
     CountryAdmin,
     RegionAdmin,
     CityAdmin,

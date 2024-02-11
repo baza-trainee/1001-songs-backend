@@ -16,6 +16,7 @@
               {{ field(class_="form-control is-invalid") }}
               {% else %}
               {% if field.name in form.is_editor_field %}
+              {{ field() }}
               {% include 'editor.html' %}
               {% else %}
               {{ field() }}
