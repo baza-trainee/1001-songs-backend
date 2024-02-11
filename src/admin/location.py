@@ -13,8 +13,15 @@ class CountryAdmin(ModelView, model=Country):
 
     column_labels = {
         Country.name: "Країна",
+        Country.cities: "Міста та селища",
+        Country.regions: "Області",
     }
     form_excluded_columns = [
+        Country.regions,
+        Country.cities,
+    ]
+    column_details_list = [
+        Country.name,
         Country.regions,
         Country.cities,
     ]
@@ -36,8 +43,15 @@ class RegionAdmin(ModelView, model=Region):
     ]
     column_labels = {
         Region.name: "Область",
+        Region.country: "Країна",
+        Region.cities: "Міста / Поселення",
     }
     form_excluded_columns = [
+        Region.cities,
+    ]
+    column_details_list = [
+        Region.country,
+        Region.name,
         Region.cities,
     ]
 
@@ -49,7 +63,7 @@ class CityAdmin(ModelView, model=City):
     can_create = True
     can_delete = True
     category = "Локації"
-    name_plural = "Міста та села"
+    name_plural = "Міста та поселення"
 
     column_list = [
         City.name,
@@ -57,14 +71,17 @@ class CityAdmin(ModelView, model=City):
         City.country,
     ]
     column_labels = {
-        City.name: "Населений пункт",
-        City.region: "Область",
         City.country: "Країна",
+        City.region: "Область",
+        City.name: "Населений пункт",
+        City.latitude: "Широта",
+        City.longitude: "Довгота",
     }
     form_excluded_columns = [City.country]
-    # form_ajax_refs = {
-    #     "region": {
-    #         "fields": ["name"],
-    #         "page_size": 10,
-    #     }
-    # }
+    column_details_list = [
+        City.country,
+        City.region,
+        City.name,
+        City.latitude,
+        City.longitude,
+    ]
