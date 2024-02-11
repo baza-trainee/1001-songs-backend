@@ -42,6 +42,7 @@ class City(Base):
 
     region = relationship("Region", back_populates="cities")
     country = relationship("Country", back_populates="cities")
+    songs = relationship("Song", back_populates="city")
 
     def __repr__(self) -> str:
         return f"{self.name}"

@@ -77,7 +77,7 @@ class CityAdmin(ModelView, model=City):
         City.latitude: "Широта",
         City.longitude: "Довгота",
     }
-    form_excluded_columns = [City.country]
+    form_excluded_columns = [City.country, City.songs]
     column_details_list = [
         City.country,
         City.region,
