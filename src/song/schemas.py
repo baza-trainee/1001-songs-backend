@@ -11,7 +11,6 @@ COLLECTORS_LEN = Song.collectors.type.length
 SOURCE_LEN = Song.source.type.length
 ARCHIVE_LEN = Song.archive.type.length
 REFERENCE_LEN = Song.bibliographic_reference.type.length
-COMMENT_LEN = Song.researcher_comment.type.length
 
 
 class Genre(BaseModel):
@@ -28,5 +27,4 @@ class SongSchema(BaseModel):
     source: Optional[str] = Field(None, max_length=SOURCE_LEN)
     archive: Optional[str] = Field(None, max_length=ARCHIVE_LEN)
     bibliographic_reference: Optional[str] = Field(None, max_length=REFERENCE_LEN)
-    researcher_comment: Optional[str] = Field(None, max_length=COMMENT_LEN)
     genres: Genre
