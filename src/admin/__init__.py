@@ -4,6 +4,7 @@ from .footer import FooterAdmin
 from .education import EducationAdmin
 from .about import AboutAdmin
 from .location import CountryAdmin, RegionAdmin, CityAdmin
+from .song import SongAdmin, GenreAdmin
 
 __all__ = [
     EducationAdmin,
@@ -14,4 +15,6 @@ __all__ = [
     CountryAdmin,
     RegionAdmin,
     CityAdmin,
+    SongAdmin,
+    GenreAdmin,
 ]
