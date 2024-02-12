@@ -3,6 +3,7 @@ from pydantic import AnyHttpUrl, Field, BaseModel, ValidationInfo, field_validat
 from src.config import settings
 from .models import PaymentDetails
 
+ORGANIZATION_NAME = PaymentDetails.organization_name.type.length
 INFO_LEN = PaymentDetails.info.type.length
 IBAN_LEN = PaymentDetails.iban.type.length
 COFFEE_URL_LEN = PaymentDetails.coffee_url.type.length
@@ -12,6 +13,7 @@ QR_CODE_URL_LEN = PaymentDetails.qr_code_url.type.length
 
 class PaymentDetailsSchema(BaseModel):
     id: int
+    organization_name: str = Field(max_length=ORGANIZATION_NAME)
     info: str = Field(max_length=INFO_LEN)
     iban: str = Field(max_length=IBAN_LEN)
     coffee_url: AnyHttpUrl = Field(max_length=COFFEE_URL_LEN)

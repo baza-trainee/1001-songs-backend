@@ -21,7 +21,8 @@ branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
 
-storage = FileSystemStorage(path="static/media/footer")
+storage1 = FileSystemStorage(path="static/media/footer")
+storage2 = FileSystemStorage(path="static/media/our_team")
 
 
 def upgrade() -> None:
@@ -30,9 +31,9 @@ def upgrade() -> None:
         "footer",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("reporting", sa.String(length=500), nullable=True),
-        sa.Column("qr_code_url", FileType(storage), nullable=True),
-        sa.Column("privacy_policy", FileType(storage), nullable=True),
-        sa.Column("rules_and_terms", FileType(storage), nullable=True),
+        sa.Column("qr_code_url", FileType(storage1), nullable=True),
+        sa.Column("privacy_policy", FileType(storage1), nullable=True),
+        sa.Column("rules_and_terms", FileType(storage1), nullable=True),
         sa.Column("email", sa.String(length=100), nullable=True),
         sa.Column("facebook_url", sa.String(length=500), nullable=True),
         sa.Column("youtube_url", sa.String(length=500), nullable=True),
@@ -42,7 +43,7 @@ def upgrade() -> None:
         "our_team",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("full_name", sa.String(length=100), nullable=False),
-        sa.Column("photo", sa.String(length=500), nullable=True),
+        sa.Column("photo", FileType(storage2), nullable=True),
         sa.Column("description", sa.String(length=500), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )

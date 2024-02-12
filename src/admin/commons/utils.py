@@ -19,11 +19,11 @@ async def model_change_for_editor(data: dict, model: Any, field_name: str = "con
     model_data = getattr(model, field_name, None)
     if model_data:
         pattern_base64 = re.compile(
-            r'(<p><img src="data:image/[^;]+;base64,)([^"]+)"></p>'
+            r'((<p>)?<img src="data:image/[^;]+;base64,)([^"]+)">(</p>)?'
         )
         matches = pattern_base64.findall(data[field_name])
         for img_data in matches:
-            header, base64_string = img_data
+            header, trash, base64_string, trash = img_data
             image_extension = header.split("/")[1].split(";")[0]
             image_data = base64.b64decode(base64_string)
             image_path = await save_photo(image_data, model, image_extension)
