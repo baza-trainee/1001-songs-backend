@@ -80,8 +80,9 @@ class EducationAdmin(ModelView, model=EducationPage):
 
 class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory):
     is_async = True
-    name_plural = "Пісенні розділи"
+    name_plural = "Категорії пісень"
     category = "Освітний розділ"
+    icon = "fa-solid fa-layer-group"
     can_create = False
     can_delete = False
     can_export = False
@@ -91,12 +92,20 @@ class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory)
         CalendarAndRitualCategory.description,
         CalendarAndRitualCategory.recommended_sources,
     ]
+    column_details_list = [
+        CalendarAndRitualCategory.title,
+        CalendarAndRitualCategory.media,
+        CalendarAndRitualCategory.description,
+        CalendarAndRitualCategory.recommended_sources,
+        CalendarAndRitualCategory.education_genres,
+        CalendarAndRitualCategory.song_subcategories,
+    ]
     column_labels = {
-        CalendarAndRitualCategory.title: "Назва розділу",
+        CalendarAndRitualCategory.title: "Назва категорії",
         CalendarAndRitualCategory.media: "Фото",
         CalendarAndRitualCategory.description: "Опис",
         CalendarAndRitualCategory.recommended_sources: "Рекомендовані джерела",
-        CalendarAndRitualCategory.education_genres: "Жанри категорій",
+        CalendarAndRitualCategory.education_genres: "Жанри",
         CalendarAndRitualCategory.song_subcategories: "Підкатегорії",
     }
     form_columns = [
@@ -163,8 +172,9 @@ class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory)
 
 class SongSubcategoryAdmin(ModelView, model=SongSubcategory):
     is_async = True
-    name_plural = "Пісенні категорії"
+    name_plural = "Під-категорії пісень"
     category = "Освітний розділ"
+    icon = "fa-solid fa-layer-group"
     can_create = True
     can_delete = True
     can_export = False
@@ -174,7 +184,7 @@ class SongSubcategoryAdmin(ModelView, model=SongSubcategory):
         SongSubcategory.main_category,
     ]
     column_labels = {
-        SongSubcategory.title: "Назва категорії",
+        SongSubcategory.title: "Назва під-категорії",
         SongSubcategory.media: "Фото",
         SongSubcategory.main_category: "Розділ",
         SongSubcategory.education_genres: "Жанри",
@@ -194,8 +204,9 @@ class SongSubcategoryAdmin(ModelView, model=SongSubcategory):
 
 class EducationPageSongGenreAdmin(ModelView, model=EducationPageSongGenre):
     is_async = True
-    name_plural = "Пісенні жанри"
+    name_plural = "Жанри розділу"
     category = "Освітний розділ"
+    icon = "fa-solid fa-layer-group"
     can_create = True
     can_delete = True
     can_export = False

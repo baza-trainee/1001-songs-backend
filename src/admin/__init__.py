@@ -14,11 +14,11 @@ from .song import SongAdmin, GenreAdmin
 from .news import NewsAdmin, NewsCategoryAdmin
 
 __all__ = [
-    EducationAdmin,
     AboutAdmin,
     OurTeamAdmin,
     FooterAdmin,
     PaymentAdmin,
+    EducationAdmin,
     CountryAdmin,
     RegionAdmin,
     CityAdmin,

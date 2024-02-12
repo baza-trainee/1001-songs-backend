@@ -122,7 +122,6 @@ async def get_songs_by_education_genre(
             }
             for song in genre.songs
         ]
-
         return response
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
