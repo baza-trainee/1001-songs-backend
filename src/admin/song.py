@@ -1,5 +1,7 @@
 from sqladmin import ModelView
+from src.admin.commons.validators import MediaValidator
 from src.song.models import Genre, Song
+from wtforms import TextAreaField
 
 
 class GenreAdmin(ModelView, model=Genre):
@@ -23,6 +25,7 @@ class SongAdmin(ModelView, model=Song):
     column_list = [
         Song.title,
         Song.genres,
+        Song.education_genres,
         Song.performers,
         Song.collectors,
         Song.archive,
@@ -37,6 +40,7 @@ class SongAdmin(ModelView, model=Song):
         Song.title: "Назва",
         Song.song_text: "Текст",
         Song.genres: "Жанри",
+        Song.education_genres: "Жанр освітнього розділу",
         Song.performers: "Виконавці",
         Song.city: "Місто / Поселення",
         Song.ethnographic_district: "Етнографічний регіон",
@@ -79,6 +83,52 @@ class SongAdmin(ModelView, model=Song):
         Song.photo2,
         Song.photo3,
         Song.video_url,
+        Song.stereo_audio,
+        Song.multichannel_audio1,
+        Song.multichannel_audio2,
+        Song.multichannel_audio3,
+        Song.multichannel_audio4,
+        Song.multichannel_audio5,
+        Song.multichannel_audio6,
+    ]
+    form_overrides = {
+        "song_text": TextAreaField,
+        "song_descriotion": TextAreaField,
+    }
+    form_args = {
+        "song_text": {
+            "render_kw": {
+                "class": "form-control",
+                "rows": 5,
+            },
+        },
+        "song_descriotion": {
+            "render_kw": {
+                "class": "form-control",
+                "rows": 3,
+            },
+        },
+    }
+    form_columns = [
+        Song.title,
+        Song.song_text,
+        Song.song_descriotion,
+        Song.performers,
+        Song.city,
+        Song.ethnographic_district,
+        Song.collectors,
+        Song.archive,
+        Song.source,
+        Song.genres,
+        Song.education_genres,
+        Song.recording_date,
+        Song.recording_location,
+        Song.bibliographic_reference,
+        Song.comment_map,
+        Song.video_url,
+        Song.photo1,
+        Song.photo2,
+        Song.photo3,
         Song.stereo_audio,
         Song.multichannel_audio1,
         Song.multichannel_audio2,

@@ -82,6 +82,7 @@ class EducationPageSongGenre(Base):
         "Song",
         secondary="song_education_genre_association",
         back_populates="education_genres",
+        lazy="selectin",
     )
 
     @property
