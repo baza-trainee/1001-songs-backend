@@ -3,6 +3,7 @@ import time
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi_pagination import add_pagination
 from sqladmin import Admin
 
 from src.config import (
@@ -15,7 +16,7 @@ from src.config import (
 )
 from src.admin import __all__ as views
 from src.utils import lifespan
-from src.database.database import engine
+from src.database.database import engine, async_session_maker
 from src.admin.auth import authentication_backend
 from src.auth.routers import auth_router
 from src.payment.routers import payment_router
@@ -24,6 +25,8 @@ from src.our_team.routers import team_router
 from src.education.routers import education_router
 from src.about.routers import about_router
 from src.location.routers import location_router
+from src.news.routers import news_router
+
 
 app = FastAPI(
     swagger_ui_parameters=SWAGGER_PARAMETERS,
@@ -36,6 +39,7 @@ admin = Admin(
     engine,
     authentication_backend=authentication_backend,
     title="1001-ADMIN",
+    session_maker=async_session_maker,
 )
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -47,6 +51,7 @@ api_routers = [
     education_router,
     about_router,
     location_router,
+    news_router,
 ]
 
 [app.include_router(router, prefix=API_PREFIX) for router in api_routers]
@@ -69,3 +74,6 @@ async def add_process_time_header(request: Request, call_next):
     process_time = (time.time() - start_time) * 1000
     response.headers["X-Process-Time"] = f"{round(process_time)} ms"
     return response
+
+
+add_pagination(app)

@@ -1,17 +1,15 @@
-import base64
-import re
 from typing import Any
-from markupsafe import Markup
 from sqladmin import ModelView
 from starlette.requests import Request
 from wtforms import Form
 
 from src.about.models import About
-from src.config import settings
-from src.utils import delete_photo, model_change_for_editor, save_photo
+from src.admin.commons.formatters import format_quill
+from src.admin.commons.utils import model_change_for_editor
 
 
 class AboutAdmin(ModelView, model=About):
+    is_async = True
     name_plural = "Про нас"
     icon = "fa-regular fa-address-card"
 
@@ -27,17 +25,7 @@ class AboutAdmin(ModelView, model=About):
     can_export = False
     page_size_options = [1]
     page_size = 1
-    column_formatters = {
-        About.content: lambda m, a: Markup(
-            f"<div class='markup-text'>{m.content}</div>"
-        )
-    }
-
-    form_args = {
-        "content": {
-            "render_kw": {"class": "form-control", "rows": 10},
-        },
-    }
+    column_formatters = {About.content: format_quill}
 
     async def scaffold_form(self) -> type[Form]:
         form = await super().scaffold_form()
@@ -50,5 +38,5 @@ class AboutAdmin(ModelView, model=About):
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
-        model_change_for_editor(data, model, field_name="content")
+        await model_change_for_editor(data, model)
         return await super().on_model_change(data, model, is_created, request)

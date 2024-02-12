@@ -5,6 +5,7 @@ from .education import EducationAdmin
 from .about import AboutAdmin
 from .location import CountryAdmin, RegionAdmin, CityAdmin
 from .song import SongAdmin, GenreAdmin
+from .news import NewsAdmin, NewsCategoryAdmin
 
 __all__ = [
     EducationAdmin,
@@ -17,4 +18,6 @@ __all__ = [
     CityAdmin,
     SongAdmin,
     GenreAdmin,
+    NewsCategoryAdmin,
+    NewsAdmin,
 ]

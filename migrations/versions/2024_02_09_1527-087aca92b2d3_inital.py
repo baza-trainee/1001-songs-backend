@@ -11,13 +11,16 @@ from typing import Sequence, Union
 from alembic import op
 import fastapi_users_db_sqlalchemy
 import sqlalchemy as sa
-
+from fastapi_storages.integrations.sqlalchemy import FileType
+from fastapi_storages import FileSystemStorage
 
 # revision identifiers, used by Alembic.
 revision: str = "087aca92b2d3"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
+
+storage = FileSystemStorage(path="static/media/payment_details")
 
 
 def upgrade() -> None:
@@ -29,7 +32,7 @@ def upgrade() -> None:
         sa.Column("iban", sa.String(length=250), nullable=True),
         sa.Column("coffee_url", sa.String(length=500), nullable=True),
         sa.Column("patreon_url", sa.String(length=500), nullable=True),
-        sa.Column("qr_code_url", sa.String(length=500), nullable=True),
+        sa.Column("qr_code_url", FileType(storage), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(

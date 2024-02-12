@@ -55,17 +55,17 @@ restore:
 	python3 scripts/restore.py
 
 frontend_build:
-	if [ -d dist.tar.xz ]; then \
-		sudo rm -rf dist.tar.xz; \
+	if [ -d docs.tar.xz ]; then \
+		sudo rm -rf docs.tar.xz; \
 	fi
-	tar -cJvf dist.tar.xz dist
+	tar -cJvf docs.tar.xz docs
 
 frontend_export:
-	if [ -d /var/www/school/dist ]; then \
-		sudo rm -rf /var/www/cats/dist; \
+	if [ -d /var/www/1000and1songs.com/docs ]; then \
+		sudo rm -rf /var/www/1000and1songs.com/docs; \
 	fi
-	sudo mkdir -p /var/www/cats/
-	sudo tar -xJvf dist.tar.xz -C /var/www/cats/
+	sudo mkdir -p /var/www/1000and1songs.com/
+	sudo tar -xJvf dist.tar.xz -C /var/www/1000and1songs.com/
 
 drop_db: down 
 	if docker volume ls -q | grep -q $$(basename "$$(pwd)")_postgres_data; then \

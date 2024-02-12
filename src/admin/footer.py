@@ -4,6 +4,7 @@ from src.footer.models import Footer
 
 
 class FooterAdmin(ModelView, model=Footer):
+    is_async = True
     name_plural = "Футер"
     icon = "fa-solid fa-shoe-prints"
 
