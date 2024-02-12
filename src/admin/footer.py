@@ -1,6 +1,7 @@
 from typing import Any
 from fastapi import Request
 from sqladmin import ModelView
+from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.utils import model_change_for_files
 
 from src.footer.models import Footer
@@ -12,6 +13,7 @@ class FooterAdmin(ModelView, model=Footer):
     name_plural = "Футер"
     icon = "fa-solid fa-shoe-prints"
 
+    column_details_exclude_list = ["id"]
     column_exclude_list = [
         Footer.id,
     ]
@@ -25,7 +27,11 @@ class FooterAdmin(ModelView, model=Footer):
         Footer.youtube_url: "Ютуб",
     }
 
-    column_details_exclude_list = ["id"]
+    column_formatters = {
+        Footer.reporting: MediaFormatter(is_file=True),
+        Footer.privacy_policy: MediaFormatter(is_file=True),
+        Footer.rules_and_terms: MediaFormatter(is_file=True),
+    }
 
     can_edit = True
     can_create = True

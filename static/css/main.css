@@ -61,18 +61,15 @@ div[class^="ql-editor"]:focus {
 .table td:nth-child(n+3) {
     min-width: 150px;
 }
-
 .grid-item {
     width: 80px;
     padding: 2px;
 }
 
+.ql-snow .ql-editor img,
 iframe[class="ql-video"],
-.quill-image {
-    width: 300px;
-}
-.ql-snow .ql-editor img {
-    width: 300px;
+.quill-column img {
+    width: 300px !important;
 }
 
 a[class^="nav-link dropdown-toggle"] {
