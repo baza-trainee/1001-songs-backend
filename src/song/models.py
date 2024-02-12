@@ -12,7 +12,6 @@ storage = FileSystemStorage(path="static/media/song")
 class Song(Base):
     __tablename__ = "song"
 
-    # MAIN_INFO
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(200), unique=True)
     song_text = Column(String(2000))
@@ -26,8 +25,6 @@ class Song(Base):
     recording_location = Column(String(100))
     bibliographic_reference = Column(String(1000))
     comment_map: str = Column(String(500))
-
-    # MEDIA
     video_url: str = Column(String(1000))
     photo1: str = Column(FileType(storage=storage))
     photo2: str = Column(FileType(storage=storage))
@@ -39,8 +36,6 @@ class Song(Base):
     multichannel_audio4: str = Column(FileType(storage=storage))
     multichannel_audio5: str = Column(FileType(storage=storage))
     multichannel_audio6: str = Column(FileType(storage=storage))
-
-    # RELATIONS
     city_id = Column(Integer, ForeignKey("cities.id"))
     city = relationship("City", back_populates="songs")
     education_genres = relationship(
@@ -51,6 +46,25 @@ class Song(Base):
     genres = relationship(
         "Genre", secondary="song_genre_association", back_populates="songs"
     )
+
+    @property
+    def photos(self):
+        return [
+            self.photo1,
+            self.photo2,
+            self.photo3,
+        ]
+
+    @property
+    def multichannel(self):
+        return [
+            self.multichannel_audio1,
+            self.multichannel_audio2,
+            self.multichannel_audio3,
+            self.multichannel_audio4,
+            self.multichannel_audio5,
+            self.multichannel_audio6,
+        ]
 
     def __repr__(self) -> str:
         return f"{self.title}"

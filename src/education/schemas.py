@@ -53,3 +53,30 @@ class CategorySchema(EducationGenreBaseSchema):
     description: Optional[str] = Field(None, max_length=DESCRIPTION_LEN)
     recommendations: Optional[str] = Field(None, max_length=RECOMENDATIONS_LEN)
     song_subcategories: List[SubCategoryBaseSchema]
+
+
+class Genre(BaseModel):
+    id: int = Field(..., ge=1)
+    title: str = Field(..., max_length=TITLE_LEN)
+
+
+class SongSchema(BaseModel):
+    id: int = Field(..., ge=1)
+    title: str = Field(..., max_length=TITLE_LEN)
+    stereo_audio: Optional[AnyHttpUrl] = Field(None)
+    photos: Optional[List[AnyHttpUrl]] = Field(None, max_items=5)
+    recording_location: Optional[str] = Field(None, max_length=100)
+    genres: Genre
+
+    @field_validator("photos", "stereo_audio", mode="before")
+    @classmethod
+    def add_base_url(cls, value: List[str], info: ValidationInfo) -> str:
+        if value == "photos":
+            result = []
+            for url in value:
+                if url:
+                    result.append(f"{settings.BASE_URL}/{url}")
+            return result
+        else:
+            if value:
+                return f"{settings.BASE_URL}/{value}"
