@@ -109,7 +109,7 @@ async def get_songs_by_education_genre(
     """Accepts the genre `ID` and returns the corresponding **list of songs**."""
     try:
         genre = await session.get(EducationPageSongGenre, id)
-        if not genre:
+        if not (genre and genre.songs):
             raise NoResultFound
         response = [
             {
