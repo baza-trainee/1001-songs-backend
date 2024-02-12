@@ -69,12 +69,13 @@ div[class^="ql-editor"]:focus {
 
 iframe[class="ql-video"],
 .quill-image {
-    min-width: 200px;
-    max-width: 400px;
+    width: 300px;
+}
+.ql-snow .ql-editor img {
+    width: 300px;
 }
 
-a[class^="nav-link dropdown-toggle active keychainify-checked"],
-a[class^="nav-link dropdown-toggle keychainify-checked"] {
+a[class^="nav-link dropdown-toggle"] {
     font-weight: bold;
     border-bottom: 1px solid rgba(184, 201, 234, 0.3);
 }
