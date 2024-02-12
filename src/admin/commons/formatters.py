@@ -6,6 +6,7 @@ from markupsafe import Markup
 #         self.many = many
 
 #     def __call__(self, m, a):
+# <img src="/pdf-icon.png">
 
 
 def format_quill(m, a):
