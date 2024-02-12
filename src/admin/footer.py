@@ -37,8 +37,8 @@ class FooterAdmin(ModelView, model=Footer):
     }
 
     can_edit = True
-    can_create = True
-    can_delete = True
+    can_create = False
+    can_delete = False
     can_export = False
 
     async def on_model_change(
