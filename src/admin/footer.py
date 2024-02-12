@@ -13,7 +13,10 @@ class FooterAdmin(ModelView, model=Footer):
     name_plural = "Футер"
     icon = "fa-solid fa-shoe-prints"
 
-    column_details_exclude_list = ["id"]
+    column_details_exclude_list = [
+        Footer.id,
+    ]
+
     column_exclude_list = [
         Footer.id,
     ]
