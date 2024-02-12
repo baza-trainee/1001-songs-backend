@@ -16,15 +16,13 @@ async def model_change_for_editor(data: dict, model: Any, field_name: str = "con
             image_extension = header.split("/")[1].split(";")[0]
             image_data = base64.b64decode(base64_string)
             image_path = await save_photo(image_data, model, image_extension)
-            image_url = (
-                f'<img class="quill-image" src="{settings.BASE_URL}/{image_path}"'
-            )
+            image_url = f'<img class="quill-image" src="/{image_path}"'
             data[field_name] = re.sub(
                 pattern_base64, image_url, data[field_name], count=1
             )
 
         media_folder = model.__tablename__.lower().replace(" ", "_")
-        pattern_static = re.compile(f'src="[^"]+(static/media/{media_folder}/[^"]+)"')
+        pattern_static = re.compile(f'src="[^"]+(/static/media/{media_folder}/[^"]+)"')
         old_data = pattern_static.findall(model_data)
         new_data = pattern_static.findall(data[field_name])
         for file_path in old_data:
@@ -33,7 +31,10 @@ async def model_change_for_editor(data: dict, model: Any, field_name: str = "con
 
 
 async def model_change_for_files(
-    data: dict, model: Any, is_created: bool, fields_name: list[str] = "content"
+    data: dict,
+    model: Any,
+    is_created: bool,
+    fields_name: list[str] = "content",
 ):
     fields_to_del = []
     for field, field_data in data.items():

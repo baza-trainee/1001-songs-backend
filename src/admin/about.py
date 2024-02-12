@@ -14,11 +14,15 @@ class AboutAdmin(ModelView, model=About):
     icon = "fa-regular fa-address-card"
 
     column_list = [
+        "title",
         "content",
     ]
+
     column_labels = {
+        "title": "Заголовок",
         "content": "Контент",
     }
+
     can_view_details = False
     can_create = False
     can_delete = False

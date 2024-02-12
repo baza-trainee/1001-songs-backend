@@ -25,6 +25,7 @@ def upgrade() -> None:
         "about",
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("content", sa.String(length=10000), nullable=False),
+        sa.Column("title", sa.String(length=250), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###
