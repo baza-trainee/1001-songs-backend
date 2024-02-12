@@ -9,7 +9,7 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-from migrations.custom_types import FileType
+from fastapi_storages.integrations.sqlalchemy import FileType
 ${imports if imports else ""}
 
 # revision identifiers, used by Alembic.

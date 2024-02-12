@@ -17,3 +17,8 @@ class PaymentDetailsSchema(BaseModel):
     coffee_url: AnyHttpUrl = Field(max_length=COFFEE_URL_LEN)
     patreon_url: AnyHttpUrl = Field(max_length=PATREON_URL_LEN)
     qr_code_url: AnyHttpUrl = Field(max_length=QR_CODE_URL_LEN)
+
+    @field_validator("qr_code_url", mode="before")
+    @classmethod
+    def add_base_url(cls, value: str, info: ValidationInfo) -> str:
+        return f"{settings.BASE_URL}/{value}"

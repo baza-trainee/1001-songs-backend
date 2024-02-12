@@ -10,13 +10,17 @@ from typing import Sequence, Union
 
 from alembic import op
 import sqlalchemy as sa
-from migrations.custom_types import FileType
+from fastapi_storages.integrations.sqlalchemy import FileType
+from fastapi_storages import FileSystemStorage
 
 # revision identifiers, used by Alembic.
 revision: str = "09a45b0fd024"
 down_revision: Union[str, None] = "16d28d1a4470"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
+
+
+storage = FileSystemStorage(path="static/media/education_section")
 
 
 def upgrade() -> None:
@@ -26,11 +30,11 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("title", sa.String(length=100), nullable=False),
         sa.Column("description", sa.String(length=5000), nullable=True),
-        sa.Column("media1", FileType(), nullable=True),
-        sa.Column("media2", FileType(), nullable=True),
-        sa.Column("media3", FileType(), nullable=True),
-        sa.Column("media4", FileType(), nullable=True),
-        sa.Column("media5", FileType(), nullable=True),
+        sa.Column("media1", FileType(storage), nullable=True),
+        sa.Column("media2", FileType(storage), nullable=True),
+        sa.Column("media3", FileType(storage), nullable=True),
+        sa.Column("media4", FileType(storage), nullable=True),
+        sa.Column("media5", FileType(storage), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###

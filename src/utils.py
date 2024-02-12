@@ -1,21 +1,17 @@
-import base64
+from io import BytesIO
 import os
-import re
-from typing import Any
 from uuid import uuid4
 
 import aiofiles
-from fastapi import FastAPI
+from fastapi import FastAPI, UploadFile
 from sqlalchemy import func, select
-from wtforms import ValidationError
 
 from src.about.utils import create_about
 from src.database.database import get_async_session
-from src.config import FILE_FORMATS, MAX_FILE_SIZE_MB, PHOTO_FORMATS, settings
+from src.config import settings
 from src.database.redis import init_redis, redis
 from src.auth.utils import create_user
 from src.auth.models import User
-from src.exceptions import INVALID_PHOTO, INVALID_FILE, OVERSIZE_FILE
 from src.footer.utils import create_footer
 from src.our_team.utils import create_fake_team
 from src.payment.utils import create_payment
@@ -69,7 +65,7 @@ async def save_photo(
     folder_path = os.path.join(
         "static", "media", model.__tablename__.lower().replace(" ", "_")
     )
-    file_name = f"{uuid4().hex}.{image_extension}"
+    file_name = generate_file_name(image_extension=image_extension)
     file_path = os.path.join(folder_path, file_name)
 
     async def _save_photo(file_path: str):
@@ -81,51 +77,22 @@ async def save_photo(
     return file_path
 
 
+def generate_file_name(filepath: str = None, image_extension: str = None):
+    "file or image_extension"
+    name = uuid4().hex
+    if not image_extension:
+        image_extension = filepath.split("/")[-1].split(".")[-1]
+    return f"{name}.{image_extension}"
+
+
+async def write_filetype_field(file_path: str) -> UploadFile:
+    async with aiofiles.open(file_path, "rb") as buffer:
+        file_name = generate_file_name(file_path)
+        return UploadFile(file=BytesIO(await buffer.read()), filename=file_name)
+
+
 async def delete_photo(path: str) -> None:
     if path and "media" in path:
         path_exists = os.path.exists(path)
         if path_exists:
             os.remove(path)
-
-
-class MediaValidator:
-    def __init__(self, is_file: bool = False) -> None:
-        self.is_file = is_file
-
-    def __call__(self, form, field):
-        file = field.data
-        if file and file.size:
-            file_size = round(file.size / 1024 / 1024, 2)
-            if file_size > MAX_FILE_SIZE_MB:
-                raise ValidationError(
-                    message=OVERSIZE_FILE % (file_size, MAX_FILE_SIZE_MB)
-                )
-            if not self.is_file and not file.content_type in PHOTO_FORMATS:
-                raise ValidationError(
-                    message=INVALID_PHOTO % (file.content_type, PHOTO_FORMATS)
-                )
-            if self.is_file and not file.content_type in FILE_FORMATS:
-                raise ValidationError(
-                    message=INVALID_FILE % (file.content_type, FILE_FORMATS)
-                )
-
-
-async def model_change_for_editor(data: dict, model: Any, field_name: str):
-    pattern_base64 = re.compile(r'(src="data:image/[^;]+;base64,)([^"]+)"')
-    matches = pattern_base64.findall(data[field_name])
-
-    for img_data in matches:
-        header, base64_string = img_data
-        image_extension = header.split("/")[1].split(";")[0]
-        image_data = base64.b64decode(base64_string)
-        image_path = await save_photo(image_data, model, image_extension)
-        image_url = f'<img class="editor-image" src="{settings.BASE_URL}/{image_path}"'
-        data[field_name] = re.sub(pattern_base64, image_url, data[field_name], count=1)
-
-    media_folder = model.__tablename__.lower().replace(" ", "_")
-    pattern_static = re.compile(f'src="[^"]+(static/media/{media_folder}/[^"]+)"')
-    old_data = pattern_static.findall(getattr(model, field_name))
-    new_data = pattern_static.findall(data[field_name])
-    for file_path in old_data:
-        if file_path not in new_data:
-            await delete_photo(file_path)
