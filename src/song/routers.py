@@ -10,11 +10,12 @@ from .models import Song
 from .schemas import SongSchema
 from sqlalchemy.orm.exc import NoResultFound
 
-location_router = APIRouter(prefix="/location", tags=["Location"])
+
+song_router = APIRouter(prefix="/song", tags=["Song"])
 
 
-@location_router.get("/countries")
-async def get_countries(session: AsyncSession = Depends(get_async_session)):
+@song_router.get("")
+async def get_song(session: AsyncSession = Depends(get_async_session)):
     try:
         records = await session.execute(select(Song))
         result = records.scalars().all()

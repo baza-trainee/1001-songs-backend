@@ -65,7 +65,7 @@ frontend_export:
 		sudo rm -rf /var/www/1000and1songs.com/docs; \
 	fi
 	sudo mkdir -p /var/www/1000and1songs.com/
-	sudo tar -xJvf dist.tar.xz -C /var/www/1000and1songs.com/
+	sudo tar -xJvf docs.tar.xz -C /var/www/1000and1songs.com/
 
 drop_db: down 
 	if docker volume ls -q | grep -q $$(basename "$$(pwd)")_postgres_data; then \
