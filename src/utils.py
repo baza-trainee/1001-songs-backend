@@ -15,7 +15,12 @@ from src.auth.models import User
 from src.footer.utils import create_footer
 from src.our_team.utils import create_fake_team
 from src.payment.utils import create_payment
-from src.education.utils import create_fake_education
+from src.education.utils import (
+    create_calendar_and_ritual_categories,
+    create_sub_categories,
+    create_genres_for_education_page,
+    create_education,
+)
 from src.location.utils import create_city, create_countries, create_regions
 from src.database.fake_data import (
     FAKE_ABOUT,
@@ -28,8 +33,11 @@ from src.database.fake_data import (
     FAKE_CITY,
     FAKE_GENRE,
     FAKE_GENRE_ES,
+    FAKE_SONG,
+    ES_MAIN_SONG_CATEGORY,
+    FAKE_SUB_CATEGORY,
 )
-from src.song.utils import create_genre
+from src.song.utils import create_genre, create_song
 
 
 lock = redis.lock("my_lock")
@@ -46,12 +54,16 @@ async def lifespan(app: FastAPI):
                 await create_payment(PAYMENT_DATA, s)
                 await create_fake_team(FAKE_TEAM, s)
                 await create_footer(FAKE_FOOTER, s)
-                await create_fake_education(FAKE_EDUCATION, s)
+                await create_calendar_and_ritual_categories(ES_MAIN_SONG_CATEGORY, s)
                 await create_about(FAKE_ABOUT, s)
                 await create_countries(FAKE_COUNTRIES, s)
                 await create_regions(FAKE_REGIONS, s)
                 await create_city(FAKE_CITY, s)
-                await create_genre([*FAKE_GENRE, *FAKE_GENRE_ES], s)
+                await create_genre(FAKE_GENRE, s)
+                await create_song(FAKE_SONG, s)
+                await create_sub_categories(FAKE_SUB_CATEGORY, s)
+                await create_genres_for_education_page(FAKE_GENRE_ES, s)
+                await create_education(FAKE_EDUCATION, s)
 
     await lock.release()
     yield
