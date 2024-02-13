@@ -39,7 +39,7 @@ async def get_education_page(session: AsyncSession = Depends(get_async_session))
         record = await session.get(EducationPage, 1)
         if not record:
             raise NoResultFound
-        query = select(CalendarAndRitualCategory)
+        query = select(CalendarAndRitualCategory).order_by("id")
         categories_result = await session.execute(query)
         categories = categories_result.scalars().all()
         return {
