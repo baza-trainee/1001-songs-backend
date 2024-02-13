@@ -9,14 +9,15 @@ class MediaFormatter:
         self.is_file = is_file
 
     def __call__(self, m, a):
-        file = getattr(m, a, None)
-        if file:
+        media = getattr(m, a, None)
+        if media:
             if self.is_file:
                 icon_url = f"{settings.BASE_URL}/static/interface/pdf_icon.svg"
-                grid_html = f'<a href="{settings.BASE_URL}/{file}"><img class="grid-item" src="{icon_url}"></a>'
-
+                grid_html = f'<a href="{settings.BASE_URL}/{media}" target="_blank"><img class="grid-pdf" src="{icon_url}"></a>'
             else:
-                grid_html = f'<img class="grid-item" src="{settings.BASE_URL}/{file}">'
+                grid_html = (
+                    f'<img class="grid-image" src="{settings.BASE_URL}/{media}">'
+                )
         return Markup(grid_html)
 
 

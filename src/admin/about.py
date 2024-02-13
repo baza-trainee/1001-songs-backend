@@ -29,7 +29,9 @@ class AboutAdmin(ModelView, model=About):
     can_export = False
     page_size_options = [1]
     page_size = 1
-    column_formatters = {About.content: format_quill}
+    column_formatters = {
+        About.content: format_quill,
+    }
 
     async def scaffold_form(self) -> type[Form]:
         form = await super().scaffold_form()

@@ -12,6 +12,8 @@ class PaymentDetails(Base):
 
     id: int = Column(Integer, primary_key=True)
     organization_name: str = Column(String(length=250))
+    edrpou: str = Column(String(length=250))
+    bank: str = Column(String(length=250))
     info: str = Column(String(length=250))
     iban: str = Column(String(length=250))
     coffee_url: str = Column(String(length=500))

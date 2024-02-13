@@ -3,6 +3,8 @@ import datetime
 
 PAYMENT_DATA = {
     "organization_name": 'ГО "МУЗЕЙ КОЛИСКОВОЇ"',
+    "edrpou": "45284215",
+    "bank": 'АТ КБ "ПРИВАТБАНК"',
     "info": "Безповоротна фінансова допомога від прізвище, ім'я, по-батькові.",
     "iban": "UA353052990000026006035028980",
     "coffee_url": "https://www.buymeacoffee.com/kolyskova",

@@ -30,6 +30,8 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("organization_name", sa.String(length=250), nullable=True),
         sa.Column("info", sa.String(length=250), nullable=True),
+        sa.Column("edrpou", sa.String(length=250), nullable=True),
+        sa.Column("bank", sa.String(length=250), nullable=True),
         sa.Column("iban", sa.String(length=250), nullable=True),
         sa.Column("coffee_url", sa.String(length=500), nullable=True),
         sa.Column("patreon_url", sa.String(length=500), nullable=True),
