@@ -19,10 +19,13 @@ class PaymentAdmin(ModelView, model=PaymentDetails):
 
     column_labels = {
         PaymentDetails.organization_name: "Назва організації",
+        PaymentDetails.bank: "Банк",
+        PaymentDetails.edrpou: "ЄДРПОУ",
+        PaymentDetails.iban: "IBAN",
         PaymentDetails.info: "Призначення платежу",
         PaymentDetails.qr_code_url: "QR code",
+        PaymentDetails.patreon_url: "Patreon",
         PaymentDetails.coffee_url: "Coffee",
-        PaymentDetails.iban: "IBAN",
     }
     can_export = False
     can_edit = True

@@ -61,11 +61,14 @@ div[class^="ql-editor"]:focus {
 .table td:nth-child(n+3) {
     min-width: 150px;
 }
-.grid-item {
+.grid-image {
     width: 80px;
     padding: 2px;
 }
-
+.grid-pdf {
+    width: 40px;
+    padding: 2px;
+}
 .ql-snow .ql-editor img,
 iframe[class="ql-video"],
 .quill-column img {
