@@ -12,7 +12,7 @@ class PaymentDetails(Base):
 
     id: int = Column(Integer, primary_key=True)
     organization_name: str = Column(String(length=250))
-    edrpou: str = Column(String(length=250))
+    edrpou: int = Column(Integer)
     bank: str = Column(String(length=250))
     info: str = Column(String(length=250))
     iban: str = Column(String(length=250))

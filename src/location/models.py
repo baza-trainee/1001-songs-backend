@@ -40,8 +40,16 @@ class City(Base):
     region_id = Column(Integer, ForeignKey("regions.id"))
     country_id = Column(Integer, ForeignKey("countries.id"))
 
-    region = relationship("Region", back_populates="cities")
-    country = relationship("Country", back_populates="cities")
+    region = relationship(
+        "Region",
+        back_populates="cities",
+        lazy="selectin",
+    )
+    country = relationship(
+        "Country",
+        back_populates="cities",
+        lazy="selectin",
+    )
     songs = relationship("Song", back_populates="city")
 
     def __repr__(self) -> str:

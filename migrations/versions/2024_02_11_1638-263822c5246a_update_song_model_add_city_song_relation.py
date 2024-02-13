@@ -9,13 +9,17 @@ Create Date: 2024-02-11 16:38:10.152725
 from typing import Sequence, Union
 
 from alembic import op
+from fastapi_storages import FileSystemStorage
 import sqlalchemy as sa
+from fastapi_storages.integrations.sqlalchemy import FileType
 
 # revision identifiers, used by Alembic.
 revision: str = "263822c5246a"
 down_revision: Union[str, None] = "64820a3923c0"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
+
+storage = FileSystemStorage(path="static/media/song")
 
 
 def upgrade() -> None:
@@ -41,29 +45,27 @@ def upgrade() -> None:
         "song", sa.Column("comment_map", sa.String(length=500), nullable=True)
     )
     op.add_column("song", sa.Column("video_url", sa.String(length=1000), nullable=True))
-    op.add_column("song", sa.Column("photo1", sa.String(length=500), nullable=True))
-    op.add_column("song", sa.Column("photo2", sa.String(length=500), nullable=True))
-    op.add_column("song", sa.Column("photo3", sa.String(length=500), nullable=True))
+    op.add_column("song", sa.Column("photo1", FileType(storage), nullable=True))
+    op.add_column("song", sa.Column("photo2", FileType(storage), nullable=True))
+    op.add_column("song", sa.Column("photo3", FileType(storage), nullable=True))
+    op.add_column("song", sa.Column("stereo_audio", FileType(storage), nullable=True))
     op.add_column(
-        "song", sa.Column("stereo_audio", sa.String(length=1000), nullable=True)
+        "song", sa.Column("multichannel_audio1", FileType(storage), nullable=True)
     )
     op.add_column(
-        "song", sa.Column("multichannel_audio1", sa.String(length=1000), nullable=True)
+        "song", sa.Column("multichannel_audio2", FileType(storage), nullable=True)
     )
     op.add_column(
-        "song", sa.Column("multichannel_audio2", sa.String(length=1000), nullable=True)
+        "song", sa.Column("multichannel_audio3", FileType(storage), nullable=True)
     )
     op.add_column(
-        "song", sa.Column("multichannel_audio3", sa.String(length=1000), nullable=True)
+        "song", sa.Column("multichannel_audio4", FileType(storage), nullable=True)
     )
     op.add_column(
-        "song", sa.Column("multichannel_audio4", sa.String(length=1000), nullable=True)
+        "song", sa.Column("multichannel_audio5", FileType(storage), nullable=True)
     )
     op.add_column(
-        "song", sa.Column("multichannel_audio5", sa.String(length=1000), nullable=True)
-    )
-    op.add_column(
-        "song", sa.Column("multichannel_audio6", sa.String(length=1000), nullable=True)
+        "song", sa.Column("multichannel_audio6", FileType(storage), nullable=True)
     )
     op.add_column("song", sa.Column("city_id", sa.Integer(), nullable=True))
     op.create_foreign_key(None, "song", "cities", ["city_id"], ["id"])

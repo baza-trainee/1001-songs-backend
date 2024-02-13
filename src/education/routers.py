@@ -4,17 +4,25 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
-from fastapi_pagination import Page
-from fastapi_pagination.ext.async_sqlalchemy import paginate
+from fastapi_pagination import Page, paginate
+from fastapi_pagination.utils import disable_installed_extensions_check
 from src.database.database import get_async_session
 from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
+from src.location.models import City, Country, Region
+from src.song.models import Genre, Song
 from .models import (
     EducationPage,
     CalendarAndRitualCategory,
     EducationPageSongGenre,
     SongSubcategory,
 )
-from .schemas import EducationSchema, CategorySchema, EducationGenreSchema, SongSchema
+from .schemas import (
+    EducationSchema,
+    CategorySchema,
+    EducationGenreSchema,
+    SongsSchema,
+    OneSongSchema,
+)
 
 
 education_router = APIRouter(prefix="/education", tags=["Education"])
@@ -102,7 +110,7 @@ async def get_genre_info(id: int, session: AsyncSession = Depends(get_async_sess
         )
 
 
-@education_router.get("/genre/{id}/songs", response_model=List[SongSchema])
+@education_router.get("/genre/{id}/songs", response_model=Page[SongsSchema])
 async def get_songs_by_education_genre(
     id: int, session: AsyncSession = Depends(get_async_session)
 ):
@@ -122,7 +130,46 @@ async def get_songs_by_education_genre(
             }
             for song in genre.songs
         ]
-        return response
+        disable_installed_extensions_check()
+        return paginate(response)
+    except NoResultFound:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        )
+
+
+@education_router.get("/genre/song/{id}", response_model=OneSongSchema)
+async def get_song_by_id(id: int, session: AsyncSession = Depends(get_async_session)):
+    """
+    Accepts the song `ID` and returns detailed information about it.
+    """
+    try:
+        song = await session.get(Song, id)
+        if not song:
+            raise NoResultFound
+        city: City = song.city
+        region: Region = city.region
+        country: Country = city.country
+        location = f"{city.name}, {region.name}, {country.name}"
+        song_info = {
+            "id": song.id,
+            "genres": [genre.title for genre in song.education_genres],
+            "title": song.title,
+            "stereo_audio": song.stereo_audio,
+            "song_text": song.song_text,
+            "song_description": song.song_descriotion,
+            "location": location,
+            "ethnographic_district": song.ethnographic_district,
+            "collectors": song.collectors,
+            "performers": song.performers,
+            "video_url": song.video_url,
+            "comment_map": song.comment_map,  # додати поле карта (файл)
+            "map_photo": song.map_photo,  # додати поле карта (файл)
+            "photos": [photo for photo in song.photos if photo is not None],
+        }
+        return song_info
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
     except Exception as e:
