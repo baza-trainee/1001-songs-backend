@@ -125,8 +125,8 @@ async def get_songs_by_education_genre(
                 "title": song.title,
                 "photos": [photo for photo in song.photos if photo is not None],
                 "stereo_audio": song.stereo_audio,
-                "recording_location": song.recording_location,
-                "genres": {"id": genre.id, "title": genre.title},
+                "recording_location": f"{song.city.name}, {song.city.region.name}, {song.city.country.name}",
+                "genre": genre.title,
             }
             for song in genre.songs
         ]

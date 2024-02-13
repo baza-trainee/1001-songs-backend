@@ -17,6 +17,12 @@ class BaseCycleSchema(BaseModel):
     title: str = Field(..., max_length=TITLE_LEN)
     media: Optional[AnyHttpUrl] = Field(None)
 
+    @field_validator("media", mode="before")
+    @classmethod
+    def add_base_url(cls, value: str, info: ValidationInfo) -> str:
+        if value:
+            return f"{settings.BASE_URL}/{value}"
+
 
 class EducationGenreBaseSchema(BaseModel):
     id: int = Field(..., ge=1)
@@ -66,7 +72,7 @@ class SongsSchema(BaseModel):
     stereo_audio: Optional[AnyHttpUrl] = Field(None)
     photos: Optional[List[AnyHttpUrl]] = Field(None, max_items=5)
     recording_location: Optional[str] = Field(None, max_length=100)
-    genres: Genre
+    genre: str
 
     @field_validator("photos", "stereo_audio", mode="before")
     @classmethod
