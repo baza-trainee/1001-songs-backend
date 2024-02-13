@@ -2,6 +2,7 @@ from sqladmin import ModelView
 from src.admin.commons.validators import MediaValidator
 from src.song.models import Genre, Song
 from wtforms import TextAreaField
+from wtforms.validators import DataRequired
 
 
 class GenreAdmin(ModelView, model=Genre):
@@ -137,3 +138,14 @@ class SongAdmin(ModelView, model=Song):
         Song.multichannel_audio5,
         Song.multichannel_audio6,
     ]
+    form_args = {
+        "title": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "genres": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "city": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "collectors": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "performers": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "ethnographic_district": {
+            "validators": [DataRequired(message="Це поле обов'язкове")]
+        },
+        "recording_date": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+    }

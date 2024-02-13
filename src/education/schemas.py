@@ -60,7 +60,7 @@ class Genre(BaseModel):
     title: str = Field(..., max_length=TITLE_LEN)
 
 
-class SongSchema(BaseModel):
+class SongsSchema(BaseModel):
     id: int = Field(..., ge=1)
     title: str = Field(..., max_length=TITLE_LEN)
     stereo_audio: Optional[AnyHttpUrl] = Field(None)
@@ -80,3 +80,35 @@ class SongSchema(BaseModel):
         else:
             if value:
                 return f"{settings.BASE_URL}/{value}"
+
+
+class OneSongSchema(BaseModel):
+    id: int = Field(..., ge=1)
+    genres: Optional[List[str]]
+    title: str = Field(..., max_length=TITLE_LEN)
+    stereo_audio: Optional[AnyHttpUrl] = Field(None)
+    song_text: Optional[str]
+    song_description: Optional[str]
+    location: str
+    ethnographic_district: str
+    collectors: str
+    performers: str
+    video_url: Optional[str]
+    comment_map: Optional[str]
+    map_photo: Optional[AnyHttpUrl]
+    photos: Optional[List[AnyHttpUrl]] = Field(None, max_items=5)
+
+    @field_validator("photos", "stereo_audio", "map_photo", mode="before")
+    @classmethod
+    def add_base_url(cls, value: List[str], info: ValidationInfo) -> str:
+        if isinstance(value, list):
+            result = []
+            for url in value:
+                if url:
+                    result.append(f"{settings.BASE_URL}/{url}")
+            return result
+        else:
+            if value:
+                return f"{settings.BASE_URL}/{value}"
+            else:
+                return None

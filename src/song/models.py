@@ -26,6 +26,7 @@ class Song(Base):
     bibliographic_reference = Column(String(1000))
     comment_map: str = Column(String(500))
     video_url: str = Column(String(1000))
+    map_photo: str = Column(FileType(storage=storage))
     photo1: str = Column(FileType(storage=storage))
     photo2: str = Column(FileType(storage=storage))
     photo3: str = Column(FileType(storage=storage))
@@ -37,14 +38,22 @@ class Song(Base):
     multichannel_audio5: str = Column(FileType(storage=storage))
     multichannel_audio6: str = Column(FileType(storage=storage))
     city_id = Column(Integer, ForeignKey("cities.id"))
-    city = relationship("City", back_populates="songs")
+    city = relationship(
+        "City",
+        back_populates="songs",
+        lazy="selectin",
+    )
     education_genres = relationship(
         "EducationPageSongGenre",
         secondary="song_education_genre_association",
         back_populates="songs",
+        lazy="selectin",
     )
     genres = relationship(
-        "Genre", secondary="song_genre_association", back_populates="songs"
+        "Genre",
+        secondary="song_genre_association",
+        back_populates="songs",
+        lazy="selectin",
     )
 
     @property
@@ -76,7 +85,10 @@ class Genre(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     genre_name = Column(String(100))
     songs = relationship(
-        "Song", secondary="song_genre_association", back_populates="genres"
+        "Song",
+        secondary="song_genre_association",
+        back_populates="genres",
+        lazy="selectin",
     )
 
     def __repr__(self) -> str:

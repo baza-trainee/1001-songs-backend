@@ -1,5 +1,7 @@
 from sqladmin import ModelView
+from wtforms import TextAreaField
 from src.location.models import City, Country, Region
+from wtforms.validators import DataRequired
 
 
 class CountryAdmin(ModelView, model=Country):
@@ -85,3 +87,11 @@ class CityAdmin(ModelView, model=City):
         City.latitude,
         City.longitude,
     ]
+    # form_overrides = {
+    #     "latitude": TextAreaField,
+    # }
+    form_args = {
+        "region": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "latitude": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "longitude": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+    }
