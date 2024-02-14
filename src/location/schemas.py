@@ -10,10 +10,12 @@ from pydantic import (
 )
 
 from src.config import settings
+from src.song.models import Genre
 from .models import City
 
 
 NAME_LEN = City.name.type.length
+NAME_GENRE_LEN = Genre.genre_name.type.length
 
 
 class BaseLocation(BaseModel):
@@ -33,6 +35,12 @@ class RegionSchema(BaseLocation):
 class CitySchema(BaseLocation):
     country_id: int = Field(..., ge=1)
     region_id: int = Field(..., ge=1)
+    song_count: int = Field(..., ge=1)
+
+
+class GenreFilterSchema(BaseModel):
+    id: int = Field(..., ge=1)
+    genre_name: str = Field(..., max_length=NAME_GENRE_LEN)
     song_count: int = Field(..., ge=1)
 
 
@@ -86,6 +94,36 @@ class FilterSongSchema(BaseModel):
                 return [genre.genre_name for genre in value]
             case "education_genres":
                 return [genre.title for genre in value]
+            case "stereo_audio":
+                if value:
+                    return f"{settings.BASE_URL}/{value}"
+
+
+class SongMapPageSchema(BaseModel):
+    id: int = Field(..., ge=1)
+    title: str = Field(...)
+    song_text: Optional[str] = Field(None)
+    genres: List[str]
+    video_url: Optional[AnyHttpUrl] = Field(None)
+    location: str
+    ethnographic_district: Optional[str]
+    collectors: Optional[str] = Field(None)
+    performers: Optional[str] = Field(None)
+    recording_date: PastDate
+    photos: Optional[List[AnyHttpUrl]] = Field(None)
+    stereo_audio: Optional[str] = Field(None)
+    multichannels: Optional[List[str]] = Field(None)
+
+    @field_validator("photos", "multichannels", "stereo_audio", mode="before")
+    @classmethod
+    def modify_fields(cls, value: str, info: ValidationInfo) -> str:
+        match info.field_name:
+            case "photos" | "multichannels":
+                result = []
+                for url in value:
+                    if url:
+                        result.append(f"{settings.BASE_URL}/{url}")
+                return result
             case "stereo_audio":
                 if value:
                     return f"{settings.BASE_URL}/{value}"

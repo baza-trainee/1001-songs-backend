@@ -65,7 +65,7 @@ class Song(Base):
         ]
 
     @property
-    def multichannel(self):
+    def multichannels(self):
         return [
             self.multichannel_audio1,
             self.multichannel_audio2,
