@@ -8,6 +8,7 @@ from fastapi_pagination import Page
 from fastapi_pagination.ext.async_sqlalchemy import paginate
 
 from src.database.database import get_async_session
+from src.exceptions import NO_DATA_FOUND
 from src.song.models import Song, Genre
 from .exceptions import NO_GENRES_FOUND, NO_REGION_FOUND, NO_CITIES_FOUND, NO_SONG_FOUND
 from .models import Country, Region, City
@@ -18,6 +19,7 @@ from .schemas import (
     CitySchema,
     FilterSongSchema,
     FilterMapSchema,
+    SongMapPageSchema,
 )
 
 
@@ -198,7 +200,7 @@ async def get_genres(
         )
 
 
-@map_router.get("/filter-song", response_model=Page[FilterSongSchema])
+@map_router.get("/filter/songs", response_model=Page[FilterSongSchema])
 async def filter_songs(
     country_ids: List[int] = Query(None),
     region_ids: List[int] = Query(None),
@@ -234,7 +236,7 @@ async def filter_songs(
         )
 
 
-@map_router.get("/filter-geotag", response_model=List[FilterMapSchema])
+@map_router.get("/filter/geotag", response_model=List[FilterMapSchema])
 async def filter_song_geotags(
     country_ids: List[int] = Query(None),
     region_ids: List[int] = Query(None),
@@ -288,6 +290,45 @@ async def filter_song_geotags(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=NO_SONG_FOUND,
         )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        )
+
+
+@map_router.get("/filter/songs/{id}", response_model=SongMapPageSchema)
+async def get_song_by_id(id: int, session: AsyncSession = Depends(get_async_session)):
+    """
+    Accepts the song `ID` and returns detailed information about it.
+    """
+    try:
+        song = await session.get(Song, id)
+        if not song:
+            raise NoResultFound
+        city: City = song.city
+        region: Region = city.region
+        country: Country = city.country
+        location = f"{city.name}, {region.name}, {country.name}"
+        song_info = {
+            "id": song.id,
+            "title": song.title,
+            "song_text": song.song_text,
+            "genres": [genre.genre_name for genre in song.genres],
+            "video_url": song.video_url,
+            "location": location,
+            "ethnographic_district": song.ethnographic_district,
+            "collectors": song.collectors,
+            "performers": song.performers,
+            "recording_date": song.recording_date,
+            "photos": [photo for photo in song.photos if photo is not None],
+            "stereo_audio": song.stereo_audio,
+            "multichannels": [
+                channel for channel in song.multichannels if channel is not None
+            ],
+        }
+        return song_info
+    except NoResultFound:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)

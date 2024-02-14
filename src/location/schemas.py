@@ -97,3 +97,33 @@ class FilterSongSchema(BaseModel):
             case "stereo_audio":
                 if value:
                     return f"{settings.BASE_URL}/{value}"
+
+
+class SongMapPageSchema(BaseModel):
+    id: int = Field(..., ge=1)
+    title: str = Field(...)
+    song_text: Optional[str] = Field(None)
+    genres: List[str]
+    video_url: Optional[AnyHttpUrl] = Field(None)
+    location: str
+    ethnographic_district: Optional[str]
+    collectors: Optional[str] = Field(None)
+    performers: Optional[str] = Field(None)
+    recording_date: PastDate
+    photos: Optional[List[AnyHttpUrl]] = Field(None)
+    stereo_audio: Optional[str] = Field(None)
+    multichannels: Optional[List[str]] = Field(None)
+
+    @field_validator("photos", "multichannels", "stereo_audio", mode="before")
+    @classmethod
+    def modify_fields(cls, value: str, info: ValidationInfo) -> str:
+        match info.field_name:
+            case "photos" | "multichannels":
+                result = []
+                for url in value:
+                    if url:
+                        result.append(f"{settings.BASE_URL}/{url}")
+                return result
+            case "stereo_audio":
+                if value:
+                    return f"{settings.BASE_URL}/{value}"
