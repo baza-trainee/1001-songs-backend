@@ -57,7 +57,9 @@ class EducationSchema(BaseModel):
 
 class CategorySchema(EducationGenreBaseSchema):
     description: Optional[str] = Field(None, max_length=DESCRIPTION_LEN)
-    recommended_sources: Optional[List[str]] = Field(None, max_length=RECOMENDATIONS_LEN)
+    recommended_sources: Optional[List[str]] = Field(
+        None, max_length=RECOMENDATIONS_LEN
+    )
     song_subcategories: List[SubCategoryBaseSchema]
 
 
