@@ -24,7 +24,7 @@ from src.footer.routers import footer_router
 from src.our_team.routers import team_router
 from src.education.routers import education_router
 from src.about.routers import about_router
-from src.location.routers import location_router
+from src.location.routers import location_router, map_router
 from src.news.routers import news_router
 
 
@@ -52,6 +52,7 @@ api_routers = [
     about_router,
     location_router,
     news_router,
+    map_router,
 ]
 
 [app.include_router(router, prefix=API_PREFIX) for router in api_routers]

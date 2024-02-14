@@ -1,20 +1,18 @@
-from typing import List
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
 from fastapi_pagination import Page, paginate
 from fastapi_pagination.utils import disable_installed_extensions_check
+
 from src.database.database import get_async_session
-from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
+from src.exceptions import NO_DATA_FOUND
 from src.location.models import City, Country, Region
-from src.song.models import Genre, Song
+from src.song.models import Song
 from .models import (
     EducationPage,
     CalendarAndRitualCategory,
     EducationPageSongGenre,
-    SongSubcategory,
 )
 from .schemas import (
     EducationSchema,
