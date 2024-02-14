@@ -658,157 +658,220 @@ ES_MAIN_SONG_CATEGORY = [
     {
         "title": "Пісні зимового циклу",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [LOREM],
+        "recommended_sources": [
+            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
+            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
+        ],
+        "media": "static/calendar_and_ritual_categories/1.png",
     },
     {
         "title": "Пісні весняного циклу",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [LOREM],
+        "recommended_sources": [
+            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
+            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
+        ],
+        "media": "static/calendar_and_ritual_categories/2.png",
     },
     {
         "title": "Пісні літнього циклу",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [LOREM],
+        "recommended_sources": [
+            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
+            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
+        ],
+        "media": "static/calendar_and_ritual_categories/3.png",
     },
     {
         "title": "Весільні пісні",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [LOREM],
+        "recommended_sources": [
+            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
+            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
+        ],
+        "media": "static/calendar_and_ritual_categories/4.jfif",
     },
     {
         "title": "Родини і хрестини. Материнський і дитячий фольклор",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [LOREM],
+        "recommended_sources": [
+            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
+            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
+        ],
+        "media": "static/calendar_and_ritual_categories/5.png",
     },
     {
         "title": "Звичайні пісні",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [LOREM],
+        "recommended_sources": [
+            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
+            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
+        ],
+        "media": "static/calendar_and_ritual_categories/6.png",
     },
     {
         "title": "Музичний епос",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [LOREM],
+        "recommended_sources": [
+            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
+            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
+        ],
+        "media": "static/calendar_and_ritual_categories/7.png",
     },
     {
         "title": "Інструментальна музика. Народні танці",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [LOREM],
+        "recommended_sources": [
+            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
+            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
+        ],
+        "media": "static/calendar_and_ritual_categories/8.png",
     },
     {
         "title": "Традиційний похорон: музичне оформлення",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [LOREM],
+        "recommended_sources": [
+            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
+            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
+        ],
+        "media": "static/calendar_and_ritual_categories/9.png",
     },
 ]
 FAKE_SUB_CATEGORY = [
     {
         "title": "Ранньотрадиційний репертуар",
         "main_category_id": 1,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Колядки пізнього походження (християнські)",
         "main_category_id": 1,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Рання весна. Перехід зима/весна",
         "main_category_id": 2,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Період весняного рівнодення. Великдень",
         "main_category_id": 2,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Зелені свята",
         "main_category_id": 2,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Приурочені ліричні пісні ранньої стилістики",
         "main_category_id": 3,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Купальсько-петрівські пісні",
         "main_category_id": 3,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Жнивні пісні",
         "main_category_id": 3,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Передвесільні обряди і пісні",
         "main_category_id": 4,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Весілля. Недільні обряди і пісні",
         "main_category_id": 4,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Післявесільні звичаї і пісні",
         "main_category_id": 4,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Музичне оформлення народин і хрестин",
         "main_category_id": 5,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Музичні жанри «материнського фольклору»",
         "main_category_id": 5,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Пісні дитячого репертуару",
         "main_category_id": 5,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Ліричні пісні (за музичними ознаками)",
         "main_category_id": 6,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Ліричні пісні (за тематикою)",
         "main_category_id": 6,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Коломийки",
         "main_category_id": 6,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Приспівки",
         "main_category_id": 6,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Пісенна творчість пізнішого часу",
         "main_category_id": 6,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Билини",
         "main_category_id": 7,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Думи",
         "main_category_id": 7,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Традиційний лірницький репертуар",
         "main_category_id": 7,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Українські традиційні музичні інструменти",
         "main_category_id": 8,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Інструментальні капели. «Троїста музика»",
         "main_category_id": 8,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Танцювальна музична культура українців",
         "main_category_id": 8,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Голосіння",
         "main_category_id": 9,
+        "media": "static/song_subcategories/subimg.png",
     },
     {
         "title": "Поминальні псальми",
         "main_category_id": 9,
+        "media": "static/song_subcategories/subimg.png",
     },
 ]
 FAKE_GENRE_ES = [
@@ -1219,7 +1282,7 @@ FAKE_GENRE_ES = [
 FAKE_EDUCATION = {
     "title": "Освітній розділ",
     "description": "Пріоритети сучасних – заповнення «білих плям» на фольклористичній карті України (східна Волинь, Наддніпрянщина, південна Чернігівщина, Сумщина, Берестейщина та інші території) та спеціалізовані регіональні програми з видання пісенних збірок за матеріалами певних етнографічних локусів.",
-    "recommendations": LOREM,
+    "recommendations": f"<p>{LOREM}</p>",
     "recommended_sources": [
         "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
         "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
