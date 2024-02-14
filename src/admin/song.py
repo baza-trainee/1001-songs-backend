@@ -33,7 +33,7 @@ class GenreAdmin(ModelView, model=Genre):
 
     category = "Пісенний розділ"
     name_plural = "Жанри"
-    icon = "fa-solid fa-guitar"
+    icon = "fa-solid fa-layer-group"
 
     can_edit = True
     can_create = True

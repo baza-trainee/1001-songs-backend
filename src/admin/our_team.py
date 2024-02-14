@@ -11,7 +11,10 @@ from src.utils import delete_photo
 
 
 class OurTeamAdmin(ModelView, model=OurTeam):
+    is_async = True
+
     name_plural = "Команда"
+    category = "Про проєкт"
     icon = "fa-solid fa-people-group"
 
     column_l = [

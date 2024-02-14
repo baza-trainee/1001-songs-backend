@@ -44,8 +44,14 @@ async def create_sub_categories(sub_categories: list[dict], session: AsyncSessio
 
 
 async def create_genres_for_education_page(genres: list[dict], session: AsyncSession):
+    from src.utils import write_filetype_field
+
     try:
+        fields = ["media1", "media2", "media3", "media4", "media5"]
         for genre in genres:
+            for field in fields:
+                if genre.get(field, None):
+                    genre[field] = await write_filetype_field(genre[field])
             instance = EducationPageSongGenre(**genre)
             session.add(instance)
         print(AFTER_EDUCATION_GENRES_CREATE)
