@@ -13,22 +13,17 @@ class AboutAdmin(ModelView, model=About):
     name_plural = "Про нас"
     icon = "fa-regular fa-address-card"
 
-    column_list = [
-        "title",
-        "content",
-    ]
-
+    column_exclude_list = [About.id]
     column_labels = {
-        "title": "Заголовок",
-        "content": "Контент",
+        About.title: "Заголовок",
+        About.content: "Контент",
+        About.slider_caption: "Підпис до слайдера",
     }
 
     can_view_details = False
     can_create = False
     can_delete = False
     can_export = False
-    page_size_options = [1]
-    page_size = 1
     column_formatters = {
         About.content: format_quill,
     }

@@ -1,22 +1,29 @@
 from sqladmin import ModelView
-from wtforms import TextAreaField
-from src.location.models import City, Country, Region
+from sqladmin.ajax import QueryAjaxModelLoader
+from sqladmin.fields import AjaxSelectField, QuerySelectField, Select2TagsField
 from wtforms.validators import DataRequired
+
+from src.location.models import City, Country, Region
 
 
 class CountryAdmin(ModelView, model=Country):
+    is_async = True
+
+    category = "Локації"
+    name_plural = "Країни"
     icon = "fa-solid fa-earth-europe"
-    column_list = [Country.name]
+
     can_edit = True
     can_create = True
     can_export = False
-    category = "Локації"
-    name_plural = "Країни"
 
+    column_list = [
+        Country.name,
+    ]
     column_labels = {
         Country.name: "Країна",
-        Country.cities: "Міста та селища",
         Country.regions: "Області",
+        Country.cities: "Міста та поселення",
     }
     form_excluded_columns = [
         Country.regions,
@@ -30,15 +37,20 @@ class CountryAdmin(ModelView, model=Country):
 
 
 class RegionAdmin(ModelView, model=Region):
+    is_async = True
+
+    category = "Локації"
+    name_plural = "Області та регіони"
     icon = "fa-solid fa-map-location-dot"
-    column_list = [Region.name]
+
     can_edit = True
     can_create = True
     can_delete = True
     can_export = False
-    category = "Локації"
-    name_plural = "Області та регіони"
 
+    column_list = [
+        Region.name,
+    ]
     column_list = [
         Region.name,
         Region.country,
@@ -48,29 +60,40 @@ class RegionAdmin(ModelView, model=Region):
         Region.country: "Країна",
         Region.cities: "Міста / Поселення",
     }
-    form_excluded_columns = [
-        Region.cities,
-    ]
     column_details_list = [
         Region.country,
         Region.name,
         Region.cities,
     ]
+    form_excluded_columns = [
+        Region.cities,
+    ]
+
+    form_ajax_refs = {
+        "country": {
+            "fields": ("name",),
+            "order_by": "id",
+        },
+    }
 
 
 class CityAdmin(ModelView, model=City):
+    is_async = True
+
+    category = "Локації"
+    name_plural = "Міста та поселення"
     icon = "fa-solid fa-location-dot"
-    column_list = [City.name, City.latitude, City.longitude]
+
     can_edit = True
     can_create = True
     can_delete = True
-    category = "Локації"
-    name_plural = "Міста та поселення"
 
     column_list = [
-        City.name,
-        City.region,
         City.country,
+        City.region,
+        City.name,
+        City.latitude,
+        City.longitude,
     ]
     column_labels = {
         City.country: "Країна",
@@ -79,7 +102,6 @@ class CityAdmin(ModelView, model=City):
         City.latitude: "Широта",
         City.longitude: "Довгота",
     }
-    form_excluded_columns = [City.country, City.songs]
     column_details_list = [
         City.country,
         City.region,
@@ -87,11 +109,31 @@ class CityAdmin(ModelView, model=City):
         City.latitude,
         City.longitude,
     ]
-    # form_overrides = {
-    #     "latitude": TextAreaField,
-    # }
+    form_excluded_columns = [
+        City.songs,
+    ]
     form_args = {
-        "region": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "latitude": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "longitude": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "region": {
+            "validators": [DataRequired(message="Це поле обов'язкове")],
+        },
+        "region": {
+            "validators": [DataRequired(message="Це поле обов'язкове")],
+        },
+        "latitude": {
+            "validators": [DataRequired(message="Це поле обов'язкове")],
+        },
+        "longitude": {
+            "validators": [DataRequired(message="Це поле обов'язкове")],
+        },
+    }
+
+    form_ajax_refs = {
+        "country": {
+            "fields": ("name",),
+            "order_by": "id",
+        },
+        "region": {
+            "fields": ("name",),
+            "order_by": "id",
+        },
     }

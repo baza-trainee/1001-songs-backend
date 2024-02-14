@@ -1,18 +1,48 @@
+from typing import Any
+
+from fastapi import Request
 from sqladmin import ModelView
-from src.admin.commons.validators import MediaValidator
-from src.song.models import Genre, Song
 from wtforms import TextAreaField
 from wtforms.validators import DataRequired
+from src.admin.commons.formatters import MediaSplitFormatter
+
+from src.admin.commons.utils import model_change_for_files
+from src.admin.commons.validators import MediaValidator
+from src.song.models import Genre, Song
+from src.utils import delete_photo
+
+
+PHOTO_FIELDS = [
+    "photo1",
+    "photo2",
+    "photo3",
+]
+SONG_FIELDS = [
+    "stereo_audio",
+    "multichannel_audio1",
+    "multichannel_audio2",
+    "multichannel_audio3",
+    "multichannel_audio4",
+    "multichannel_audio5",
+    "multichannel_audio6",
+]
 
 
 class GenreAdmin(ModelView, model=Genre):
+    is_async = True
+
+    category = "Пісенний розділ"
+    name_plural = "Жанри"
     icon = "fa-solid fa-guitar"
-    column_list = [Genre.genre_name, Genre.songs]
+
     can_edit = True
     can_create = True
     can_export = False
-    category = "Пісенний розділ"
-    name_plural = "Жанри"
+
+    column_list = [
+        Genre.genre_name,
+        Genre.songs,
+    ]
     column_labels = {
         Genre.genre_name: "Назва жанру",
         Genre.songs: "Пісні",
@@ -22,7 +52,16 @@ class GenreAdmin(ModelView, model=Genre):
 
 
 class SongAdmin(ModelView, model=Song):
+    is_async = True
+
+    category = "Пісенний розділ"
+    name_plural = "Пісні"
     icon = "fa-solid fa-music"
+
+    can_edit = True
+    can_create = True
+    can_export = False
+
     column_list = [
         Song.title,
         Song.genres,
@@ -31,12 +70,8 @@ class SongAdmin(ModelView, model=Song):
         Song.collectors,
         Song.archive,
         Song.recording_date,
+        Song.photo1,
     ]
-    can_edit = True
-    can_create = True
-    can_export = False
-    category = "Пісенний розділ"
-    name_plural = "Пісні"
     column_labels = {
         Song.title: "Назва",
         Song.song_text: "Текст",
@@ -54,8 +89,8 @@ class SongAdmin(ModelView, model=Song):
         Song.comment_map: "Коментар для карти",
         Song.bibliographic_reference: "bibliographic_reference",
         Song.photo1: "Фото",
-        Song.photo2: "Фото",
-        Song.photo3: "Фото",
+        Song.photo2: "Фото 2",
+        Song.photo3: "Фото 3",
         Song.video_url: "Посилання на відео",
         Song.stereo_audio: "Пісня",
         Song.multichannel_audio1: "Канал 1",
@@ -92,24 +127,7 @@ class SongAdmin(ModelView, model=Song):
         Song.multichannel_audio5,
         Song.multichannel_audio6,
     ]
-    form_overrides = {
-        "song_text": TextAreaField,
-        "song_descriotion": TextAreaField,
-    }
-    form_args = {
-        "song_text": {
-            "render_kw": {
-                "class": "form-control",
-                "rows": 5,
-            },
-        },
-        "song_descriotion": {
-            "render_kw": {
-                "class": "form-control",
-                "rows": 3,
-            },
-        },
-    }
+
     form_columns = [
         Song.title,
         Song.song_text,
@@ -138,14 +156,59 @@ class SongAdmin(ModelView, model=Song):
         Song.multichannel_audio5,
         Song.multichannel_audio6,
     ]
-    form_args = {
-        "title": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "genres": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "city": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "collectors": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "performers": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "ethnographic_district": {
-            "validators": [DataRequired(message="Це поле обов'язкове")]
-        },
-        "recording_date": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+    column_formatters = {
+        Song.photo1: MediaSplitFormatter(PHOTO_FIELDS),
     }
+    form_overrides = {
+        "song_text": TextAreaField,
+        "song_descriotion": TextAreaField,
+    }
+    form_args = {
+        #     "title": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        #     "genres": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        #     "city": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        #     "collectors": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        #     "performers": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        #     "ethnographic_district": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        #     "recording_date": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "song_text": {
+            "render_kw": {
+                "class": "form-control",
+                "rows": 5,
+            },
+        },
+        "song_descriotion": {
+            "render_kw": {
+                "class": "form-control",
+                "rows": 3,
+            },
+        },
+    }
+
+    form_ajax_refs = {
+        "genres": {
+            "fields": ("genre_name",),
+            "order_by": "id",
+        },
+        "education_genres": {
+            "fields": ("title",),
+            "order_by": "id",
+        },
+        "city": {
+            "fields": ("name",),
+            "order_by": "id",
+        },
+    }
+
+    async def on_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        await model_change_for_files(
+            data, model, is_created, SONG_FIELDS + PHOTO_FIELDS
+        )
+        return await super().on_model_change(data, model, is_created, request)
+
+    async def on_model_delete(self, model: Any, request: Request) -> None:
+        for field in SONG_FIELDS + PHOTO_FIELDS:
+            await delete_photo(getattr(model, field, None))
+        return await super().on_model_delete(model, request)

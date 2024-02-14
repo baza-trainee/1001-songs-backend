@@ -13,6 +13,7 @@ from src.database.redis import init_redis, redis
 from src.auth.utils import create_user
 from src.auth.models import User
 from src.footer.utils import create_footer
+from src.news.utils import create_news, create_news_category
 from src.our_team.utils import create_fake_team
 from src.payment.utils import create_payment
 from src.education.utils import (
@@ -25,6 +26,8 @@ from src.location.utils import create_city, create_countries, create_regions
 from src.database.fake_data import (
     FAKE_ABOUT,
     FAKE_FOOTER,
+    FAKE_NEWS,
+    FAKE_NEWS_CATEGORY,
     PAYMENT_DATA,
     FAKE_TEAM,
     FAKE_EDUCATION,
@@ -64,7 +67,8 @@ async def lifespan(app: FastAPI):
                 await create_sub_categories(FAKE_SUB_CATEGORY, s)
                 await create_genres_for_education_page(FAKE_GENRE_ES, s)
                 await create_education(FAKE_EDUCATION, s)
-
+                await create_news_category(FAKE_NEWS_CATEGORY, s)
+                await create_news(FAKE_NEWS, s)
     await lock.release()
     yield
 
@@ -90,11 +94,11 @@ async def save_photo(
 
 
 def generate_file_name(filepath: str = None, image_extension: str = None):
-    "file or image_extension"
+    "file or image_extension with <.>"
     name = uuid4().hex
     if not image_extension:
-        image_extension = filepath.split("/")[-1].split(".")[-1]
-    return f"{name}.{image_extension}"
+        image_extension = "." + filepath.split("/")[-1].split(".")[-1]
+    return name + image_extension
 
 
 async def write_filetype_field(file_path: str) -> UploadFile:
