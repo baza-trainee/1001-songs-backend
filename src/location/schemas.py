@@ -10,10 +10,12 @@ from pydantic import (
 )
 
 from src.config import settings
+from src.song.models import Genre
 from .models import City
 
 
 NAME_LEN = City.name.type.length
+NAME_GENRE_LEN = Genre.genre_name.type.length
 
 
 class BaseLocation(BaseModel):
@@ -33,6 +35,12 @@ class RegionSchema(BaseLocation):
 class CitySchema(BaseLocation):
     country_id: int = Field(..., ge=1)
     region_id: int = Field(..., ge=1)
+    song_count: int = Field(..., ge=1)
+
+
+class GenreFilterSchema(BaseModel):
+    id: int = Field(..., ge=1)
+    genre_name: str = Field(..., max_length=NAME_GENRE_LEN)
     song_count: int = Field(..., ge=1)
 
 

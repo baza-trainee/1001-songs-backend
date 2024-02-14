@@ -9,10 +9,11 @@ from fastapi_pagination.ext.async_sqlalchemy import paginate
 
 from src.database.database import get_async_session
 from src.song.models import Song, Genre
-from .exceptions import NO_REGION_FOUND, NO_CITIES_FOUND, NO_SONG_FOUND
+from .exceptions import NO_GENRES_FOUND, NO_REGION_FOUND, NO_CITIES_FOUND, NO_SONG_FOUND
 from .models import Country, Region, City
 from .schemas import (
     CountrySchema,
+    GenreFilterSchema,
     RegionSchema,
     CitySchema,
     FilterSongSchema,
@@ -96,7 +97,9 @@ async def get_regions(
 
 @location_router.get("/cities", response_model=List[CitySchema])
 async def get_cities(
-    id: List[int] = Query(None), session: AsyncSession = Depends(get_async_session)
+    country_id: List[int] = Query(None),
+    region_id: List[int] = Query(None),
+    session: AsyncSession = Depends(get_async_session),
 ):
     """
     Use this endpoint to retrieve cities. You can filter them by region by passing one or more **region ID**s.
@@ -115,9 +118,10 @@ async def get_cities(
             .order_by(City.name)
         )
 
-        if id:
-            query = query.filter(City.region_id.in_(id))
-
+        if region_id:
+            query = query.filter(City.region_id.in_(region_id))
+        if country_id:
+            query = query.filter(City.country_id.in_(country_id))
         records = await session.execute(query)
         result = records.all()
         if not result:
@@ -136,6 +140,57 @@ async def get_cities(
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=NO_CITIES_FOUND,
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        )
+
+
+@location_router.get("/genres", response_model=List[GenreFilterSchema])
+async def get_genres(
+    country_id: List[int] = Query(None),
+    region_id: List[int] = Query(None),
+    city_id: List[int] = Query(None),
+    session: AsyncSession = Depends(get_async_session),
+):
+    """
+    Use this endpoint to retrieve genres. You can filter them by country, region, or city by passing one or more IDs.
+    """
+    try:
+        query = (
+            select(Genre.id, Genre.genre_name, func.count(Song.id).label("count"))
+            .join(Song.genres)
+            .join(City, Song.city_id == City.id)
+            .join(Region, City.region_id == Region.id)
+            .join(Country, City.country_id == Country.id)
+            .group_by(Genre.id)
+            .order_by(Genre.id)
+        )
+
+        if country_id:
+            query = query.filter(Country.id.in_(country_id))
+        if region_id:
+            query = query.filter(Region.id.in_(region_id))
+        if city_id:
+            query = query.filter(City.id.in_(city_id))
+
+        records = await session.execute(query)
+        result = records.all()
+        if not result:
+            raise NoResultFound
+        return [
+            {
+                "id": record.id,
+                "genre_name": record.genre_name,
+                "song_count": record.count,
+            }
+            for record in result
+        ]
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=NO_GENRES_FOUND,
         )
     except Exception as e:
         raise HTTPException(
