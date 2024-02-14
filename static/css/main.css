@@ -47,6 +47,9 @@ div[class^="ql-editor"]:focus {
 .ql-editor p {
     margin: 0 0 10px 0;
 }
+.quill-column p img {
+    text-align: center; 
+}
 
 .table th,
 .table td {
@@ -69,6 +72,20 @@ div[class^="ql-editor"]:focus {
 .grid-pdf {
     width: 40px;
     padding: 2px;
+}
+.grid-string-array {
+    background-color: #e4e4e4;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    cursor: default;
+    float: left;
+    margin-right: 5px;
+    margin-top: 5px;
+    padding: 0 5px;
+    max-width: 300px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .ql-snow .ql-editor img,
 iframe[class="ql-video"],

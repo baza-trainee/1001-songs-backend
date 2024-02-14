@@ -4,7 +4,7 @@ from fastapi import Request
 from sqladmin import ModelView
 from wtforms import TextAreaField
 from wtforms.validators import DataRequired
-from src.admin.commons.formatters import MediaSplitFormatter
+from src.admin.commons.formatters import MediaSplitFormatter, format_audio
 
 from src.admin.commons.utils import model_change_for_files
 from src.admin.commons.validators import MediaValidator
@@ -64,6 +64,7 @@ class SongAdmin(ModelView, model=Song):
 
     column_list = [
         Song.title,
+        Song.stereo_audio,
         Song.genres,
         Song.education_genres,
         Song.performers,
@@ -159,13 +160,16 @@ class SongAdmin(ModelView, model=Song):
     column_formatters = {
         Song.photo1: MediaSplitFormatter(PHOTO_FIELDS),
     }
+    column_formatters = {
+        Song.stereo_audio: format_audio,
+    }
     form_overrides = {
         "song_text": TextAreaField,
         "song_descriotion": TextAreaField,
     }
     form_args = {
-        #     "title": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        #     "genres": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "title": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        # "genres": {"validators": [DataRequired(message="Це поле обов'язкове")]},
         #     "city": {"validators": [DataRequired(message="Це поле обов'язкове")]},
         #     "collectors": {"validators": [DataRequired(message="Це поле обов'язкове")]},
         #     "performers": {"validators": [DataRequired(message="Це поле обов'язкове")]},
