@@ -24,6 +24,7 @@ from src.education.utils import (
 )
 from src.location.utils import create_city, create_countries, create_regions
 from src.expedition.utils import create_expedition_categories
+from src.song.utils import create_song_and_genre
 from src.database.fake_data import (
     FAKE_ABOUT,
     FAKE_FOOTER,
@@ -42,7 +43,6 @@ from src.database.fake_data import (
     FAKE_SUB_CATEGORY,
     FAKE_EXPED_CATEGORY
 )
-from src.song.utils import create_genre, create_song
 
 
 lock = redis.lock("my_lock")
@@ -64,8 +64,7 @@ async def lifespan(app: FastAPI):
                 await create_countries(FAKE_COUNTRIES, s)
                 await create_regions(FAKE_REGIONS, s)
                 await create_city(FAKE_CITY, s)
-                await create_genre(FAKE_GENRE, s)
-                await create_song(FAKE_SONG, s)
+                await create_song_and_genre(FAKE_GENRE, FAKE_SONG, s)
                 await create_sub_categories(FAKE_SUB_CATEGORY, s)
                 await create_genres_for_education_page(FAKE_GENRE_ES, s)
                 await create_education(FAKE_EDUCATION, s)

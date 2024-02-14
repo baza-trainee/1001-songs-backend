@@ -1,9 +1,9 @@
 from typing import Any
-from uuid import uuid4
+
 from fastapi import Form, Request
-from markupsafe import Markup
 from sqladmin import ModelView
 from wtforms import TextAreaField
+
 from src.admin.commons.formatters import (
     MediaFormatter,
     MediaSplitFormatter,
@@ -12,8 +12,6 @@ from src.admin.commons.formatters import (
 )
 from src.admin.commons.utils import model_change_for_editor, model_change_for_files
 from src.admin.commons.validators import MediaValidator
-
-from src.config import settings
 from src.education.models import (
     EducationPage,
     CalendarAndRitualCategory,
@@ -97,9 +95,11 @@ class EducationAdmin(ModelView, model=EducationPage):
 
 class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory):
     is_async = True
-    name_plural = "Категорії пісень"
+
+    name_plural = "Освітні категорії"
     category = "Освітний розділ"
     icon = "fa-solid fa-layer-group"
+
     can_create = False
     can_delete = False
     can_export = False
@@ -137,6 +137,7 @@ class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory)
     }
     column_formatters = {
         CalendarAndRitualCategory.recommended_sources: format_array_of_string,
+        CalendarAndRitualCategory.media: MediaFormatter(),
     }
 
     form_args = {
@@ -170,7 +171,7 @@ class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory)
 class SongSubcategoryAdmin(ModelView, model=SongSubcategory):
     is_async = True
 
-    name_plural = "Під-категорії пісень"
+    name_plural = "Освітні під-категорії"
     category = "Освітний розділ"
     icon = "fa-solid fa-layer-group"
 
@@ -219,7 +220,7 @@ class SongSubcategoryAdmin(ModelView, model=SongSubcategory):
 class EducationPageSongGenreAdmin(ModelView, model=EducationPageSongGenre):
     is_async = True
 
-    name_plural = "Жанри розділу"
+    name_plural = "Освітні жанри"
     category = "Освітний розділ"
     icon = "fa-solid fa-layer-group"
 
@@ -256,7 +257,7 @@ class EducationPageSongGenreAdmin(ModelView, model=EducationPageSongGenre):
         **{field: {"validators": [MediaValidator()]} for field in MEDIA_FIELDS},
     }
     column_formatters = {
-        CalendarAndRitualCategory.media: MediaSplitFormatter(MEDIA_FIELDS),
+        EducationPageSongGenre.media1: MediaSplitFormatter(MEDIA_FIELDS),
     }
 
     async def on_model_change(

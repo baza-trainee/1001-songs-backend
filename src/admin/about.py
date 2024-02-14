@@ -11,6 +11,7 @@ from src.admin.commons.utils import model_change_for_editor
 class AboutAdmin(ModelView, model=About):
     is_async = True
     name_plural = "Про нас"
+    category = "Про проєкт"
     icon = "fa-regular fa-address-card"
 
     column_exclude_list = [About.id]

@@ -33,7 +33,7 @@ class GenreAdmin(ModelView, model=Genre):
 
     category = "Пісенний розділ"
     name_plural = "Жанри"
-    icon = "fa-solid fa-guitar"
+    icon = "fa-solid fa-layer-group"
 
     can_edit = True
     can_create = True
@@ -88,7 +88,6 @@ class SongAdmin(ModelView, model=Song):
         Song.recording_date: "Дата запису",
         Song.recording_location: "Місце запису",
         Song.comment_map: "Коментар для карти",
-        Song.bibliographic_reference: "bibliographic_reference",
         Song.photo1: "Фото",
         Song.photo2: "Фото 2",
         Song.photo3: "Фото 3",
@@ -114,7 +113,6 @@ class SongAdmin(ModelView, model=Song):
         Song.source,
         Song.recording_date,
         Song.recording_location,
-        Song.bibliographic_reference,
         Song.comment_map,
         Song.photo1,
         Song.photo2,
@@ -143,7 +141,6 @@ class SongAdmin(ModelView, model=Song):
         Song.education_genres,
         Song.recording_date,
         Song.recording_location,
-        Song.bibliographic_reference,
         Song.comment_map,
         Song.video_url,
         Song.photo1,

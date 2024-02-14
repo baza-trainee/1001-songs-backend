@@ -23,7 +23,6 @@ class Song(Base):
     source = Column(String(200))
     archive = Column(String(255))
     recording_location = Column(String(100))
-    bibliographic_reference = Column(String(1000))
     comment_map: str = Column(String(500))
     video_url: str = Column(String(1000))
     map_photo: str = Column(FileType(storage=storage))
