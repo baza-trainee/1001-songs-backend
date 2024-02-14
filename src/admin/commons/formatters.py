@@ -31,7 +31,7 @@ class MediaSplitFormatter:
         for field in self.media_fields:
             image = getattr(m, field, None)
             if image:
-                grid_html += f'<img class="grid-item" src={settings.BASE_URL}/{image}>'
+                grid_html += f'<img class="grid-image" src={settings.BASE_URL}/{image}>'
         return Markup(grid_html)
 
 
@@ -43,8 +43,8 @@ def format_quill(m, a):
 def format_audio(m, a):
     if field_data := getattr(m, a, None):
         html = f"""<audio controls class="grid-audio">
-  <source src="{settings.BASE_URL}/{field_data}" type="audio/mp3">
-  Your browser does not support the audio element.
+<source src="{settings.BASE_URL}/{field_data}" type="audio/mp3">
+Your browser does not support the audio element.
 </audio>"""
     else:
         html = "файл відсутній"

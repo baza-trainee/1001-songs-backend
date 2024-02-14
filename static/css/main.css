@@ -5,7 +5,7 @@
 div[class^="ql-editor"] {
     display: block;
     width: 100%;
-    min-height: 100px;
+    min-height: 150px;
     padding: .4375rem .75rem;
     font-family: var(--tblr-font-sans-serif);
     font-size: .875rem;
@@ -20,6 +20,13 @@ div[class^="ql-editor"] {
     appearance: none;
     border-radius: var(--tblr-border-radius);
     transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.ql-editor::after {
+    content: '';
+    display: block;
+    height: 40px;
+    width: 100%;
 }
 
 div[class^="ql-editor"] p {
@@ -47,8 +54,9 @@ div[class^="ql-editor"]:focus {
 .ql-editor p {
     margin: 0 0 10px 0;
 }
+
 .quill-column p img {
-    text-align: center; 
+    text-align: center;
 }
 
 .table th,
@@ -61,20 +69,23 @@ div[class^="ql-editor"]:focus {
 .table td:nth-child(2) {
     min-width: 100px;
 }
+
 .table th:nth-child(n+3),
 .table td:nth-child(n+3) {
     min-width: 150px;
 }
+
 .grid-image {
     width: 80px;
     padding: 2px;
 }
+
 .grid-pdf {
     width: 40px;
     padding: 2px;
 }
+
 .grid-string-array {
-    background-color: #e4e4e4;
     border: 1px solid #aaa;
     border-radius: 4px;
     cursor: default;
@@ -87,10 +98,11 @@ div[class^="ql-editor"]:focus {
     overflow: hidden;
     white-space: nowrap;
 }
+
 .ql-snow .ql-editor img,
 iframe[class="ql-video"],
 .quill-column img {
-    width: 300px !important;
+    height: 200px;
 }
 
 a[class^="nav-link dropdown-toggle"] {

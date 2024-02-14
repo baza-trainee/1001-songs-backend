@@ -31,15 +31,15 @@ async def get_news(
     session: AsyncSession = Depends(get_async_session),
 ):
     """
-    Use this endpoint to retrieve news. You can filter them by category by passing one or more **category ID**s.
+    Use this endpoint to retrieve news. You can filter them by category by passing one or more **category `ID`s**.
     """
     try:
         if await session.scalar(select(func.count()).select_from(News)) == 0:
             raise NoResultFound
+
+        query = select(News).order_by(News.created_at.desc())
         if id:
-            query = select(News).filter(News.category_id.in_(id))
-        else:
-            query = select(News)
+            query = query.filter(News.category_id.in_(id))
         return await paginate(session, query)
 
     except NoResultFound:
