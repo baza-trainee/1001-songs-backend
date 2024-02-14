@@ -51,7 +51,7 @@ class EducationSchema(BaseModel):
     title: str = Field(..., max_length=TITLE_LEN)
     description: Optional[str] = Field(None, max_length=DESCRIPTION_LEN)
     recommendations: Optional[str] = Field(None, max_length=RECOMENDATIONS_LEN)
-    recommended_sources: Optional[str] = Field(None, max_length=SOURCES_LEN)
+    recommended_sources: Optional[List[str]] = Field(None, max_length=SOURCES_LEN)
     calendar_and_ritual_categories: List[BaseCycleSchema]
 
 
