@@ -37,7 +37,18 @@ class MediaSplitFormatter:
 
 def format_quill(m, a):
     if field_data := getattr(m, a, None):
-        return Markup(f"<div class='quill-column'>{field_data}</div>")
+        return Markup(f'<div class="quill-column">{field_data}</div>')
+
+
+def format_audio(m, a):
+    if field_data := getattr(m, a, None):
+        html = f"""<audio controls class="grid-audio">
+  <source src="{settings.BASE_URL}/{field_data}" type="audio/mp3">
+  Your browser does not support the audio element.
+</audio>"""
+    else:
+        html = "файл відсутній"
+    return Markup(html)
 
 
 def format_datetime(m, a):
@@ -50,5 +61,5 @@ def format_array_of_string(m, a):
     if field_data := getattr(m, a, None):
         res = ""
         for data in field_data:
-            res += f"<br>{data}"
+            res += f'<p class="grid-string-array">{data}</p>'
         return Markup(res)

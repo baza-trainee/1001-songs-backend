@@ -131,10 +131,14 @@ class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory)
         CalendarAndRitualCategory.description,
         CalendarAndRitualCategory.recommended_sources,
     ]
+
     form_overrides = {
         "description": TextAreaField,
-        "recommended_sources": TextAreaField,
     }
+    column_formatters = {
+        CalendarAndRitualCategory.recommended_sources: format_array_of_string,
+    }
+
     form_args = {
         "description": {
             "render_kw": {
