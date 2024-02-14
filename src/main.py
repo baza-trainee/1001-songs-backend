@@ -26,6 +26,7 @@ from src.education.routers import education_router
 from src.about.routers import about_router
 from src.location.routers import location_router, map_router
 from src.news.routers import news_router
+from src.expedition.routers import expedition_router
 
 
 app = FastAPI(
@@ -54,6 +55,7 @@ api_routers = [
     location_router,
     news_router,
     map_router,
+    expedition_router,
 ]
 
 [app.include_router(router, prefix=API_PREFIX) for router in api_routers]

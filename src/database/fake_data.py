@@ -1480,3 +1480,12 @@ FAKE_EDUCATION = {
         "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
     ],
 }
+
+FAKE_EXPED_CATEGORY = [
+    {"title": "Розвідка"},
+    {"title": "Статичний"},
+    {"title": "Міждисциплінарна"},
+    {"title": "Тематична"},
+    {"title": "Відеозапис обряду"},
+    {"title": "Цифровий запис"},
+]
