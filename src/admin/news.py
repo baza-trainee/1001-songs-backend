@@ -49,16 +49,17 @@ class NewsAdmin(ModelView, model=News):
         News.category,
         News.title,
         News.content,
+        News.slider_caption,
         News.authors,
         News.editors,
         News.photographers,
     ]
-
     column_labels = {
         News.created_at: "Дата публікації",
         News.category: "Категорія",
         News.title: "Заголовок",
         News.content: "Контент",
+        News.slider_caption: "Підпис до слайдера",
         News.authors: "Автор",
         News.editors: "Редактор",
         News.photographers: "Світлини",

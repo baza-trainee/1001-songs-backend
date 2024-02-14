@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, String, Integer
+from sqlalchemy import ARRAY, Column, ForeignKey, String, Integer
 from sqlalchemy.orm import relationship
 from fastapi_storages.integrations.sqlalchemy import FileType
 from fastapi_storages import FileSystemStorage
@@ -18,17 +18,17 @@ class EducationPage(Base):
     title: str = Column(String(100), nullable=True)
     description: str = Column(String(5000))
     recommendations: str = Column(String(10000))
-    recommended_sources: str = Column(String(10000))
+    recommended_sources: list[str] = Column(ARRAY(String(1000)))
 
 
 class CalendarAndRitualCategory(Base):
     __tablename__ = "calendar_and_ritual_categories"
 
-    id = Column(Integer, primary_key=True)
-    title = Column(String(100))
+    id: int = Column(Integer, primary_key=True)
+    title: str = Column(String(100))
     media = Column(FileType(storage=storage1))
-    description = Column(String(2000))
-    recommended_sources = Column(String(10000))
+    description: str = Column(String(2000))
+    recommended_sources: list[str] = Column(ARRAY(String(1000)))
 
     song_subcategories = relationship(
         "SongSubcategory", back_populates="main_category", lazy="selectin"
@@ -44,10 +44,12 @@ class CalendarAndRitualCategory(Base):
 class SongSubcategory(Base):
     __tablename__ = "song_subcategories"
 
-    id = Column(Integer, primary_key=True)
-    title = Column(String(100), nullable=False)
+    id: int = Column(Integer, primary_key=True)
+    title: str = Column(String(100), nullable=False)
     media = Column(FileType(storage=storage2))
-    main_category_id = Column(Integer, ForeignKey("calendar_and_ritual_categories.id"))
+    main_category_id: int = Column(
+        Integer, ForeignKey("calendar_and_ritual_categories.id")
+    )
 
     main_category = relationship(
         "CalendarAndRitualCategory", back_populates="song_subcategories"
@@ -63,16 +65,18 @@ class SongSubcategory(Base):
 class EducationPageSongGenre(Base):
     __tablename__ = "education_page_song_genres"
 
-    id = Column(Integer, primary_key=True)
-    title = Column(String(100), nullable=False)
-    description = Column(String(2000))
+    id: int = Column(Integer, primary_key=True)
+    title: str = Column(String(100), nullable=False)
+    description: str = Column(String(2000))
     media1: str = Column(FileType(storage=storage3))
     media2: str = Column(FileType(storage=storage3))
     media3: str = Column(FileType(storage=storage3))
     media4: str = Column(FileType(storage=storage3))
     media5: str = Column(FileType(storage=storage3))
-    main_category_id = Column(Integer, ForeignKey("calendar_and_ritual_categories.id"))
-    sub_category_id = Column(Integer, ForeignKey("song_subcategories.id"))
+    main_category_id: int = Column(
+        Integer, ForeignKey("calendar_and_ritual_categories.id")
+    )
+    sub_category_id: int = Column(Integer, ForeignKey("song_subcategories.id"))
 
     main_category = relationship(
         "CalendarAndRitualCategory", back_populates="education_genres"

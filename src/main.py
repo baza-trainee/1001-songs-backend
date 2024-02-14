@@ -39,6 +39,7 @@ admin = Admin(
     engine,
     authentication_backend=authentication_backend,
     title="1001-ADMIN",
+    debug=True,
     session_maker=async_session_maker,
 )
 

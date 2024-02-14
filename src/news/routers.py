@@ -7,6 +7,7 @@ from fastapi_pagination import Page
 from fastapi_pagination.ext.async_sqlalchemy import paginate
 
 from src.database.database import get_async_session
+from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
 from src.location.exceptions import NO_REGION_FOUND
 from .service import get_records
 from .models import NewsCategory, News
@@ -33,7 +34,7 @@ async def get_news(
     Use this endpoint to retrieve news. You can filter them by category by passing one or more **category ID**s.
     """
     try:
-        if session.scalar(select(func.count()).select_from(News)) == 0:
+        if await session.scalar(select(func.count()).select_from(News)) == 0:
             raise NoResultFound
         if id:
             query = select(News).filter(News.category_id.in_(id))
@@ -49,4 +50,19 @@ async def get_news(
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(exc)
+        )
+
+
+@news_router.get("/news/{id}", response_model=NewsSchema)
+async def get_one_news(id: int, session: AsyncSession = Depends(get_async_session)):
+    try:
+        record = await session.get(News, id)
+        if not record:
+            raise NoResultFound
+        return record
+    except NoResultFound:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=SERVER_ERROR
         )

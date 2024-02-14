@@ -1,33 +1,28 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from .models import Country, City, Region
-from .exceptions import AFTER_COUNTRY_CREATE, AFTER_CITY_CREATE, AFTER_REGION_CREATE
+
+from .models import NewsCategory, News
+from .exceptions import AFTER_NEWS_CATEGORY_CREATE, AFTER_NEWS_CREATE
 
 
-async def create_countries(countries_list: list[dict], session: AsyncSession):
+async def create_news_category(news_list: list[dict], session: AsyncSession):
     try:
-        for country in countries_list:
-            instance = Country(**country)
-            session.add(instance)
-        print(AFTER_COUNTRY_CREATE)
+        add_data = []
+        for news in news_list:
+            instance = NewsCategory(**news)
+            add_data.append(instance)
+        session.add_all(add_data)
+        print(AFTER_NEWS_CATEGORY_CREATE)
     except Exception as exc:
         raise exc
 
 
-async def create_regions(regions_list: list[dict], session: AsyncSession):
+async def create_news(news_list: list[dict], session: AsyncSession):
     try:
-        for region in regions_list:
-            instance = Region(**region)
-            session.add(instance)
-        print(AFTER_REGION_CREATE)
-    except Exception as exc:
-        raise exc
-
-
-async def create_city(city_list: list[dict], session: AsyncSession):
-    try:
-        for city in city_list:
-            instance = City(**city)
-            session.add(instance)
-        print(AFTER_CITY_CREATE)
+        add_data = []
+        for region in news_list:
+            instance = News(**region)
+            add_data.append(instance)
+        session.add_all(add_data)
+        print(AFTER_NEWS_CREATE)
     except Exception as exc:
         raise exc

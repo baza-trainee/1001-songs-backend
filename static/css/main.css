@@ -40,6 +40,7 @@ div[class^="ql-editor"]:focus {
     border: 1px solid rgba(29, 39, 59, 0.2);
     overflow-x: auto;
     white-space: wrap;
+    min-width: 500px;
 }
 
 .quill-column p,

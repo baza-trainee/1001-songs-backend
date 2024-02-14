@@ -32,7 +32,9 @@ def upgrade() -> None:
         sa.Column("title", sa.String(length=100), nullable=True),
         sa.Column("media", FileType(storage1), nullable=True),
         sa.Column("description", sa.String(length=2000), nullable=True),
-        sa.Column("recommended_sources", sa.String(length=10000), nullable=True),
+        sa.Column(
+            "recommended_sources", sa.ARRAY(sa.String(length=1000)), nullable=True
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
@@ -41,7 +43,9 @@ def upgrade() -> None:
         sa.Column("title", sa.String(length=100), nullable=True),
         sa.Column("description", sa.String(length=5000), nullable=True),
         sa.Column("recommendations", sa.String(length=10000), nullable=True),
-        sa.Column("recommended_sources", sa.String(length=10000), nullable=True),
+        sa.Column(
+            "recommended_sources", sa.ARRAY(sa.String(length=1000)), nullable=True
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(

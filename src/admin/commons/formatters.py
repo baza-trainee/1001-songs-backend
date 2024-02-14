@@ -10,6 +10,7 @@ class MediaFormatter:
 
     def __call__(self, m, a):
         media = getattr(m, a, None)
+        grid_html = ""
         if media:
             if self.is_file:
                 icon_url = f"{settings.BASE_URL}/static/interface/pdf_icon.svg"

@@ -9,3 +9,4 @@ class About(Base):
     id: int = Column(Integer, primary_key=True)
     title: str = Column(String(length=250), nullable=False)
     content: str = Column(String(length=10000), nullable=False)
+    slider_caption: str = Column(String(length=100), nullable=True)

@@ -9,7 +9,7 @@ from .models import EducationPage
 TITLE_LEN = EducationPage.title.type.length
 DESCRIPTION_LEN = EducationPage.description.type.length
 RECOMENDATIONS_LEN = EducationPage.recommendations.type.length
-SOURCES_LEN = EducationPage.recommended_sources.type.length
+SOURCES_LEN = EducationPage.recommended_sources.type.item_type.length
 
 
 class BaseCycleSchema(BaseModel):
@@ -61,7 +61,7 @@ class CategorySchema(EducationGenreBaseSchema):
     song_subcategories: List[SubCategoryBaseSchema]
 
 
-class Genre(BaseModel):
+class GenreSchema(BaseModel):
     id: int = Field(..., ge=1)
     title: str = Field(..., max_length=TITLE_LEN)
 
