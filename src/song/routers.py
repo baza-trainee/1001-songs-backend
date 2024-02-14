@@ -1,14 +1,11 @@
-from typing import List
-
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm.exc import NoResultFound
 
 from src.database.database import get_async_session
 from src.exceptions import SERVER_ERROR, NO_DATA_FOUND
 from .models import Song
-from .schemas import SongSchema
-from sqlalchemy.orm.exc import NoResultFound
 
 
 song_router = APIRouter(prefix="/song", tags=["Song"])

@@ -36,7 +36,6 @@ def upgrade() -> None:
         sa.Column("collectors", sa.String(length=200), nullable=True),
         sa.Column("source", sa.String(length=200), nullable=True),
         sa.Column("archive", sa.String(length=255), nullable=True),
-        sa.Column("bibliographic_reference", sa.String(length=1000), nullable=True),
         sa.Column("researcher_comment", sa.String(length=1000), nullable=True),
         sa.PrimaryKeyConstraint("id"),
         sa.UniqueConstraint("title"),

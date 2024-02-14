@@ -1,5 +1,3 @@
-from random import choice
-
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from .models import Genre, Song
@@ -12,7 +10,8 @@ async def create_genre(genre_list: list[dict], session: AsyncSession):
         for genre in genre_list:
             instance = Genre(**genre)
             genre_instances.append(instance)
-        await session.flush(genre_instances)
+        session.add_all(genre_instances)
+        await session.flush()
         print(AFTER_GENRE_CREATE)
         return genre_instances
     except Exception as exc:
@@ -25,6 +24,7 @@ async def create_song_and_genre(
     from src.utils import write_filetype_field
 
     genre_instances = await create_genre(genre_list, session)
+
     try:
         fields = [
             "map_photo",
@@ -42,7 +42,7 @@ async def create_song_and_genre(
                 if field in song and song[field]:
                     song[field] = await write_filetype_field(song[field])
             instance = Song(**song)
-            # instance.genres.append(choice(genre_instances))
+            # instance.genres.append(choice(genres))
             song_instances.append(instance)
         session.add_all(song_instances)
         print(AFTER_SONG_CREATE)
