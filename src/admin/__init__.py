@@ -13,6 +13,8 @@ from .location import CountryAdmin, RegionAdmin, CityAdmin
 from .song import SongAdmin, GenreAdmin
 from .news import NewsAdmin, NewsCategoryAdmin
 from .expedition import ExpeditionAdmin
+from .project import OurProjectAdmin
+
 
 __all__ = [
     NewsCategoryAdmin,
@@ -29,6 +31,7 @@ __all__ = [
     AboutAdmin,
     OurTeamAdmin,
     ExpeditionAdmin,
+    OurProjectAdmin,
     FooterAdmin,
     PaymentAdmin,
 ]

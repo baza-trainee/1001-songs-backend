@@ -2,6 +2,7 @@ from sqlalchemy import Column, String, ForeignKey, Integer, Float
 from sqlalchemy.orm import relationship
 
 from src.database.database import Base
+from src.our_project.models import OurProject
 
 
 class Country(Base):
@@ -53,6 +54,7 @@ class City(Base):
     )
     songs = relationship("Song", back_populates="city")
     expeditions = relationship("Expedition", back_populates="location")
+    projects = relationship("OurProject", back_populates="location")
     news = relationship("News", back_populates="location")
 
     def __repr__(self) -> str:
