@@ -11,14 +11,12 @@ from .education import (
 from .about import AboutAdmin
 from .location import CountryAdmin, RegionAdmin, CityAdmin
 from .song import SongAdmin, GenreAdmin
-from .news import NewsAdmin, NewsCategoryAdmin
+from .news import NewsAdmin
 from .expedition import ExpeditionAdmin
 from .project import OurProjectAdmin
 
 
 __all__ = [
-    NewsCategoryAdmin,
-    NewsAdmin,
     RegionAdmin,
     EducationAdmin,
     CountryAdmin,
@@ -30,6 +28,7 @@ __all__ = [
     EducationPageSongGenreAdmin,
     AboutAdmin,
     OurTeamAdmin,
+    NewsAdmin,
     ExpeditionAdmin,
     OurProjectAdmin,
     FooterAdmin,
