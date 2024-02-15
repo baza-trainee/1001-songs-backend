@@ -158,7 +158,6 @@ class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory)
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
-
         return await super().on_model_change(data, model, is_created, request)
 
     async def on_model_delete(self, model: Any, request: Request) -> None:

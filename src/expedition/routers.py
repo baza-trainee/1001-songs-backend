@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_pagination import Page
 from fastapi_pagination.ext.async_sqlalchemy import paginate
@@ -39,14 +39,27 @@ async def get_all_categories(session: AsyncSession = Depends(get_async_session))
 
 @expedition_router.get("/filter", response_model=Page[ExpedListSchema])
 async def get_expeditions_list_by_category(
-    id: Optional[int] = Query(None), session: AsyncSession = Depends(get_async_session)
+    search: Optional[str] = Query(None),
+    id: Optional[int] = Query(None),
+    session: AsyncSession = Depends(get_async_session),
 ):
-    """Get expeditions list by category ID."""
+    """
+    Get expeditions list by category **ID**.
+    In addition to filtering by **ID**, you can also use a search by title or descriptin.
+    """
     try:
         if id:
             query = select(Expedition).filter(Expedition.category_id == id)
         else:
             query = select(Expedition)
+        if search:
+            search_expr = f"%{search}%"
+            query = query.filter(
+                or_(
+                    Expedition.title.ilike(search_expr),
+                    Expedition.short_description.ilike(search_expr),
+                )
+            )
         result = await paginate(session, query)
         if not result.items:
             raise NoResultFound

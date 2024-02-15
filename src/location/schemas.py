@@ -65,7 +65,7 @@ class FilterSongSchema(BaseModel):
     collectors: Optional[str] = Field(None)
     recording_date: PastDate
     stereo_audio: Optional[str] = Field(None)
-    video_url: Optional[AnyHttpUrl] = Field(None)
+    video_url: Optional[str] = Field(None)
     ethnographic_district: Optional[str]
     photos: Optional[List[AnyHttpUrl]] = Field(None)
     city: str
