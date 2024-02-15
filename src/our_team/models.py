@@ -15,3 +15,6 @@ class OurTeam(Base):
     full_name: str = Column(String(100), nullable=False)
     photo: str = Column(FileType(storage=storage))
     description: str = Column(String(500))
+
+    def __repr__(self) -> str:
+        return f"{self.full_name}"

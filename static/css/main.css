@@ -106,7 +106,8 @@ table {
 }
 
 .grid-image {
-    height: 160px;
+    max-width: fit-content;
+    height: 120px;
     padding: 2px;
 }
 

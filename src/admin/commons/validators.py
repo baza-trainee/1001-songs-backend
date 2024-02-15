@@ -1,4 +1,5 @@
 from wtforms import ValidationError
+
 from src.config import FILE_FORMATS, MAX_FILE_SIZE_MB, PHOTO_FORMATS
 from src.exceptions import INVALID_FILE, INVALID_PHOTO, OVERSIZE_FILE
 

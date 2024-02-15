@@ -109,11 +109,15 @@ class CityAdmin(ModelView, model=City):
         City.latitude,
         City.longitude,
     ]
-    form_excluded_columns = [
-        City.songs,
+    form_columns = [
+        City.country,
+        City.region,
+        City.name,
+        City.latitude,
+        City.longitude,
     ]
     form_args = {
-        "region": {
+        "country": {
             "validators": [DataRequired(message="Це поле обов'язкове")],
         },
         "region": {
