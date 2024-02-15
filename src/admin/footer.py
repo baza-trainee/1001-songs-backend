@@ -1,11 +1,16 @@
 from typing import Any
+
 from fastapi import Request
 from sqladmin import ModelView
-from src.admin.commons.formatters import MediaFormatter
-from src.admin.commons.utils import model_change_for_files
+from wtforms.validators import DataRequired
 
+from src.admin.commons.formatters import MediaFormatter
+from src.admin.commons.utils import CustomFileInputWidget, model_change_for_files
+from src.admin.commons.validators import MediaValidator
 from src.footer.models import Footer
 from src.utils import delete_photo
+
+FILE_FIELDS = ["reporting", "privacy_policy", "rules_and_terms"]
 
 
 class FooterAdmin(ModelView, model=Footer):
@@ -36,6 +41,16 @@ class FooterAdmin(ModelView, model=Footer):
         Footer.rules_and_terms: MediaFormatter(is_file=True),
     }
 
+    form_args = {
+        field: {
+            "widget": CustomFileInputWidget(is_file=True, is_required=True),
+            "validators": [
+                MediaValidator(is_file=True),
+            ],
+        }
+        for field in FILE_FIELDS
+    }
+
     can_edit = True
     can_create = False
     can_delete = False
@@ -44,12 +59,10 @@ class FooterAdmin(ModelView, model=Footer):
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
-        fields = ["reporting", "privacy_policy", "rules_and_terms"]
-        await model_change_for_files(data, model, is_created, fields)
+        await model_change_for_files(data, model, is_created, FILE_FIELDS)
         return await super().on_model_change(data, model, is_created, request)
 
     async def on_model_delete(self, model: Any, request: Request) -> None:
-        fields = ["reporting", "privacy_policy", "rules_and_terms"]
-        for field in fields:
+        for field in FILE_FIELDS:
             await delete_photo(getattr(model, field, None))
         return await super().on_model_delete(model, request)

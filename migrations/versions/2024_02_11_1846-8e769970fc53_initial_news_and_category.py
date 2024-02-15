@@ -9,7 +9,9 @@ Create Date: 2024-02-11 18:46:31.340798
 from typing import Sequence, Union
 
 from alembic import op
+from fastapi_storages import FileSystemStorage
 import sqlalchemy as sa
+from fastapi_storages.integrations.sqlalchemy import FileType
 
 
 # revision identifiers, used by Alembic.
@@ -17,6 +19,8 @@ revision: str = "8e769970fc53"
 down_revision: Union[str, None] = "263822c5246a"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
+
+storage = FileSystemStorage(path="static/media/news")
 
 
 def upgrade() -> None:
@@ -36,12 +40,17 @@ def upgrade() -> None:
         sa.Column("authors", sa.ARRAY(sa.String(length=100)), nullable=True),
         sa.Column("editors", sa.ARRAY(sa.String(length=100)), nullable=True),
         sa.Column("photographers", sa.ARRAY(sa.String(length=100)), nullable=True),
-        sa.Column("location", sa.String(length=100), nullable=False),
+        sa.Column("preview_photo", FileType(storage), nullable=True),
         sa.Column("created_at", sa.Date(), nullable=False),
         sa.Column("category_id", sa.Integer(), nullable=True),
+        sa.Column("city_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
             ["category_id"],
             ["news_category.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["city_id"],
+            ["cities.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
     )

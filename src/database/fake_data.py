@@ -58,8 +58,9 @@ FAKE_NEWS = [
         "authors": ["Поліщук Петро"],
         "editors": ["Даніель Санторо", "Навухо Доносор"],
         "photographers": ["Артас Менетіл", "Богдан Зара"],
+        "preview_photo": "static/news/1.png",
         "created_at": datetime.datetime.now().date() + datetime.timedelta(days=1),
-        "location": "Торунь, Польща",
+        "city_id": 1,
         "category_id": 1,
     },
     {
@@ -68,8 +69,9 @@ FAKE_NEWS = [
         "authors": ["Поліщук Петро"],
         "editors": ["Даніель Санторо", "Навухо Доносор"],
         "photographers": ["Артас Менетіл", "Богдан Зара"],
+        "preview_photo": "static/news/2.png",
         "created_at": datetime.datetime.now().date(),
-        "location": "Краків, Польща",
+        "city_id": 2,
         "category_id": 2,
     },
 ]

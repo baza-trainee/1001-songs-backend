@@ -1,7 +1,9 @@
 from datetime import datetime
 from typing import Annotated, Optional, List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationInfo, field_validator
+
+from src.config import settings
 
 from .models import NewsCategory, News
 
@@ -28,5 +30,17 @@ class NewsSchema(BaseModel):
     authors: Optional[List[str]] = Field(None, max_length=AUTHORS_LEN)
     editors: Optional[List[str]] = Field(None, max_length=EDITORS_LEN)
     photographers: Optional[List[str]] = Field(None, max_length=PHOTOGRAPHERS_LEN)
+    preview_photo: Optional[str] = Field(None)
+    location: Optional[str]
     category: NewCategorySchema
     created_at: datetime
+
+    @field_validator("location", "preview_photo", mode="before")
+    @classmethod
+    def add_base_url(cls, value: dict, info: ValidationInfo) -> str:
+        match info.field_name:
+            case "location":
+                return f"{value.name}, {value.region.name}, {value.region.country.name}"
+            case "preview_photo":
+                if value:
+                    return f"{settings.BASE_URL}/{value}"

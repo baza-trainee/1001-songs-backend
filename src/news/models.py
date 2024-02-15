@@ -1,8 +1,12 @@
 from datetime import datetime
+from fastapi_storages import FileSystemStorage
 from sqlalchemy import Column, String, ForeignKey, Integer, Date, ARRAY
 from sqlalchemy.orm import relationship
+from fastapi_storages.integrations.sqlalchemy import FileType
 
 from src.database.database import Base
+
+storage = FileSystemStorage(path="static/media/news")
 
 
 class NewsCategory(Base):
@@ -27,11 +31,13 @@ class News(Base):
     authors: list[str] = Column(ARRAY(String(100)), nullable=True)
     editors: list[str] = Column(ARRAY(String(100)), nullable=True)
     photographers: list[str] = Column(ARRAY(String(100)), nullable=True)
-    location: str = Column(String(100), nullable=False)
+    preview_photo: str = Column(FileType(storage=storage))
     created_at: datetime = Column(Date(), nullable=False)
     category_id: int = Column(Integer, ForeignKey("news_category.id"))
+    city_id = Column(Integer, ForeignKey("cities.id"))
 
     category = relationship("NewsCategory", back_populates="news")
+    location = relationship("City", back_populates="news")
 
     def __repr__(self) -> str:
         return f"{self.title}"

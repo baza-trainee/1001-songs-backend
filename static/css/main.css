@@ -1,7 +1,3 @@
-.table thead th {
-    text-transform: none;
-}
-
 div[class^="ql-editor"] {
     display: block;
     width: 100%;
@@ -46,19 +42,53 @@ div[class^="ql-editor"]:focus {
     padding: 10px;
     border: 1px solid rgba(29, 39, 59, 0.2);
     overflow-x: auto;
+    overflow-y: scroll;
+    max-height: 400px;
     white-space: wrap;
     min-width: 500px;
+    text-align: left;
 }
 
+div[class^="ql-editor"],
 .quill-column p,
 .ql-editor p {
     margin: 0 0 10px 0;
 }
-
+div[class^="ql-editor"] p img,
 .quill-column p img {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     text-align: center;
 }
 
+
+.ql-snow .ql-editor img,
+iframe.ql-video,
+.quill-column img {
+    height: 200px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+iframe.ql-video::selection {
+    background-color: rgba(13, 255, 0, 0.465);
+}
+.ql-snow .ql-editor img::selection {
+    background-color: rgba(13, 255, 0, 0.465);
+}
+a[class^="nav-link dropdown-toggle"] {
+    font-weight: bold;
+    border-bottom: 1px solid rgba(184, 201, 234, 0.3);
+}
+
+table {
+    text-align: center;
+}
+.table thead th {
+    text-transform: none;
+}
 .table th,
 .table td {
     overflow: hidden;
@@ -76,11 +106,14 @@ div[class^="ql-editor"]:focus {
 }
 
 .grid-image {
-    width: 80px;
+    height: 160px;
     padding: 2px;
 }
 
 .grid-pdf {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     width: 40px;
     padding: 2px;
 }
@@ -99,13 +132,9 @@ div[class^="ql-editor"]:focus {
     white-space: nowrap;
 }
 
-.ql-snow .ql-editor img,
-iframe[class="ql-video"],
-.quill-column img {
-    height: 200px;
+.grid-string-left {
+    text-align: left;
 }
-
-a[class^="nav-link dropdown-toggle"] {
-    font-weight: bold;
-    border-bottom: 1px solid rgba(184, 201, 234, 0.3);
+.form-fieldset {
+    border-color: rgba(8, 60, 96, 0.2)
 }

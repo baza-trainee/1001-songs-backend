@@ -7,7 +7,6 @@ from wtforms.validators import DataRequired
 
 from src.admin.commons.formatters import (
     MediaFormatter,
-    format_datetime,
     format_quill,
     format_array_of_string,
 )
@@ -17,6 +16,7 @@ from src.expedition.models import Expedition
 
 class ExpeditionAdmin(ModelView, model=Expedition):
     is_async = True
+
     name_plural = "Експедиції"
     icon = "fa-solid fa-route"
 
@@ -46,7 +46,7 @@ class ExpeditionAdmin(ModelView, model=Expedition):
         Expedition.expedition_date: "Дата експедиції",
         Expedition.content: "Контент",
         Expedition.category: "Категорія",
-        Expedition.location: "Локація",
+        Expedition.location: "Розташування",
         Expedition.authors: "Збирачі",
         Expedition.editors: "Редактор",
         Expedition.photographers: "Відео-монтаж",
