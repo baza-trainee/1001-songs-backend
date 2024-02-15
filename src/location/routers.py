@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy import func, select
@@ -202,6 +202,7 @@ async def get_genres(
 
 @map_router.get("/filter/songs", response_model=Page[FilterSongSchema])
 async def filter_songs(
+    search: Optional[str] = Query(None),
     country_ids: List[int] = Query(None),
     region_ids: List[int] = Query(None),
     city_ids: List[int] = Query(None),
@@ -220,6 +221,8 @@ async def filter_songs(
             query = query.filter(City.id.in_(city_ids))
         if genre_ids:
             query = query.join(Song.genres).filter(Genre.id.in_(genre_ids))
+        if search:
+            query = query.filter(Song.title.ilike(f"%{search}%"))
 
         result = await paginate(session, query)
         if not result.items:
@@ -238,6 +241,7 @@ async def filter_songs(
 
 @map_router.get("/filter/geotag", response_model=List[FilterMapSchema])
 async def filter_song_geotags(
+    search: Optional[str] = Query(None),
     country_ids: List[int] = Query(None),
     region_ids: List[int] = Query(None),
     city_ids: List[int] = Query(None),
@@ -270,6 +274,8 @@ async def filter_song_geotags(
             query = query.filter(City.id.in_(city_ids))
         if genre_ids:
             query = query.join(Song.genres).filter(Genre.id.in_(genre_ids))
+        if search:
+            query = query.filter(Song.title.ilike(f"%{search}%"))
 
         records = await session.execute(query)
         result = records.all()

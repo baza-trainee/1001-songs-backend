@@ -1520,7 +1520,7 @@ FAKE_EXPED_CATEGORY = [
     {"title": "Цифровий запис"},
 ]
 
-TITLES = [
+EXPEDITIONS_TITLES = [
     "Дослідження місцевих легенд",
     "Відкриття нових культурних звичаїв",
     "Експедиція до джунглів",
@@ -1532,6 +1532,19 @@ TITLES = [
     "Дослідження впливу природи на культуру",
     "Створення документального фільму про місцеві традиції",
 ]
+PROJECT_TITLES = [
+    "Дослідження українських обрядів",
+    "Пошук унікальних народних мелодій",
+    "Етнографічні експедиції в селах",
+    "Фольклорні традиції сучасного міста",
+    "Збереження української народної співанки",
+    "Дослідження музичних звичаїв Гуцульщини",
+    "Українські мелодії: минуле і сьогодення",
+    "Культурні етнографічні експедиції",
+    "Пошук народних танців та мелодій",
+    "Спадщина українських колядок",
+]
+
 PEOPLE = [
     "Микола Черновіл",
     "Оксана Петренко",
@@ -1544,7 +1557,7 @@ PEOPLE = [
 ]
 FAKE_PROJECTS = []
 for i in range(10):
-    title = random.choice(TITLES)
+    title = random.choice(PROJECT_TITLES)
     short_description = f"Короткий опис проєкту '{title}'"
     preview_photo = f"static/projects/project1.png"
     project_date = datetime.datetime.now().date() + datetime.timedelta(days=i + 1)
@@ -1568,3 +1581,33 @@ for i in range(10):
         "city_id": city_id,
     }
     FAKE_PROJECTS.append(fake_project)
+
+FAKE_EXPEDITIONS = []
+for i in range(10):
+    title = random.choice(EXPEDITIONS_TITLES)
+    short_description = f"Короткий опис експедиції '{title}'"
+    map_photo = f"static/expeditions/img{i + 1}.png"
+    preview_photo = f"static/expeditions/Vector.png"
+    expedition_date = datetime.datetime.now().date() + datetime.timedelta(days=i + 1)
+    content = f"<p>Опис експедиції '{title}'.</p>"
+    category_id = random.randint(1, 6)
+    city_id = random.randint(1, 40)
+    authors = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
+    editors = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
+    photographers = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
+    recording = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
+    fake_expedition = {
+        "title": title,
+        "short_description": short_description,
+        "map_photo": map_photo,
+        "preview_photo": preview_photo,
+        "expedition_date": expedition_date,
+        "content": content,
+        "category_id": category_id,
+        "city_id": city_id,
+        "authors": authors,
+        "editors": editors,
+        "photographers": photographers,
+        "recording": recording,
+    }
+    FAKE_EXPEDITIONS.append(fake_expedition)
