@@ -56,7 +56,7 @@ api_routers = [
     news_router,
     map_router,
     expedition_router,
-    project_router
+    project_router,
 ]
 
 [app.include_router(router, prefix=API_PREFIX) for router in api_routers]

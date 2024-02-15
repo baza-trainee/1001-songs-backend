@@ -43,7 +43,7 @@ from src.database.fake_data import (
     ES_MAIN_SONG_CATEGORY,
     FAKE_SUB_CATEGORY,
     FAKE_EXPED_CATEGORY,
-    FAKE_PROJECTS
+    FAKE_PROJECTS,
 )
 
 

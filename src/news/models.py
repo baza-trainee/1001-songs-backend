@@ -36,8 +36,8 @@ class News(Base):
     category_id: int = Column(Integer, ForeignKey("news_category.id"))
     city_id = Column(Integer, ForeignKey("cities.id"))
 
-    category = relationship("NewsCategory", back_populates="news")
-    location = relationship("City", back_populates="news")
+    category = relationship("NewsCategory", back_populates="news", lazy="selectin")
+    location = relationship("City", back_populates="news", lazy="selectin")
 
     def __repr__(self) -> str:
         return f"{self.title}"

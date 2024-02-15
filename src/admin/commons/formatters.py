@@ -31,7 +31,9 @@ class MediaSplitFormatter:
         for field in self.media_fields:
             image = getattr(m, field, None)
             if image:
-                grid_html += f'<img class="grid-image" src={settings.BASE_URL}/{image}>'
+                grid_html += (
+                    f'<img class="grid-split-image" src={settings.BASE_URL}/{image}>'
+                )
         return Markup(grid_html)
 
 
