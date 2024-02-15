@@ -27,7 +27,7 @@ from src.about.routers import about_router
 from src.location.routers import location_router, map_router
 from src.news.routers import news_router
 from src.expedition.routers import expedition_router
-
+from src.our_project.routers import project_router
 
 app = FastAPI(
     swagger_ui_parameters=SWAGGER_PARAMETERS,
@@ -56,6 +56,7 @@ api_routers = [
     news_router,
     map_router,
     expedition_router,
+    project_router
 ]
 
 [app.include_router(router, prefix=API_PREFIX) for router in api_routers]

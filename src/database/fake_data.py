@@ -1,4 +1,5 @@
 import datetime
+import random
 
 
 PAYMENT_DATA = {
@@ -1491,3 +1492,52 @@ FAKE_EXPED_CATEGORY = [
     {"title": "Відеозапис обряду"},
     {"title": "Цифровий запис"},
 ]
+
+TITLES = [
+    "Дослідження місцевих легенд",
+    "Відкриття нових культурних звичаїв",
+    "Експедиція до джунглів",
+    "Реконструкція історичних подій",
+    "Мистецтво та культура сучасного міста",
+    "Вивчення фольклору та традицій",
+    "Етнографічні дослідження",
+    "Експедиція до невідомих місць",
+    "Дослідження впливу природи на культуру",
+    "Створення документального фільму про місцеві традиції",
+]
+PEOPLE = [
+    "Микола Черновіл",
+    "Оксана Петренко",
+    "Іван Ковальчук",
+    "Марія Данилішина",
+    "Олег Кузьменко",
+    "Тетяна Шевченко",
+    "Павло Іваненко",
+    "Катерина Козлова",
+]
+FAKE_PROJECTS = []
+for i in range(10):
+    title = random.choice(TITLES)
+    short_description = f"Короткий опис проєкту '{title}'"
+    preview_photo = f"static/projects/project1.png"
+    project_date = datetime.datetime.now().date() + datetime.timedelta(days=i+1)
+    content = f"<p>Опис проєкту '{title}'.</p>"
+    authors = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
+    editors = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
+    photographers = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
+    recording = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
+    city_id = random.randint(1, 40)
+
+    fake_project = {
+        "title": title,
+        "short_description": short_description,
+        "preview_photo": preview_photo,
+        "project_date": project_date,
+        "content": content,
+        "authors": authors,
+        "editors": editors,
+        "photographers": photographers,
+        "recording": recording,
+        "city_id": city_id,
+    }
+    FAKE_PROJECTS.append(fake_project)
