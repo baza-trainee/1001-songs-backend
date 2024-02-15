@@ -1,3 +1,9 @@
+:root {
+    --table-border-color-inner: rgba(97, 114, 118, 0.16);
+    --table-border-color-outer: rgba(29, 39, 59, 0.2);
+    --размер-шрифта: 16px;
+  }
+
 div[class^="ql-editor"] {
     display: block;
     width: 100%;
@@ -40,7 +46,7 @@ div[class^="ql-editor"]:focus {
 .quill-column {
     color: #1d273b;
     padding: 10px;
-    border: 1px solid rgba(29, 39, 59, 0.2);
+    border: 1px solid var(--table-border);
     overflow-x: auto;
     overflow-y: scroll;
     max-height: 400px;
@@ -91,13 +97,16 @@ table {
 }
 .table th,
 .table td {
+    border: 1px solid var(--table-border-color-inner);
     overflow: hidden;
     white-space: normal;
+    padding: 5px;
 }
 
 .table th:nth-child(2),
 .table td:nth-child(2) {
-    min-width: 100px;
+    min-width: 80px;
+    text-align: center !important;
 }
 
 .table th:nth-child(n+3),
@@ -110,7 +119,12 @@ table {
     height: 120px;
     padding: 2px;
 }
-
+.grid-split-image {
+    /* max-width: 80px; */
+    display: inline;
+    width: 80px;
+    padding: 2px;
+}
 .grid-pdf {
     display: block;
     margin-left: auto;
@@ -118,7 +132,12 @@ table {
     width: 40px;
     padding: 2px;
 }
-
+.grid-audio {
+    max-width: 300px; 
+}
+.form-fieldset .grid-pdf {
+    display: inline;
+}
 .grid-string-array {
     border: 1px solid #aaa;
     border-radius: 4px;
@@ -137,5 +156,5 @@ table {
     text-align: left;
 }
 .form-fieldset {
-    border-color: rgba(8, 60, 96, 0.2)
+    border-color: var(--table-border-color-outer)
 }

@@ -27,6 +27,9 @@ async def create_song_and_genre(
 
     try:
         fields = [
+            "photo1",
+            "photo2",
+            "photo3",
             "map_photo",
             "stereo_audio",
             "multichannel_audio1",

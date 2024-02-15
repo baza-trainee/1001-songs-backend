@@ -12,38 +12,16 @@ from src.admin.commons.formatters import (
     format_string_left,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, model_change_for_editor
-from src.news.models import News, NewsCategory
+from src.news.models import News
 from src.our_team.models import OurTeam
 
 relation_team_fields = ["authors", "editors", "photographers"]
-
-
-class NewsCategoryAdmin(ModelView, model=NewsCategory):
-    is_async = True
-
-    name_plural = "Категорії новин"
-    category = "Розділ новин"
-    icon = "fa-solid fa-icons"
-
-    can_view_details = True
-    can_export = False
-    can_create = True
-
-    column_labels = {
-        "name": "Назва категорії",
-    }
-    column_exclude_list = [
-        NewsCategory.news,
-        NewsCategory.id,
-    ]
-    form_excluded_columns = [NewsCategory.news]
 
 
 class NewsAdmin(ModelView, model=News):
     is_async = True
 
     name_plural = "Новини"
-    category = "Розділ новин"
     icon = "fa-solid fa-kiwi-bird"
 
     can_export = False

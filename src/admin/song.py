@@ -6,7 +6,7 @@ from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 from src.admin.commons.formatters import MediaSplitFormatter, format_audio
 
-from src.admin.commons.utils import model_change_for_files
+from src.admin.commons.utils import CustomFileInputWidget, model_change_for_files
 from src.admin.commons.validators import MediaValidator
 from src.song.models import Genre, Song
 from src.utils import delete_photo
@@ -89,8 +89,8 @@ class SongAdmin(ModelView, model=Song):
         Song.recording_location: "Місце запису",
         Song.comment_map: "Коментар для карти",
         Song.photo1: "Фото",
-        Song.photo2: "Фото 2",
-        Song.photo3: "Фото 3",
+        Song.photo2: "Фото",
+        Song.photo3: "Фото",
         Song.video_url: "Посилання на відео",
         Song.stereo_audio: "Пісня",
         Song.multichannel_audio1: "Канал 1",
@@ -156,8 +156,6 @@ class SongAdmin(ModelView, model=Song):
     ]
     column_formatters = {
         Song.photo1: MediaSplitFormatter(PHOTO_FIELDS),
-    }
-    column_formatters = {
         Song.stereo_audio: format_audio,
     }
     form_overrides = {
@@ -167,11 +165,11 @@ class SongAdmin(ModelView, model=Song):
     form_args = {
         "title": {"validators": [DataRequired(message="Це поле обов'язкове")]},
         # "genres": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        #     "city": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        #     "collectors": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        #     "performers": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        #     "ethnographic_district": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        #     "recording_date": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        # "city": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        # "collectors": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        # "performers": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        # "ethnographic_district": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        # "recording_date": {"validators": [DataRequired(message="Це поле обов'язкове")]},
         "song_text": {
             "render_kw": {
                 "class": "form-control",
@@ -183,6 +181,15 @@ class SongAdmin(ModelView, model=Song):
                 "class": "form-control",
                 "rows": 3,
             },
+        },
+        **{
+            field: {
+                "widget": CustomFileInputWidget(is_required=False),
+                "validators": [
+                    MediaValidator(),
+                ],
+            }
+            for field in PHOTO_FIELDS
         },
     }
 
