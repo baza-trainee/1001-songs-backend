@@ -17,10 +17,15 @@ async def create_news_category(news_list: list[dict], session: AsyncSession):
 
 
 async def create_news(news_list: list[dict], session: AsyncSession):
+    from src.utils import write_filetype_field
+
     try:
+        field = "preview_photo"
         add_data = []
-        for region in news_list:
-            instance = News(**region)
+        for news in news_list:
+            if news[field]:
+                news[field] = await write_filetype_field(news[field])
+            instance = News(**news)
             add_data.append(instance)
         session.add_all(add_data)
         print(AFTER_NEWS_CREATE)

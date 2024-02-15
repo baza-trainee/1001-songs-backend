@@ -4,7 +4,7 @@ from .exceptions import AFTER_CATEGORY_CREATE
 from .models import ExpeditionCategory
 
 
-async def create_expedition_categories(categories:list[dict], session: AsyncSession):
+async def create_expedition_categories(categories: list[dict], session: AsyncSession):
     try:
         for category in categories:
             instance = ExpeditionCategory(**category)

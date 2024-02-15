@@ -57,9 +57,23 @@ def format_datetime(m, a):
         return field_data.strftime("%d/%m/%Y, %H:%M")
 
 
-def format_array_of_string(m, a):
+def format_date(m, a):
+    res = ""
     if field_data := getattr(m, a, None):
-        res = ""
+        res = field_data.strftime("%d/%m/%Y")
+    return res
+
+
+def format_array_of_string(m, a):
+    res = ""
+    if field_data := getattr(m, a, None):
         for data in field_data:
             res += f'<p class="grid-string-array">{data}</p>'
-        return Markup(res)
+    return Markup(res)
+
+
+def format_string_left(m, a):
+    res = ""
+    if field_data := getattr(m, a, None):
+        res += f'<p class="grid-string-left">{field_data}</p>'
+    return Markup(res)

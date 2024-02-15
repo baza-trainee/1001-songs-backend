@@ -1,14 +1,53 @@
 import base64
 import mimetypes
 import re
-from typing import Any
+from typing import Any, Optional
 
 from bs4 import BeautifulSoup
-from wtforms import ValidationError
+from markupsafe import Markup
+from sqladmin.fields import Select2TagsField, QuerySelectField
+from sqlalchemy import select
+from wtforms import Form, ValidationError, Field, widgets
+from src.admin.commons.formatters import MediaFormatter, MediaSplitFormatter
 
+from src.database.database import async_session_maker
 from src.config import settings
 from src.exceptions import MAX_FIELD_LENTH
 from src.utils import delete_photo, generate_file_name, save_photo
+
+
+class CustomFileInputWidget(widgets.FileInput):
+    """
+    File input widget with clear checkbox.
+    """
+
+    def __init__(
+        self, multiple=False, is_file: bool = False, is_required: bool = False
+    ):
+        super().__init__()
+        self.multiple = multiple
+        self.is_file = is_file
+        self.is_required = is_required
+
+    def __call__(self, field: Field, **kwargs: Any) -> str:
+        file_input = super().__call__(field, **kwargs)
+        checkbox_id = f"{field.id}_checkbox"
+        if self.multiple:
+            formatter = MediaSplitFormatter(is_file=self.is_file)
+        formatter = MediaFormatter(is_file=self.is_file)
+        checkbox_label = Markup(
+            f'<label class="form-check-label" for="{checkbox_id}">Clear</label>'
+        )
+        widget_data = formatter(field, "object_data") + file_input
+        if not self.is_required:
+            checkbox_input = Markup(
+                f'<input class="form-check-input" type="checkbox" id="{checkbox_id}" name="{checkbox_id}">'  # noqa: E501
+            )
+            checkbox = Markup(
+                f'<div class="form-check">{checkbox_input}{checkbox_label}</div>'
+            )
+            widget_data += checkbox
+        return widget_data
 
 
 async def model_change_for_editor(
@@ -86,3 +125,15 @@ async def model_change_for_files(
                 fields_to_del.append(field)
     for field in fields_to_del:
         del data[field]
+
+
+class CustomSelect2TagsField(Select2TagsField):
+    def __init__(self, model, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.model = model
+
+    async def __call__(self, **kwargs: object) -> Markup:
+        async with async_session_maker() as session:
+            query = await session.execute(select(self.model))
+            self._select_data = query.scalars().all()
+        return super().__call__(**kwargs)
