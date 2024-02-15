@@ -130,10 +130,14 @@ async def model_change_for_files(
 class CustomSelect2TagsField(Select2TagsField):
     def __init__(self, model, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.coerce
         self.model = model
 
     async def __call__(self, **kwargs: object) -> Markup:
         async with async_session_maker() as session:
             query = await session.execute(select(self.model))
-            self._select_data = query.scalars().all()
+            self.choices = query.scalars().all()
+            self.choices = list(
+                set([str(choice) for choice in self.choices] + self.data)
+            )
         return super().__call__(**kwargs)

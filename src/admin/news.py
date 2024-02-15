@@ -11,8 +11,11 @@ from src.admin.commons.formatters import (
     format_array_of_string,
     format_string_left,
 )
-from src.admin.commons.utils import model_change_for_editor
+from src.admin.commons.utils import CustomSelect2TagsField, model_change_for_editor
 from src.news.models import News, NewsCategory
+from src.our_team.models import OurTeam
+
+relation_team_fields = ["authors", "editors", "photographers"]
 
 
 class NewsCategoryAdmin(ModelView, model=NewsCategory):
@@ -43,7 +46,6 @@ class NewsAdmin(ModelView, model=News):
     category = "Розділ новин"
     icon = "fa-solid fa-kiwi-bird"
 
-    can_view_details = False
     can_export = False
 
     column_list = [
@@ -88,7 +90,12 @@ class NewsAdmin(ModelView, model=News):
         News.photographers: format_array_of_string,
         News.preview_photo: MediaFormatter(),
     }
-
+    form_overrides = {
+        **{field: CustomSelect2TagsField for field in relation_team_fields}
+    }
+    form_args = {
+        **{field: {"model": OurTeam} for field in relation_team_fields},
+    }
     form_ajax_refs = {
         "category": {
             "fields": ("name",),

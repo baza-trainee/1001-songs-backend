@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Annotated, Optional, List
 
-from pydantic import BaseModel, Field, ValidationInfo, field_validator
+from pydantic import AnyHttpUrl, BaseModel, Field, ValidationInfo, field_validator
 
 from src.config import settings
 
@@ -15,6 +15,8 @@ SLIDER_CAPTION_LEN = News.slider_caption.type.length
 AUTHORS_LEN = News.authors.type.item_type.length
 EDITORS_LEN = News.editors.type.item_type.length
 PHOTOGRAPHERS_LEN = News.photographers.type.item_type.length
+PREVIEW_PHOTO_LEN = News.preview_photo.type.length
+LOCATION_LEN = News.preview_photo.type.length
 
 
 class NewCategorySchema(BaseModel):
@@ -27,11 +29,13 @@ class NewsSchema(BaseModel):
     title: str = Field(..., max_length=TITLE_LEN)
     content: str = Field(..., max_length=CONTENT_LEN)
     slider_caption: Optional[str] = Field(None, max_length=SLIDER_CAPTION_LEN)
-    authors: Optional[List[str]] = Field(None, max_length=AUTHORS_LEN)
-    editors: Optional[List[str]] = Field(None, max_length=EDITORS_LEN)
-    photographers: Optional[List[str]] = Field(None, max_length=PHOTOGRAPHERS_LEN)
-    preview_photo: Optional[str] = Field(None)
-    location: Optional[str]
+    authors: Optional[List[Annotated[str, Field(max_length=AUTHORS_LEN)]]] = Field([])
+    editors: Optional[List[Annotated[str, Field(max_length=EDITORS_LEN)]]] = Field([])
+    photographers: Optional[
+        List[Annotated[str, Field(max_length=PHOTOGRAPHERS_LEN)]]
+    ] = Field([])
+    preview_photo: AnyHttpUrl
+    location: Optional[str] = Field(None)
     category: NewCategorySchema
     created_at: datetime
 

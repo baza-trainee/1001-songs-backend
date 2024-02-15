@@ -9,6 +9,7 @@ from src.admin.commons.formatters import (
     MediaSplitFormatter,
     format_array_of_string,
     format_quill,
+    format_string_left,
 )
 from src.admin.commons.utils import model_change_for_editor, model_change_for_files
 from src.admin.commons.validators import MediaValidator
@@ -70,10 +71,7 @@ class EducationAdmin(ModelView, model=EducationPage):
         },
     }
     column_formatters = {
-        EducationPage.recommendations: format_array_of_string,
-        EducationPage.recommended_sources: format_quill,
-    }
-    column_formatters = {
+        EducationPage.description: format_string_left,
         EducationPage.recommendations: format_quill,
         EducationPage.recommended_sources: format_array_of_string,
     }
@@ -138,6 +136,7 @@ class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory)
     column_formatters = {
         CalendarAndRitualCategory.recommended_sources: format_array_of_string,
         CalendarAndRitualCategory.media: MediaFormatter(),
+        CalendarAndRitualCategory.description: format_string_left,
     }
 
     form_args = {
@@ -257,6 +256,7 @@ class EducationPageSongGenreAdmin(ModelView, model=EducationPageSongGenre):
         **{field: {"validators": [MediaValidator()]} for field in MEDIA_FIELDS},
     }
     column_formatters = {
+        EducationPageSongGenre.description: format_string_left,
         EducationPageSongGenre.media1: MediaSplitFormatter(MEDIA_FIELDS),
     }
 
