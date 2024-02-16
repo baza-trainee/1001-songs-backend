@@ -116,8 +116,8 @@ table {
     padding: 2px;
 }
 .grid-split-image {
-    display: inline;
-    width: 80px;
+    max-width: fit-content;
+    height: 60px;
     padding: 2px;
 }
 .grid-pdf {
