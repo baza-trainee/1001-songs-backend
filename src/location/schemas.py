@@ -61,8 +61,7 @@ class FilterSongSchema(BaseModel):
     id: int = Field(..., ge=1)
     title: str = Field(...)
     song_text: Optional[str] = Field(None)
-    # performers: Optional[str] = Field(None)  Можливо пізніше треба буде включити
-    collectors: Optional[str] = Field(None)
+    collectors: Optional[List[str]] = Field(None)
     recording_date: PastDate
     stereo_audio: Optional[str] = Field(None)
     video_url: Optional[str] = Field(None)
@@ -105,16 +104,18 @@ class SongMapPageSchema(BaseModel):
     song_text: Optional[str] = Field(None)
     genres: List[str]
     video_url: Optional[AnyHttpUrl] = Field(None)
-    location: str
+    location: str = Field(..., validation_alias="city")
     ethnographic_district: Optional[str]
-    collectors: Optional[str] = Field(None)
+    collectors: Optional[List[str]] = Field(None)
     performers: Optional[str] = Field(None)
     recording_date: PastDate
     photos: Optional[List[AnyHttpUrl]] = Field(None)
     stereo_audio: Optional[str] = Field(None)
     multichannels: Optional[List[str]] = Field(None)
 
-    @field_validator("photos", "multichannels", "stereo_audio", mode="before")
+    @field_validator(
+        "photos", "multichannels", "stereo_audio", "genres", "location", mode="before"
+    )
     @classmethod
     def modify_fields(cls, value: str, info: ValidationInfo) -> str:
         match info.field_name:
@@ -127,3 +128,9 @@ class SongMapPageSchema(BaseModel):
             case "stereo_audio":
                 if value:
                     return f"{settings.BASE_URL}/{value}"
+            case "genres":
+                if value:
+                    return [genre.genre_name for genre in value.genres]
+                return []
+            case "location":
+                return f"{value.name}, {value.region.name}, {value.country.name}"

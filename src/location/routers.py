@@ -308,31 +308,10 @@ async def get_song_by_id(id: int, session: AsyncSession = Depends(get_async_sess
     Accepts the song `ID` and returns detailed information about it.
     """
     try:
-        song = await session.get(Song, id)
-        if not song:
+        record = await session.get(Song, id)
+        if not record:
             raise NoResultFound
-        city: City = song.city
-        region: Region = city.region
-        country: Country = city.country
-        location = f"{city.name}, {region.name}, {country.name}"
-        song_info = {
-            "id": song.id,
-            "title": song.title,
-            "song_text": song.song_text,
-            "genres": [genre.genre_name for genre in song.genres],
-            "video_url": song.video_url,
-            "location": location,
-            "ethnographic_district": song.ethnographic_district,
-            "collectors": song.collectors,
-            "performers": song.performers,
-            "recording_date": song.recording_date,
-            "photos": [photo for photo in song.photos if photo is not None],
-            "stereo_audio": song.stereo_audio,
-            "multichannels": [
-                channel for channel in song.multichannels if channel is not None
-            ],
-        }
-        return song_info
+        return record
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
     except Exception as e:

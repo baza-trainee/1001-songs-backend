@@ -121,7 +121,9 @@ async def get_songs_by_education_genre(
             {
                 "id": song.id,
                 "title": song.title,
-                "photos": [photo for photo in song.photos if photo is not None],
+                "photos": [
+                    photo for photo in song.ethnographic_photos if photo is not None
+                ],
                 "stereo_audio": song.stereo_audio,
                 "recording_location": f"{song.city.name}, {song.city.region.name}, {song.city.country.name}",
                 "genre": genre.title,
@@ -144,30 +146,10 @@ async def get_song_by_id(id: int, session: AsyncSession = Depends(get_async_sess
     Accepts the song `ID` and returns detailed information about it.
     """
     try:
-        song = await session.get(Song, id)
-        if not song:
+        record = await session.get(Song, id)
+        if not record:
             raise NoResultFound
-        city: City = song.city
-        region: Region = city.region
-        country: Country = city.country
-        location = f"{city.name}, {region.name}, {country.name}"
-        song_info = {
-            "id": song.id,
-            "genres": [genre.title for genre in song.education_genres],
-            "title": song.title,
-            "stereo_audio": song.stereo_audio,
-            "song_text": song.song_text,
-            "song_description": song.song_descriotion,
-            "location": location,
-            "ethnographic_district": song.ethnographic_district,
-            "collectors": song.collectors,
-            "performers": song.performers,
-            "video_url": song.video_url,
-            "comment_map": song.comment_map,  # додати поле карта (файл)
-            "map_photo": song.map_photo,  # додати поле карта (файл)
-            "photos": [photo for photo in song.photos if photo is not None],
-        }
-        return song_info
+        return record
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
     except Exception as e:
