@@ -2,7 +2,6 @@ from sqlalchemy import Column, String, ForeignKey, Integer, Float
 from sqlalchemy.orm import relationship
 
 from src.database.database import Base
-from src.our_project.models import OurProject
 
 
 class Country(Base):

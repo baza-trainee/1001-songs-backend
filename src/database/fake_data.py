@@ -646,6 +646,7 @@ FAKE_SONG = [
         "multichannel_audio4": "static/song/audio4.mp3",
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
+        "city_id": 1,
     },
     {
         "title": "Зозуленька рябенькая",
@@ -672,6 +673,7 @@ FAKE_SONG = [
         "multichannel_audio4": "static/song/audio4.mp3",
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
+        "city_id": 2,
     },
     {
         "title": "Щедрик-ведрик, дайте-2",
