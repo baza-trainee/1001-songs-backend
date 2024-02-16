@@ -1,11 +1,15 @@
-from typing import Any, List
+from typing import Any
 
 from fastapi import Request
 from sqladmin import ModelView
 from wtforms import Form, TextAreaField
 from wtforms.validators import DataRequired
 
-from src.admin.commons.formatters import MediaSplitFormatter, MediaFormatter
+from src.admin.commons.formatters import (
+    MediaSplitFormatter,
+    MediaFormatter,
+    format_array_of_string,
+)
 from src.admin.commons.utils import CustomFileInputWidget, model_change_for_files
 from src.admin.commons.validators import MediaValidator
 from src.song.models import Genre, Song
@@ -16,6 +20,11 @@ PHOTO_FIELDS = [
     "photo1",
     "photo2",
     "photo3",
+]
+ETHNOGRAPHIC_PHOTO_FIELDS = [
+    "ethnographic_photo1",
+    "ethnographic_photo2",
+    "ethnographic_photo3",
 ]
 SONG_FIELDS = [
     "stereo_audio",
@@ -73,6 +82,7 @@ class SongAdmin(ModelView, model=Song):
         Song.archive,
         Song.recording_date,
         Song.photo1,
+        Song.ethnographic_photo1,
     ]
     column_labels = {
         Song.title: "Назва",
@@ -91,6 +101,9 @@ class SongAdmin(ModelView, model=Song):
         Song.photo1: "Фото",
         Song.photo2: "Фото",
         Song.photo3: "Фото",
+        Song.ethnographic_photo1: "Етнографічне фото",
+        Song.ethnographic_photo2: "Етнографічне фото",
+        Song.ethnographic_photo3: "Етнографічне фото",
         Song.video_url: "Посилання на відео",
         Song.stereo_audio: "Пісня",
         Song.multichannel_audio1: "Канал 1",
@@ -100,33 +113,8 @@ class SongAdmin(ModelView, model=Song):
         Song.multichannel_audio5: "Канал 5",
         Song.multichannel_audio6: "Канал 6",
     }
-    column_details_list = [
-        Song.title,
-        Song.song_text,
-        Song.genres,
-        Song.performers,
-        Song.city,
-        Song.ethnographic_district,
-        Song.song_descriotion,
-        Song.collectors,
-        Song.archive,
-        Song.recording_date,
-        Song.recording_location,
-        Song.comment_map,
-        Song.photo1,
-        Song.photo2,
-        Song.photo3,
-        Song.video_url,
-        Song.stereo_audio,
-        Song.multichannel_audio1,
-        Song.multichannel_audio2,
-        Song.multichannel_audio3,
-        Song.multichannel_audio4,
-        Song.multichannel_audio5,
-        Song.multichannel_audio6,
-    ]
 
-    form_columns = [
+    column_details_list = form_columns = [
         Song.title,
         Song.song_text,
         Song.song_descriotion,
@@ -144,6 +132,9 @@ class SongAdmin(ModelView, model=Song):
         Song.photo1,
         Song.photo2,
         Song.photo3,
+        Song.ethnographic_photo1,
+        Song.ethnographic_photo2,
+        Song.ethnographic_photo3,
         Song.stereo_audio,
         Song.multichannel_audio1,
         Song.multichannel_audio2,
@@ -153,7 +144,9 @@ class SongAdmin(ModelView, model=Song):
         Song.multichannel_audio6,
     ]
     column_formatters = {
+        Song.collectors: format_array_of_string,
         Song.photo1: MediaSplitFormatter(PHOTO_FIELDS),
+        Song.ethnographic_photo1: MediaSplitFormatter(ETHNOGRAPHIC_PHOTO_FIELDS),
         Song.stereo_audio: MediaFormatter(is_audio=True),
     }
     form_overrides = {
@@ -163,6 +156,8 @@ class SongAdmin(ModelView, model=Song):
     form_args = {
         "title": {"validators": [DataRequired()]},
         "performers": {"validators": [DataRequired()]},
+        "genres": {"validators": [DataRequired()]},
+        "city": {"validators": [DataRequired()]},
         "ethnographic_district": {"validators": [DataRequired()]},
         "recording_date": {"validators": [DataRequired()]},
         "song_text": {
@@ -199,20 +194,20 @@ class SongAdmin(ModelView, model=Song):
         },
     }
 
-    form_ajax_refs = {
-        "genres": {
-            "fields": ("genre_name",),
-            "order_by": "id",
-        },
-        "education_genres": {
-            "fields": ("title",),
-            "order_by": "id",
-        },
-        "city": {
-            "fields": ("name",),
-            "order_by": "id",
-        },
-    }
+    # form_ajax_refs = {
+    #     "genres": {
+    #         "fields": ("genre_name",),
+    #         "order_by": "id",
+    #     },
+    #     "education_genres": {
+    #         "fields": ("title",),
+    #         "order_by": "id",
+    #     },
+    #     "city": {
+    #         "fields": ("name",),
+    #         "order_by": "id",
+    #     },
+    # }
 
     async def scaffold_form(self) -> type[Form]:
         form = await super().scaffold_form()
@@ -223,11 +218,15 @@ class SongAdmin(ModelView, model=Song):
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
         await model_change_for_files(
-            data, model, is_created, request, SONG_FIELDS + PHOTO_FIELDS
+            data,
+            model,
+            is_created,
+            request,
+            SONG_FIELDS + PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS,
         )
         return await super().on_model_change(data, model, is_created, request)
 
     async def on_model_delete(self, model: Any, request: Request) -> None:
-        for field in SONG_FIELDS + PHOTO_FIELDS:
+        for field in SONG_FIELDS + PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS:
             await delete_photo(getattr(model, field, None))
         return await super().on_model_delete(model, request)
