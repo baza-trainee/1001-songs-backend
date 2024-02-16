@@ -24,7 +24,7 @@ from src.education.utils import (
 )
 from src.location.utils import create_city, create_countries, create_regions
 from src.expedition.utils import create_expedition_categories, create_expeditions
-from src.song.utils import create_song_and_genre
+from src.song.utils import create_song_and_genre, create_funds
 from src.our_project.utils import create_projects
 from src.database.fake_data import (
     FAKE_ABOUT,
@@ -45,6 +45,7 @@ from src.database.fake_data import (
     FAKE_EXPED_CATEGORY,
     FAKE_PROJECTS,
     FAKE_EXPEDITIONS,
+    FAKE_FUNDS,
 )
 
 
@@ -76,6 +77,7 @@ async def lifespan(app: FastAPI):
                 await create_expedition_categories(FAKE_EXPED_CATEGORY, s)
                 await create_expeditions(FAKE_EXPEDITIONS, s)
                 await create_projects(FAKE_PROJECTS, s)
+                await create_funds(FAKE_FUNDS, s)
     await lock.release()
     yield
 

@@ -86,7 +86,21 @@ FAKE_NEWS = [
         "category_id": 2,
     },
 ]
-
+FAKE_FUNDS = [
+    {"title": "Фонд ПНДЛ етномузикології НМАУ"}, #1
+    {"title": "Фонд ПНДЛ музичної етнології ЛНМА"}, #2
+    {"title": "Приватний фонд Людмили Іваннікової"}, #3
+    {"title": "Приватний фонд Маргарити Скаженик і Олега Коробова"}, #4
+    {"title": "Приватний фонд Віктора Ковальчука"}, #5
+    {"title": "Фонд ДНЦЗСТК"}, #6
+    {"title": "Приватний фонд Ірини Телюх"}, #7
+    {"title": "Приватний фонд Елеонори Хачатрян"}, #8
+    {"title": 'Фонд ГО "Моя провінція"'}, #9
+    {"title": "Приватний фонд Івана Синельнікова"}, #10
+    {"title": "Приватний фонд Вікторії Ярмоли"}, #11
+    {"title": "Приватний фонд Ірини Клименко"}, #12
+    {"title": "Приватний фонд Лариси Лукашенко"}, #13
+]
 FAKE_COUNTRIES = [
     {"name": "Україна"},  # 1
     {"name": "Білорусь"},
@@ -485,6 +499,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 29,
+        "fund_id": random.randint(1, 4)
     },
     {
         "title": "Ой якби ж я до Київа доріженьку знала",
@@ -512,6 +527,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 20,
+        "fund_id": random.randint(1, 4)
     },
     {
         "title": "Ой ти Галино",
@@ -539,6 +555,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 33,
+        "fund_id": random.randint(1, 4)
     },
     {
         "title": "Проведу я русалочки",
@@ -566,6 +583,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 36,
+        "fund_id": random.randint(1, 4)
     },
     {
         "title": "Косив козак сіно",
@@ -593,6 +611,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 8,
+        "fund_id": random.randint(1, 4)
     },
     {
         "title": "Щедрик-ведрик, дайте",
@@ -620,6 +639,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 7,
+        "fund_id": random.randint(1, 4)
     },
     {
         "title": "А я знаю, що пан робіть",
@@ -647,6 +667,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 1,
+        "fund_id": random.randint(1, 4)
     },
     {
         "title": "Зозуленька рябенькая",
@@ -674,6 +695,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 2,
+        "fund_id": random.randint(1, 4)
     },
     {
         "title": "Щедрик-ведрик, дайте-2",
@@ -701,6 +723,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 7,
+        "fund_id": random.randint(1, 4)
     },
 ]
 LOREM = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vehicula libero nec justo convallis, nec sodales nunc pellentesque. Sed auctor efficitur sem id vestibulum. Mauris fringilla ullamcorper mauris eget pellentesque. Fusce ullamcorper elit vitae sapien tincidunt, vel molestie lacus tristique. Aliquam in ex ac risus auctor condimentum. Integer hendrerit tincidunt diam eget tempor. Integer sit amet condimentum dolor. Nullam viverra urna sit amet justo sagittis, non vehicula metus consectetur."""
@@ -1540,7 +1563,6 @@ FAKE_EDUCATION = {
         "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
     ],
 }
-
 FAKE_EXPED_CATEGORY = [
     {"title": "Розвідка"},
     {"title": "Статичний"},
@@ -1549,7 +1571,6 @@ FAKE_EXPED_CATEGORY = [
     {"title": "Відеозапис обряду"},
     {"title": "Цифровий запис"},
 ]
-
 EXPEDITIONS_TITLES = [
     "Дослідження місцевих легенд",
     "Відкриття нових культурних звичаїв",
@@ -1607,10 +1628,10 @@ FAKE_EXPEDITIONS = []
 for i in range(10):
     title = random.choice(EXPEDITIONS_TITLES)
     short_description = f"Короткий опис експедиції '{title}'"
-    map_photo = f"static/expeditions/img{i + 1}.png"
-    preview_photo = f"static/expeditions/Vector.png"
+    map_photo = f"static/expeditions/Vector.png"
+    preview_photo = f"static/expeditions/img{i + 1}.png"
     expedition_date = datetime.datetime.now().date() + datetime.timedelta(days=i + 1)
-    content = f"<p>Опис експедиції '{title}'.</p>"
+    content = f"<p>Опис експедиції &#39;{title}&#39;.</p>"
     category_id = random.randint(1, 6)
     city_id = random.randint(1, 40)
     authors = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))

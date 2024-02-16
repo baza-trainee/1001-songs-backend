@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
 from fastapi_pagination import Page
@@ -9,8 +9,14 @@ from fastapi_pagination.ext.async_sqlalchemy import paginate
 
 from src.database.database import get_async_session
 from src.exceptions import NO_DATA_FOUND
-from src.song.models import Song, Genre
-from .exceptions import NO_GENRES_FOUND, NO_REGION_FOUND, NO_CITIES_FOUND, NO_SONG_FOUND
+from src.song.models import Fund, Song, Genre
+from .exceptions import (
+    NO_FUND_FOUND,
+    NO_GENRES_FOUND,
+    NO_REGION_FOUND,
+    NO_CITIES_FOUND,
+    NO_SONG_FOUND,
+)
 from .models import Country, Region, City
 from .schemas import (
     CountrySchema,
@@ -20,10 +26,11 @@ from .schemas import (
     FilterSongSchema,
     FilterMapSchema,
     SongMapPageSchema,
+    FundFilterSchema,
 )
 
 
-location_router = APIRouter(prefix="/location", tags=["Dropdown locations"])
+location_router = APIRouter(prefix="/location", tags=["Dropdowns"])
 map_router = APIRouter(prefix="/map", tags=["Map"])
 
 
@@ -101,6 +108,8 @@ async def get_regions(
 async def get_cities(
     country_id: List[int] = Query(None),
     region_id: List[int] = Query(None),
+    genre_id: List[int] = Query(None),
+    fund_id: List[int] = Query(None),
     session: AsyncSession = Depends(get_async_session),
 ):
     """
@@ -124,6 +133,10 @@ async def get_cities(
             query = query.filter(City.region_id.in_(region_id))
         if country_id:
             query = query.filter(City.country_id.in_(country_id))
+        if genre_id:
+            query = query.filter(Song.genres.any(Genre.id.in_(genre_id)))
+        if fund_id:
+            query = query.filter(Song.fund_id.in_(fund_id))
         records = await session.execute(query)
         result = records.all()
         if not result:
@@ -200,6 +213,57 @@ async def get_genres(
         )
 
 
+@location_router.get("/funds", response_model=List[FundFilterSchema])
+async def get_funds(
+    country_id: List[int] = Query(None),
+    region_id: List[int] = Query(None),
+    city_id: List[int] = Query(None),
+    genre_id: List[int] = Query(None),
+    session: AsyncSession = Depends(get_async_session),
+):
+    try:
+        query = (
+            select(Fund.id, Fund.title, func.count(Song.id).label("count"))
+            .join(Song, Fund.id == Song.fund_id)
+            .join(City, Song.city_id == City.id)
+            .join(Region, City.region_id == Region.id)
+            .join(Country, City.country_id == Country.id)
+            .group_by(Fund.id)
+            .order_by(Fund.id)
+        )
+
+        if country_id:
+            query = query.filter(Country.id.in_(country_id))
+        if region_id:
+            query = query.filter(Region.id.in_(region_id))
+        if city_id:
+            query = query.filter(City.id.in_(city_id))
+        if genre_id:
+            query = query.join(Song.genres).filter(Genre.id.in_(genre_id))
+
+        records = await session.execute(query)
+        result = records.all()
+        if not result:
+            raise NoResultFound
+        return [
+            {
+                "id": record.id,
+                "fund_name": record.title,
+                "song_count": record.count,
+            }
+            for record in result
+        ]
+    except NoResultFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=NO_FUND_FOUND,
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
+        )
+
+
 @map_router.get("/filter/songs", response_model=Page[FilterSongSchema])
 async def filter_songs(
     search: Optional[str] = Query(None),
@@ -207,6 +271,7 @@ async def filter_songs(
     region_ids: List[int] = Query(None),
     city_ids: List[int] = Query(None),
     genre_ids: List[int] = Query(None),
+    fund_ids: List[int] = Query(None),
     session: AsyncSession = Depends(get_async_session),
 ):
     """Use this endpoint to filter songs by country, region, city, and genre. Endpoint returns paginated elements."""
@@ -219,6 +284,8 @@ async def filter_songs(
             query = query.filter(Region.id.in_(region_ids))
         if city_ids:
             query = query.filter(City.id.in_(city_ids))
+        if fund_ids:
+            query = query.filter(Song.fund_id.in_(fund_ids))
         if genre_ids:
             query = query.join(Song.genres).filter(Genre.id.in_(genre_ids))
         if search:
@@ -246,6 +313,7 @@ async def filter_song_geotags(
     region_ids: List[int] = Query(None),
     city_ids: List[int] = Query(None),
     genre_ids: List[int] = Query(None),
+    fund_ids: List[int] = Query(None),
     session: AsyncSession = Depends(get_async_session),
 ):
     """Use this endpoint to filter geotag by Country, Region, City, or Genre. Or all at once."""
@@ -272,6 +340,8 @@ async def filter_song_geotags(
             query = query.filter(Region.id.in_(region_ids))
         if city_ids:
             query = query.filter(City.id.in_(city_ids))
+        if fund_ids:
+            query = query.filter(Song.fund_id.in_(fund_ids))
         if genre_ids:
             query = query.join(Song.genres).filter(Genre.id.in_(genre_ids))
         if search:

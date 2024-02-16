@@ -44,6 +44,12 @@ class GenreFilterSchema(BaseModel):
     song_count: int = Field(..., ge=1)
 
 
+class FundFilterSchema(BaseModel):
+    id: int = Field(..., ge=1)
+    fund_name: str = Field(..., max_length=NAME_GENRE_LEN)
+    song_count: int = Field(..., ge=1)
+
+
 class CityMapSchema(BaseModel):
     latitude: Optional[float] = Field(None, examples=[51.53694777241224])
     longitude: Optional[float] = Field(None, examples=[26.98664264])
@@ -70,9 +76,10 @@ class FilterSongSchema(BaseModel):
     city: str
     genres: List[str]
     education_genres: List[str]
+    fund: str
 
     @field_validator(
-        "city", "photos", "genres", "education_genres", "stereo_audio", mode="before"
+        "city", "photos", "genres", "fund","education_genres", "stereo_audio", mode="before"
     )
     @classmethod
     def modify_fields(cls, value: str, info: ValidationInfo) -> str:
@@ -91,6 +98,8 @@ class FilterSongSchema(BaseModel):
                     return f"{city_name}, {region_name}, {country_name}"
             case "genres":
                 return [genre.genre_name for genre in value]
+            case "fund":
+                return value.title
             case "education_genres":
                 return [genre.title for genre in value]
             case "stereo_audio":

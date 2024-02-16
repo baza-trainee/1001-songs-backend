@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .models import Genre, Song
-from .exceptions import AFTER_GENRE_CREATE, AFTER_SONG_CREATE
+from .models import Genre, Song, Fund
+from .exceptions import AFTER_GENRE_CREATE, AFTER_SONG_CREATE, AFTER_FONDS_CREATE
 
 
 async def create_genre(genre_list: list[dict], session: AsyncSession):
@@ -14,6 +14,20 @@ async def create_genre(genre_list: list[dict], session: AsyncSession):
         await session.flush()
         print(AFTER_GENRE_CREATE)
         return genre_instances
+    except Exception as exc:
+        raise exc
+
+
+async def create_funds(funds_list: list[dict], session: AsyncSession):
+    try:
+        fund_instances = []
+        for fond in funds_list:
+            instance = Fund(**fond)
+            fund_instances.append(instance)
+        session.add_all(fund_instances)
+        await session.flush()
+        print(AFTER_FONDS_CREATE)
+        return fund_instances
     except Exception as exc:
         raise exc
 

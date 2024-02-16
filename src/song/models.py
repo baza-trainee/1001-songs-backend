@@ -48,6 +48,8 @@ class Song(Base):
     multichannel_audio4: str = Column(FileType(storage=storage))
     multichannel_audio5: str = Column(FileType(storage=storage))
     multichannel_audio6: str = Column(FileType(storage=storage))
+    fund_id = Column(Integer, ForeignKey("funds.id"))
+    fund = relationship("Fund", back_populates="songs", lazy="selectin")
     city_id = Column(Integer, ForeignKey("cities.id"))
     city = relationship(
         "City",
@@ -128,3 +130,15 @@ class SongToEducationGenre(Base):
     education_genre_id = Column(
         Integer, ForeignKey("education_page_song_genres.id"), primary_key=True
     )
+
+
+class Fund(Base):
+    __tablename__ = "funds"
+
+    id = Column(Integer, primary_key=True)
+    title = Column(String(100), nullable=False)
+
+    songs = relationship("Song", back_populates="fund")
+
+    def __repr__(self) -> str:
+        return f"{self.title}"

@@ -12,7 +12,7 @@ from src.admin.commons.formatters import (
 )
 from src.admin.commons.utils import CustomFileInputWidget, model_change_for_files
 from src.admin.commons.validators import MediaValidator
-from src.song.models import Genre, Song
+from src.song.models import Genre, Song, Fund
 from src.utils import delete_photo
 
 
@@ -61,6 +61,30 @@ class GenreAdmin(ModelView, model=Genre):
     }
 
 
+class FundAdmin(ModelView, model=Fund):
+    is_async = True
+
+    category = "Пісенний розділ"
+    name_plural = "Фонди"
+    icon = "fa-solid fa-layer-group"
+
+    can_edit = True
+    can_create = True
+    can_export = False
+
+    column_list = [
+        Fund.title,
+        Fund.songs
+    ]
+    column_labels = {
+        Fund.title: "Назва фонду",
+    }
+    form_excluded_columns = [Fund.songs]
+    column_details_exclude_list = [Fund.id]
+    form_args = {
+        "title": {"validators": [DataRequired()]},
+    }
+
 class SongAdmin(ModelView, model=Song):
     is_async = True
 
@@ -79,7 +103,7 @@ class SongAdmin(ModelView, model=Song):
         Song.education_genres,
         Song.performers,
         Song.collectors,
-        Song.archive,
+        Song.fund,
         Song.recording_date,
         Song.photo1,
         Song.ethnographic_photo1,
@@ -94,7 +118,7 @@ class SongAdmin(ModelView, model=Song):
         Song.ethnographic_district: "Етнографічний регіон",
         Song.song_descriotion: "Опис",
         Song.collectors: "Збирачі",
-        Song.archive: "Фонд",
+        Song.fund: "Фонд",
         Song.recording_date: "Дата запису",
         Song.recording_location: "Місце запису",
         Song.comment_map: "Коментар для карти",
@@ -122,7 +146,7 @@ class SongAdmin(ModelView, model=Song):
         Song.city,
         Song.ethnographic_district,
         Song.collectors,
-        Song.archive,
+        Song.fund,
         Song.genres,
         Song.education_genres,
         Song.recording_date,
