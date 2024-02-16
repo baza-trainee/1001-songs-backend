@@ -10,7 +10,7 @@ from .education import (
 )
 from .about import AboutAdmin
 from .location import CountryAdmin, RegionAdmin, CityAdmin
-from .song import SongAdmin, GenreAdmin
+from .song import SongAdmin, GenreAdmin, FundAdmin
 from .news import NewsAdmin
 from .expedition import ExpeditionAdmin
 from .project import OurProjectAdmin
@@ -33,4 +33,5 @@ __all__ = [
     OurProjectAdmin,
     FooterAdmin,
     PaymentAdmin,
+    FundAdmin,
 ]
