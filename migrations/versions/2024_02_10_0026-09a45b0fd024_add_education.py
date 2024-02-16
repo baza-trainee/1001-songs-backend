@@ -33,8 +33,6 @@ def upgrade() -> None:
         sa.Column("media1", FileType(storage), nullable=True),
         sa.Column("media2", FileType(storage), nullable=True),
         sa.Column("media3", FileType(storage), nullable=True),
-        sa.Column("media4", FileType(storage), nullable=True),
-        sa.Column("media5", FileType(storage), nullable=True),
         sa.PrimaryKeyConstraint("id"),
     )
     # ### end Alembic commands ###

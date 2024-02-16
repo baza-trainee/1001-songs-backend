@@ -59,7 +59,7 @@ class FooterAdmin(ModelView, model=Footer):
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
-        await model_change_for_files(data, model, is_created, FILE_FIELDS)
+        await model_change_for_files(data, model, is_created, request, FILE_FIELDS)
         return await super().on_model_change(data, model, is_created, request)
 
     async def on_model_delete(self, model: Any, request: Request) -> None:

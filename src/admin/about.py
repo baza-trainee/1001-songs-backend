@@ -31,7 +31,7 @@ class AboutAdmin(ModelView, model=About):
 
     async def scaffold_form(self) -> type[Form]:
         form = await super().scaffold_form()
-        form.is_editor_field = [
+        form.is_quill_field = [
             "content",
         ]
         del form.content.kwargs["validators"][-1]

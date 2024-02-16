@@ -6,10 +6,10 @@ from wtforms import Form
 
 from src.admin.commons.formatters import (
     MediaFormatter,
+    TextFormatter,
     format_date,
     format_quill,
     format_array_of_string,
-    format_string_left,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, model_change_for_editor
 from src.news.models import News
@@ -60,7 +60,7 @@ class NewsAdmin(ModelView, model=News):
         News.content,
     ]
     column_formatters = {
-        News.title: format_string_left,
+        News.title: TextFormatter(text_align="left"),
         News.created_at: format_date,
         News.content: format_quill,
         News.authors: format_array_of_string,
@@ -83,7 +83,7 @@ class NewsAdmin(ModelView, model=News):
 
     async def scaffold_form(self) -> type[Form]:
         form = await super().scaffold_form()
-        form.is_editor_field = [
+        form.is_quill_field = [
             "content",
         ]
         del form.content.kwargs["validators"][-1]

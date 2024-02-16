@@ -47,7 +47,7 @@ async def create_genres_for_education_page(genres: list[dict], session: AsyncSes
     from src.utils import write_filetype_field
 
     try:
-        fields = ["media1", "media2", "media3", "media4", "media5"]
+        fields = ["media1", "media2", "media3"]
         for genre in genres:
             for field in fields:
                 if genre.get(field, None):

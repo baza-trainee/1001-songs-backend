@@ -69,20 +69,18 @@ class OurProjectAdmin(ModelView, model=OurProject):
         OurProject.preview_photo: MediaFormatter(),
     }
     form_args = {
-        "title": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "short_description": {
-            "validators": [DataRequired(message="Це поле обов'язкове")]
-        },
-        "location": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "category": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "content": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "project_date": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "preview_photo": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "title": {"validators": [DataRequired()]},
+        "short_description": {"validators": [DataRequired()]},
+        "location": {"validators": [DataRequired()]},
+        "category": {"validators": [DataRequired()]},
+        "content": {"validators": [DataRequired()]},
+        "project_date": {"validators": [DataRequired()]},
+        "preview_photo": {"validators": [DataRequired()]},
     }
 
     async def scaffold_form(self) -> type[Form]:
         form = await super().scaffold_form()
-        form.is_editor_field = [
+        form.is_quill_field = [
             "content",
         ]
         del form.content.kwargs["validators"][-1]

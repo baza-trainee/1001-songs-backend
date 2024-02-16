@@ -17,10 +17,10 @@ from .project import OurProjectAdmin
 
 
 __all__ = [
-    RegionAdmin,
-    EducationAdmin,
     CountryAdmin,
+    RegionAdmin,
     CityAdmin,
+    EducationAdmin,
     GenreAdmin,
     SongAdmin,
     CalendarAndRitualCategoryAdmin,

@@ -44,9 +44,6 @@ div[class^="ql-editor"]:focus {
 }
 
 .quill-column {
-    color: #1d273b;
-    padding: 10px;
-    border: 1px solid var(--table-border);
     overflow-x: auto;
     overflow-y: scroll;
     max-height: 400px;
@@ -113,14 +110,12 @@ table {
 .table td:nth-child(n+3) {
     min-width: 150px;
 }
-
 .grid-image {
     max-width: fit-content;
     height: 120px;
     padding: 2px;
 }
 .grid-split-image {
-    /* max-width: 80px; */
     display: inline;
     width: 80px;
     padding: 2px;
@@ -135,9 +130,6 @@ table {
 .grid-audio {
     max-width: 300px; 
 }
-.form-fieldset .grid-pdf {
-    display: inline;
-}
 .grid-string-array {
     border: 1px solid #aaa;
     border-radius: 4px;
@@ -151,10 +143,18 @@ table {
     overflow: hidden;
     white-space: nowrap;
 }
-
 .grid-string-left {
     text-align: left;
 }
 .form-fieldset {
     border-color: var(--table-border-color-outer)
+}
+.form-fieldset .grid-pdf {
+    display: inline;
+}
+
+/* FORGOT PASSWORD */
+a[class^="forgot_password"] {
+    display: block;
+    padding-bottom: 20px;
 }

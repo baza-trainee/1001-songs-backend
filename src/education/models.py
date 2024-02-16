@@ -71,8 +71,6 @@ class EducationPageSongGenre(Base):
     media1: str = Column(FileType(storage=storage3))
     media2: str = Column(FileType(storage=storage3))
     media3: str = Column(FileType(storage=storage3))
-    media4: str = Column(FileType(storage=storage3))
-    media5: str = Column(FileType(storage=storage3))
     main_category_id: int = Column(
         Integer, ForeignKey("calendar_and_ritual_categories.id")
     )
@@ -91,7 +89,7 @@ class EducationPageSongGenre(Base):
 
     @property
     def media(self):
-        return [self.media1, self.media2, self.media3, self.media4, self.media5]
+        return [self.media1, self.media2, self.media3]
 
     def __repr__(self) -> str:
         return f"{self.title}"
