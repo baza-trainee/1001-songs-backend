@@ -94,7 +94,7 @@ class SongAdmin(ModelView, model=Song):
         Song.ethnographic_district: "Етнографічний регіон",
         Song.song_descriotion: "Опис",
         Song.collectors: "Збирачі",
-        Song.archive: "Архів",
+        Song.archive: "Фонд",
         Song.recording_date: "Дата запису",
         Song.recording_location: "Місце запису",
         Song.comment_map: "Коментар для карти",
@@ -174,6 +174,18 @@ class SongAdmin(ModelView, model=Song):
                 "maxlength": Song.song_descriotion.type.length,
             },
         },
+        "genres": {
+            "render_kw": {
+                "class": "form-control",
+                "rows": 20,
+            },
+        },
+        "city": {
+            "render_kw": {
+                "class": "form-control",
+                "rows": 20,
+            },
+        },
         **{
             field: {
                 "widget": CustomFileInputWidget(),
@@ -181,7 +193,7 @@ class SongAdmin(ModelView, model=Song):
                     MediaValidator(),
                 ],
             }
-            for field in PHOTO_FIELDS
+            for field in PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS
         },
         **{
             field: {
