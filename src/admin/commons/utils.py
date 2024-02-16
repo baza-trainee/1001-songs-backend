@@ -4,6 +4,7 @@ import re
 from typing import Any, Optional
 
 from bs4 import BeautifulSoup
+from fastapi import Request
 from markupsafe import Markup
 from sqladmin.fields import Select2TagsField, QuerySelectField
 from sqlalchemy import select
@@ -17,24 +18,25 @@ from src.utils import delete_photo, generate_file_name, save_photo
 
 
 class CustomFileInputWidget(widgets.FileInput):
-    """
-    File input widget with clear checkbox.
-    """
-
     def __init__(
-        self, multiple=False, is_file: bool = False, is_required: bool = False
+        self,
+        multiple=False,
+        is_file: bool = False,
+        is_required: bool = False,
+        is_audio: bool = False,
     ):
         super().__init__()
         self.multiple = multiple
         self.is_file = is_file
         self.is_required = is_required
+        self.is_audio = is_audio
 
     def __call__(self, field: Field, **kwargs: Any) -> str:
         file_input = super().__call__(field, **kwargs)
         checkbox_id = f"{field.id}_checkbox"
         if self.multiple:
             formatter = MediaSplitFormatter(is_file=self.is_file)
-        formatter = MediaFormatter(is_file=self.is_file)
+        formatter = MediaFormatter(is_file=self.is_file, is_audio=self.is_audio)
         checkbox_label = Markup(
             f'<label class="form-check-label" for="{checkbox_id}">Clear</label>'
         )
@@ -107,23 +109,27 @@ async def model_change_for_files(
     data: dict,
     model: Any,
     is_created: bool,
+    request: Request,
     fields_name: list[str] = "content",
 ):
-    fields_to_del = []
+    fields_do_not_del = []
     for field, field_data in data.items():
         if field in fields_name:
+            model_data = getattr(model, field, None)
+            if request._form.get(f"{field}_checkbox", None) == "on":
+                await delete_photo(model_data)
+                continue
             if field_data.size:
                 file_name = generate_file_name(field_data.filename)
                 if is_created:
                     data[field].filename = file_name
                 else:
-                    model_data = getattr(model, field, None)
                     if model_data and model_data != field_data.filename:
                         data[field].filename = file_name
                         await delete_photo(model_data)
             else:
-                fields_to_del.append(field)
-    for field in fields_to_del:
+                fields_do_not_del.append(field)
+    for field in fields_do_not_del:
         del data[field]
 
 

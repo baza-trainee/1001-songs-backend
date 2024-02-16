@@ -118,16 +118,16 @@ class CityAdmin(ModelView, model=City):
     ]
     form_args = {
         "country": {
-            "validators": [DataRequired(message="Це поле обов'язкове")],
+            "validators": [DataRequired()],
         },
         "region": {
-            "validators": [DataRequired(message="Це поле обов'язкове")],
+            "validators": [DataRequired()],
         },
         "latitude": {
-            "validators": [DataRequired(message="Це поле обов'язкове")],
+            "validators": [DataRequired()],
         },
         "longitude": {
-            "validators": [DataRequired(message="Це поле обов'язкове")],
+            "validators": [DataRequired()],
         },
     }
 

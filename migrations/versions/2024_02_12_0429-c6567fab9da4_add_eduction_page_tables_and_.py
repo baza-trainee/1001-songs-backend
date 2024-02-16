@@ -68,8 +68,6 @@ def upgrade() -> None:
         sa.Column("media1", FileType(storage3), nullable=True),
         sa.Column("media2", FileType(storage3), nullable=True),
         sa.Column("media3", FileType(storage3), nullable=True),
-        sa.Column("media4", FileType(storage3), nullable=True),
-        sa.Column("media5", FileType(storage3), nullable=True),
         sa.Column("main_category_id", sa.Integer(), nullable=True),
         sa.Column("sub_category_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(
@@ -117,8 +115,6 @@ def downgrade() -> None:
         sa.Column("media1", sa.VARCHAR(), autoincrement=False, nullable=True),
         sa.Column("media2", sa.VARCHAR(), autoincrement=False, nullable=True),
         sa.Column("media3", sa.VARCHAR(), autoincrement=False, nullable=True),
-        sa.Column("media4", sa.VARCHAR(), autoincrement=False, nullable=True),
-        sa.Column("media5", sa.VARCHAR(), autoincrement=False, nullable=True),
         sa.PrimaryKeyConstraint("id", name="education_section_pkey"),
     )
     op.drop_table("song_education_genre_association")

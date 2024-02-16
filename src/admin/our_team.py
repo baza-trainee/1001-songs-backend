@@ -41,6 +41,7 @@ class OurTeamAdmin(ModelView, model=OurTeam):
             "render_kw": {
                 "class": "form-control",
                 "rows": 5,
+                "maxlength": OurTeam.description.type.length,
             },
         },
     }
@@ -53,7 +54,7 @@ class OurTeamAdmin(ModelView, model=OurTeam):
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
         fields = ["photo"]
-        await model_change_for_files(data, model, is_created, fields)
+        await model_change_for_files(data, model, is_created, request, fields)
         return await super().on_model_change(data, model, is_created, request)
 
     async def on_model_delete(self, model: Any, request: Request) -> None:

@@ -4,7 +4,6 @@ from typing import Annotated, Optional, List
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationInfo, field_validator
 
 from src.config import settings
-
 from .models import NewsCategory, News
 
 
@@ -24,20 +23,13 @@ class NewCategorySchema(BaseModel):
     name: str = Field(..., max_length=NAME_LEN)
 
 
-class NewsSchema(BaseModel):
+class NewsSchemaList(BaseModel):
     id: int = Field(..., ge=1)
     title: str = Field(..., max_length=TITLE_LEN)
-    content: str = Field(..., max_length=CONTENT_LEN)
-    slider_caption: Optional[str] = Field(None, max_length=SLIDER_CAPTION_LEN)
-    authors: Optional[List[Annotated[str, Field(max_length=AUTHORS_LEN)]]] = Field([])
-    editors: Optional[List[Annotated[str, Field(max_length=EDITORS_LEN)]]] = Field([])
-    photographers: Optional[
-        List[Annotated[str, Field(max_length=PHOTOGRAPHERS_LEN)]]
-    ] = Field([])
     preview_photo: AnyHttpUrl
-    location: Optional[str] = Field(None)
-    category: NewCategorySchema
     created_at: datetime
+    category: NewCategorySchema
+    location: Optional[str] = Field(None)
 
     @field_validator("location", "preview_photo", mode="before")
     @classmethod
@@ -48,3 +40,13 @@ class NewsSchema(BaseModel):
             case "preview_photo":
                 if value:
                     return f"{settings.BASE_URL}/{value}"
+
+
+class NewsSchema(NewsSchemaList):
+    content: str = Field(..., max_length=CONTENT_LEN)
+    slider_caption: Optional[str] = Field(None, max_length=SLIDER_CAPTION_LEN)
+    authors: Optional[List[Annotated[str, Field(max_length=AUTHORS_LEN)]]] = Field([])
+    editors: Optional[List[Annotated[str, Field(max_length=EDITORS_LEN)]]] = Field([])
+    photographers: Optional[
+        List[Annotated[str, Field(max_length=PHOTOGRAPHERS_LEN)]]
+    ] = Field([])

@@ -67,17 +67,15 @@ class ExpeditionAdmin(ModelView, model=Expedition):
         Expedition.preview_photo: MediaFormatter(),
     }
     form_args = {
-        "category": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "location": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        "expedition_date": {
-            "validators": [DataRequired(message="Це поле обов'язкове")]
-        },
-        "content": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "category": {"validators": [DataRequired()]},
+        "location": {"validators": [DataRequired()]},
+        "expedition_date": {"validators": [DataRequired()]},
+        "content": {"validators": [DataRequired()]},
     }
 
     async def scaffold_form(self) -> type[Form]:
         form = await super().scaffold_form()
-        form.is_editor_field = [
+        form.is_quill_field = [
             "content",
         ]
         del form.content.kwargs["validators"][-1]

@@ -1,11 +1,11 @@
-from typing import Any
+from typing import Any, List
 
 from fastapi import Request
 from sqladmin import ModelView
-from wtforms import TextAreaField
+from wtforms import Form, TextAreaField
 from wtforms.validators import DataRequired
-from src.admin.commons.formatters import MediaSplitFormatter, format_audio
 
+from src.admin.commons.formatters import MediaSplitFormatter, MediaFormatter
 from src.admin.commons.utils import CustomFileInputWidget, model_change_for_files
 from src.admin.commons.validators import MediaValidator
 from src.song.models import Genre, Song
@@ -41,14 +41,15 @@ class GenreAdmin(ModelView, model=Genre):
 
     column_list = [
         Genre.genre_name,
-        Genre.songs,
     ]
     column_labels = {
         Genre.genre_name: "Назва жанру",
-        Genre.songs: "Пісні",
     }
     form_excluded_columns = [Genre.songs]
     column_details_exclude_list = [Genre.id]
+    form_args = {
+        "genre_name": {"validators": [DataRequired()]},
+    }
 
 
 class SongAdmin(ModelView, model=Song):
@@ -84,7 +85,6 @@ class SongAdmin(ModelView, model=Song):
         Song.song_descriotion: "Опис",
         Song.collectors: "Збирачі",
         Song.archive: "Архів",
-        Song.source: "source",
         Song.recording_date: "Дата запису",
         Song.recording_location: "Місце запису",
         Song.comment_map: "Коментар для карти",
@@ -110,7 +110,6 @@ class SongAdmin(ModelView, model=Song):
         Song.song_descriotion,
         Song.collectors,
         Song.archive,
-        Song.source,
         Song.recording_date,
         Song.recording_location,
         Song.comment_map,
@@ -136,7 +135,6 @@ class SongAdmin(ModelView, model=Song):
         Song.ethnographic_district,
         Song.collectors,
         Song.archive,
-        Song.source,
         Song.genres,
         Song.education_genres,
         Song.recording_date,
@@ -156,40 +154,48 @@ class SongAdmin(ModelView, model=Song):
     ]
     column_formatters = {
         Song.photo1: MediaSplitFormatter(PHOTO_FIELDS),
-        Song.stereo_audio: format_audio,
+        Song.stereo_audio: MediaFormatter(is_audio=True),
     }
     form_overrides = {
         "song_text": TextAreaField,
         "song_descriotion": TextAreaField,
     }
     form_args = {
-        "title": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        # "genres": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        # "city": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        # "collectors": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        # "performers": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        # "ethnographic_district": {"validators": [DataRequired(message="Це поле обов'язкове")]},
-        # "recording_date": {"validators": [DataRequired(message="Це поле обов'язкове")]},
+        "title": {"validators": [DataRequired()]},
+        "performers": {"validators": [DataRequired()]},
+        "ethnographic_district": {"validators": [DataRequired()]},
+        "recording_date": {"validators": [DataRequired()]},
         "song_text": {
             "render_kw": {
                 "class": "form-control",
                 "rows": 5,
+                "maxlength": Song.song_text.type.length,
             },
         },
         "song_descriotion": {
             "render_kw": {
                 "class": "form-control",
                 "rows": 3,
+                "maxlength": Song.song_descriotion.type.length,
             },
         },
         **{
             field: {
-                "widget": CustomFileInputWidget(is_required=False),
+                "widget": CustomFileInputWidget(),
                 "validators": [
                     MediaValidator(),
                 ],
             }
             for field in PHOTO_FIELDS
+        },
+        **{
+            field: {
+                "widget": CustomFileInputWidget(is_audio=True),
+                "validators": [
+                    MediaValidator(),
+                ],
+            }
+            for field in SONG_FIELDS
         },
     }
 
@@ -208,11 +214,16 @@ class SongAdmin(ModelView, model=Song):
         },
     }
 
+    async def scaffold_form(self) -> type[Form]:
+        form = await super().scaffold_form()
+        # form.city.kwargs["validators"] = form.genres.kwargs["validators"] = [DataRequired()]
+        return form
+
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
         await model_change_for_files(
-            data, model, is_created, SONG_FIELDS + PHOTO_FIELDS
+            data, model, is_created, request, SONG_FIELDS + PHOTO_FIELDS
         )
         return await super().on_model_change(data, model, is_created, request)
 
