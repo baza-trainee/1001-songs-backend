@@ -60,7 +60,7 @@ class FilterMapSchema(BaseModel):
     city: str
     latitude: float = Field(..., examples=[51.53694777241224])
     longitude: Optional[float] = Field(..., examples=[26.98664264])
-    count: int = Field(..., ge=1)
+    song_count: int = Field(..., ge=1)
 
 
 class FilterSongSchema(BaseModel):
@@ -79,7 +79,13 @@ class FilterSongSchema(BaseModel):
     fund: str
 
     @field_validator(
-        "city", "photos", "genres", "fund","education_genres", "stereo_audio", mode="before"
+        "city",
+        "photos",
+        "genres",
+        "fund",
+        "education_genres",
+        "stereo_audio",
+        mode="before",
     )
     @classmethod
     def modify_fields(cls, value: str, info: ValidationInfo) -> str:
