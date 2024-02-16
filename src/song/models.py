@@ -1,4 +1,14 @@
-from sqlalchemy import Column, String, Date, DateTime, Text, ForeignKey, Integer, func
+from sqlalchemy import (
+    ARRAY,
+    Column,
+    String,
+    Date,
+    DateTime,
+    Text,
+    ForeignKey,
+    Integer,
+    func,
+)
 from sqlalchemy.orm import relationship
 from fastapi_storages.integrations.sqlalchemy import FileType
 from fastapi_storages import FileSystemStorage
@@ -19,8 +29,7 @@ class Song(Base):
     recording_date = Column(Date)
     performers = Column(String(200))
     ethnographic_district = Column(String(100))
-    collectors = Column(String(200))
-    source = Column(String(200))
+    collectors: list[str] = Column(ARRAY(String(100)), nullable=True)
     archive = Column(String(255))
     recording_location = Column(String(100))
     comment_map: str = Column(String(500))
@@ -29,6 +38,9 @@ class Song(Base):
     photo1: str = Column(FileType(storage=storage))
     photo2: str = Column(FileType(storage=storage))
     photo3: str = Column(FileType(storage=storage))
+    ethnographic_photo1: str = Column(FileType(storage=storage))
+    ethnographic_photo2: str = Column(FileType(storage=storage))
+    ethnographic_photo3: str = Column(FileType(storage=storage))
     stereo_audio: str = Column(FileType(storage=storage))
     multichannel_audio1: str = Column(FileType(storage=storage))
     multichannel_audio2: str = Column(FileType(storage=storage))
@@ -61,6 +73,14 @@ class Song(Base):
             self.photo1,
             self.photo2,
             self.photo3,
+        ]
+
+    @property
+    def ethnographic_photos(self):
+        return [
+            self.ethnographic_photo1,
+            self.ethnographic_photo2,
+            self.ethnographic_photo3,
         ]
 
     @property

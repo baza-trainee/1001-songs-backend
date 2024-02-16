@@ -92,31 +92,40 @@ class SongsSchema(BaseModel):
 
 class OneSongSchema(BaseModel):
     id: int = Field(..., ge=1)
-    genres: Optional[List[str]]
+    genres: List[str] = Field(..., validation_alias="education_genres")
     title: str = Field(..., max_length=TITLE_LEN)
     stereo_audio: Optional[AnyHttpUrl] = Field(None)
-    song_text: Optional[str]
-    song_description: Optional[str]
-    location: str
+    song_text: Optional[str] = Field(None)
+    song_description: Optional[str] = Field(None)
+    location: str = Field(..., validation_alias="city")
     ethnographic_district: str
-    collectors: str
+    collectors: Optional[List[str]] = Field(None)
     performers: str
-    video_url: Optional[str]
-    comment_map: Optional[str]
-    map_photo: Optional[AnyHttpUrl]
-    photos: Optional[List[AnyHttpUrl]] = Field(None, max_items=5)
+    video_url: Optional[AnyHttpUrl] = Field(None)
+    comment_map: Optional[str] = Field(None)
+    map_photo: Optional[AnyHttpUrl] = Field(None)
+    photos: Optional[List[AnyHttpUrl]] = Field(
+        None, max_items=5, validation_alias="ethnographic_photos"
+    )
 
-    @field_validator("photos", "stereo_audio", "map_photo", mode="before")
+    @field_validator(
+        "photos", "stereo_audio", "map_photo", "location", "genres", mode="before"
+    )
     @classmethod
-    def add_base_url(cls, value: List[str], info: ValidationInfo) -> str:
-        if isinstance(value, list):
-            result = []
-            for url in value:
-                if url:
-                    result.append(f"{settings.BASE_URL}/{url}")
-            return result
-        else:
-            if value:
-                return f"{settings.BASE_URL}/{value}"
-            else:
-                return None
+    def modify_fields(cls, value: str, info: ValidationInfo) -> str:
+        match info.field_name:
+            case "photos":
+                result = []
+                for url in value:
+                    if url:
+                        result.append(f"{settings.BASE_URL}/{url}")
+                return result
+            case "stereo_audio" | "map_photo":
+                if value:
+                    return f"{settings.BASE_URL}/{value}"
+            case "genres":
+                if value:
+                    return [genre.title for genre in value]
+                return []
+            case "location":
+                return f"{value.name}, {value.region.name}, {value.country.name}"

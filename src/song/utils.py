@@ -38,6 +38,9 @@ async def create_song_and_genre(
             "multichannel_audio4",
             "multichannel_audio5",
             "multichannel_audio6",
+            "ethnographic_photo1",
+            "ethnographic_photo2",
+            "ethnographic_photo3",
         ]
         song_instances = []
         for song in songs_list:
