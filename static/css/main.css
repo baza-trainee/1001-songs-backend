@@ -152,6 +152,10 @@ table {
 .form-fieldset .grid-pdf {
     display: inline;
 }
+select[id="education_genres"],
+select[id="genres"] {
+    height: 200px;
+}
 
 /* FORGOT PASSWORD */
 a[class^="forgot_password"] {
