@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy import func, or_, select
+from sqlalchemy import distinct, func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
 from fastapi_pagination import Page
@@ -58,7 +58,11 @@ async def get_countries(session: AsyncSession = Depends(get_async_session)):
 
 @location_router.get("/regions", response_model=List[RegionSchema])
 async def get_regions(
-    id: List[int] = Query(None), session: AsyncSession = Depends(get_async_session)
+    country_id: List[int] = Query(None),
+    genre_id: List[int] = Query(None),
+    fund_id: List[int] = Query(None),
+    city_id: List[int] = Query(None),
+    session: AsyncSession = Depends(get_async_session),
 ):
     """
     Use this endpoint to retrieve regions. You can filter them by country by passing one or more **country ID**s.
@@ -69,7 +73,7 @@ async def get_regions(
                 Region.id,
                 Region.name,
                 Region.country_id,
-                func.count(Song.id).label("count"),
+                func.count(distinct(Song.id)).label("count"),
             )
             .join(City, Region.id == City.region_id)
             .join(Song)
@@ -77,8 +81,14 @@ async def get_regions(
             .order_by(Region.name)
         )
 
-        if id:
-            query = query.filter(Region.country_id.in_(id))
+        if country_id:
+            query = query.filter(Region.country_id.in_(country_id))
+        if city_id:
+            query = query.filter(City.id.in_(city_id))
+        if genre_id:
+            query = query.join(Song.genres).filter(Genre.id.in_(genre_id))
+        if fund_id:
+            query = query.filter(Song.fund_id.in_(fund_id))
 
         records = await session.execute(query)
         result: List[Region] = records.all()
@@ -167,6 +177,7 @@ async def get_genres(
     country_id: List[int] = Query(None),
     region_id: List[int] = Query(None),
     city_id: List[int] = Query(None),
+    fund_id: List[int] = Query(None),
     session: AsyncSession = Depends(get_async_session),
 ):
     """
@@ -179,6 +190,7 @@ async def get_genres(
             .join(City, Song.city_id == City.id)
             .join(Region, City.region_id == Region.id)
             .join(Country, City.country_id == Country.id)
+            .join(Fund, Song.fund_id == Fund.id)
             .group_by(Genre.id)
             .order_by(Genre.id)
         )
@@ -189,6 +201,8 @@ async def get_genres(
             query = query.filter(Region.id.in_(region_id))
         if city_id:
             query = query.filter(City.id.in_(city_id))
+        if fund_id:
+            query = query.filter(Song.fund_id.in_(fund_id))
 
         records = await session.execute(query)
         result = records.all()
