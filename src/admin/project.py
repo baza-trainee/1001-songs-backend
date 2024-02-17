@@ -7,7 +7,7 @@ from src.admin.commons.formatters import (
     format_array_of_string,
 )
 from src.admin.commons.utils import MediaInputWidget
-from src.admin.commons.validators import MediaValidator
+from src.admin.commons.validators import MediaValidator, QuillValidator
 from src.our_project.models import OurProject
 
 
@@ -28,7 +28,6 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
         OurProject.recording: "Запис",
     }
     form_columns = column_details_list = [
-        OurProject.content,
         OurProject.title,
         OurProject.short_description,
         OurProject.preview_photo,
@@ -38,14 +37,15 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
         OurProject.editors,
         OurProject.photographers,
         OurProject.recording,
+        OurProject.content,
     ]
     column_list = [
+        OurProject.content,
         OurProject.title,
         OurProject.location,
         OurProject.project_date,
         OurProject.short_description,
         OurProject.preview_photo,
-        OurProject.content,
         OurProject.authors,
         OurProject.editors,
         OurProject.photographers,
@@ -66,15 +66,22 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
     form_files_list = [
         OurProject.preview_photo,
     ]
+    column_searchable_list = [
+        OurProject.title,
+    ]
+    column_sortable_list = [
+        OurProject.project_date,
+    ]
+    column_default_sort = ("project_date", True)
     form_args = {
         "title": {"validators": [DataRequired()]},
         "short_description": {"validators": [DataRequired()]},
         "location": {"validators": [DataRequired()]},
         "category": {"validators": [DataRequired()]},
-        "content": {"validators": [DataRequired()]},
+        "content": {"validators": [QuillValidator()]},
         "project_date": {"validators": [DataRequired()]},
         "preview_photo": {
-            "validators": [MediaValidator()],
             "widget": MediaInputWidget(is_required=True),
+            "validators": [MediaValidator(is_required=True)],
         },
     }

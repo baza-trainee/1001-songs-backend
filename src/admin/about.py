@@ -1,6 +1,6 @@
 from src.about.models import About
 from src.admin.commons.base import BaseAdmin
-from src.admin.commons.formatters import TextFormatter, format_quill
+from src.admin.commons.formatters import format_quill
 from src.admin.commons.validators import QuillValidator
 
 
@@ -15,7 +15,6 @@ class AboutAdmin(BaseAdmin, model=About):
     column_labels = {
         About.title: "Заголовок",
         About.content: "Контент",
-        About.slider_caption: "Підпис до слайдера",
     }
     column_exclude_list = column_details_exclude_list = [
         About.id,

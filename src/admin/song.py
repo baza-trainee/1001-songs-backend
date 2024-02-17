@@ -5,10 +5,12 @@ from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import (
     PhotoSplitFormatter,
     MediaFormatter,
+    TextFormatter,
     format_array_of_string,
 )
-from src.admin.commons.utils import MediaInputWidget
+from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
 from src.admin.commons.validators import MediaValidator
+from src.our_team.models import OurTeam
 from src.song.models import Genre, Song, Fund
 
 PHOTO_FIELDS = [
@@ -56,8 +58,12 @@ class FundAdmin(BaseAdmin, model=Fund):
     column_labels = {
         Fund.title: "Назва фонду",
     }
-    column_list = form_columns = column_details_list = [
+    column_list = form_columns = [
         Fund.title,
+    ]
+    column_details_list = [
+        Fund.title,
+        Fund.songs,
     ]
     form_args = {
         "title": {"validators": [DataRequired()]},
@@ -101,6 +107,7 @@ class SongAdmin(BaseAdmin, model=Song):
     column_list = [
         Song.title,
         Song.stereo_audio,
+        Song.song_text,
         Song.photo1,
         Song.ethnographic_photo1,
         Song.recording_date,
@@ -139,7 +146,16 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.multichannel_audio5,
         Song.multichannel_audio6,
     ]
+    column_searchable_list = [
+        Song.title,
+        Song.song_text,
+    ]
+    column_sortable_list = [
+        Song.recording_date,
+    ]
+    column_default_sort = ("recording_date", True)
     column_formatters = {
+        Song.song_text: TextFormatter(text_align="left", min_width=200),
         Song.collectors: format_array_of_string,
         Song.photo1: PhotoSplitFormatter(PHOTO_FIELDS),
         Song.ethnographic_photo1: PhotoSplitFormatter(ETHNOGRAPHIC_PHOTO_FIELDS),

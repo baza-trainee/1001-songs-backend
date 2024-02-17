@@ -27,7 +27,7 @@ class News(Base):
     id: int = Column(Integer, primary_key=True)
     title: str = Column(String(250), nullable=False)
     content: str = Column(String(10000), nullable=False)
-    slider_caption: str = Column(String(100), nullable=True)
+    short_description: str = Column(String(120), nullable=False)
     authors: list[str] = Column(ARRAY(String(100)), nullable=True)
     editors: list[str] = Column(ARRAY(String(100)), nullable=True)
     photographers: list[str] = Column(ARRAY(String(100)), nullable=True)

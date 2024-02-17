@@ -36,7 +36,7 @@ def upgrade() -> None:
         sa.Column("id", sa.Integer(), nullable=False),
         sa.Column("title", sa.String(length=250), nullable=False),
         sa.Column("content", sa.String(length=10000), nullable=False),
-        sa.Column("slider_caption", sa.String(length=100), nullable=True),
+        sa.Column("short_description", sa.String(length=120), nullable=False),
         sa.Column("authors", sa.ARRAY(sa.String(length=100)), nullable=True),
         sa.Column("editors", sa.ARRAY(sa.String(length=100)), nullable=True),
         sa.Column("photographers", sa.ARRAY(sa.String(length=100)), nullable=True),

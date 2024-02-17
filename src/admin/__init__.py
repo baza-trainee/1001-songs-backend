@@ -34,5 +34,5 @@ __all__ = [
     FooterAdmin,
     PaymentAdmin,
     FundAdmin,
-    ChangePasswordAdmin
+    ChangePasswordAdmin,
 ]
