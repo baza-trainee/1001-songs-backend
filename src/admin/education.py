@@ -1,64 +1,52 @@
-from typing import Any
-
-from fastapi import Request
-from sqladmin import ModelView
-from wtforms import TextAreaField, Form
+from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 
+from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import (
     MediaFormatter,
-    MediaSplitFormatter,
+    PhotoSplitFormatter,
     TextFormatter,
     format_array_of_string,
     format_quill,
 )
-from src.admin.commons.utils import (
-    CustomFileInputWidget,
-    model_change_for_editor,
-    model_change_for_files,
-)
-from src.admin.commons.validators import MediaValidator
+from src.admin.commons.utils import MediaInputWidget
+from src.admin.commons.validators import MediaValidator, QuillValidator
 from src.education.models import (
     EducationPage,
     CalendarAndRitualCategory,
     SongSubcategory,
     EducationPageSongGenre,
 )
-from src.utils import delete_photo
 
-MEDIA_FIELDS = [
+EDUCATION_PAGE_PHOTO_FIELDS = [
     "media1",
     "media2",
     "media3",
 ]
 
 
-class EducationAdmin(ModelView, model=EducationPage):
-    is_async = True
-
-    can_edit = True
-    can_create = False
-    can_delete = False
-    can_export = False
-
+class EducationAdmin(BaseAdmin, model=EducationPage):
     category = "Освітний розділ"
     name_plural = "Загальна інформація"
     icon = "fa-solid fa-user-graduate"
 
-    column_list = column_details_list = [
-        EducationPage.title,
-        EducationPage.description,
-        EducationPage.recommendations,
-        EducationPage.recommended_sources,
-    ]
+    can_create = False
+    can_delete = False
+
     column_labels = {
         EducationPage.title: "Заголовок розділу",
         EducationPage.description: "Опис",
         EducationPage.recommendations: "Рекомендації",
         EducationPage.recommended_sources: "Рекомендовані джерела",
     }
+    column_list = column_details_list = form_columns = [
+        EducationPage.title,
+        EducationPage.description,
+        EducationPage.recommendations,
+        EducationPage.recommended_sources,
+    ]
     column_formatters = {
-        EducationPage.description: TextFormatter(text_align="left", min_width=250),
+        EducationPage.description: TextFormatter(text_align="left", min_width=300),
         EducationPage.recommendations: format_quill,
         EducationPage.recommended_sources: format_array_of_string,
     }
@@ -77,39 +65,22 @@ class EducationAdmin(ModelView, model=EducationPage):
         "title": {
             "validators": [DataRequired()],
         },
+        "recommendations": {"validators": [QuillValidator()]},
     }
-
-    async def scaffold_form(self) -> type[Form]:
-        form = await super().scaffold_form()
-        form.is_quill_field = [
-            "recommendations",
-        ]
-        return form
-
-    async def on_model_change(
-        self, data: dict, model: Any, is_created: bool, request: Request
-    ) -> None:
-        await model_change_for_editor(data, model, field_name="recommendations")
-        return await super().on_model_change(data, model, is_created, request)
+    form_quill_list = [
+        EducationPage.recommendations,
+    ]
 
 
-class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory):
-    is_async = True
-
+class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory):
     name_plural = "Освітні категорії"
     category = "Освітний розділ"
     icon = "fa-solid fa-layer-group"
 
     can_create = False
     can_delete = False
-    can_export = False
-    column_list = [
-        CalendarAndRitualCategory.title,
-        CalendarAndRitualCategory.media,
-        CalendarAndRitualCategory.description,
-        CalendarAndRitualCategory.recommended_sources,
-    ]
-    column_details_list = [
+
+    column_list = column_details_list = form_columns = [
         CalendarAndRitualCategory.title,
         CalendarAndRitualCategory.media,
         CalendarAndRitualCategory.description,
@@ -117,6 +88,7 @@ class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory)
         CalendarAndRitualCategory.education_genres,
         CalendarAndRitualCategory.song_subcategories,
     ]
+
     column_labels = {
         CalendarAndRitualCategory.title: "Назва категорії",
         CalendarAndRitualCategory.media: "Фото",
@@ -125,12 +97,7 @@ class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory)
         CalendarAndRitualCategory.education_genres: "Жанри",
         CalendarAndRitualCategory.song_subcategories: "Підкатегорії",
     }
-    form_columns = [
-        CalendarAndRitualCategory.title,
-        CalendarAndRitualCategory.media,
-        CalendarAndRitualCategory.description,
-        CalendarAndRitualCategory.recommended_sources,
-    ]
+
     column_formatters = {
         CalendarAndRitualCategory.recommended_sources: format_array_of_string,
         CalendarAndRitualCategory.media: MediaFormatter(),
@@ -138,7 +105,9 @@ class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory)
             text_align="left", min_width=250
         ),
     }
-
+    form_files_list = [
+        CalendarAndRitualCategory.media,
+    ]
     form_overrides = {
         "description": TextAreaField,
     }
@@ -162,38 +131,21 @@ class CalendarAndRitualCategoryAdmin(ModelView, model=CalendarAndRitualCategory)
         },
         "media": {
             "validators": [MediaValidator()],
-            "widget": CustomFileInputWidget(is_required=True),
+            "widget": MediaInputWidget(is_required=True),
         },
     }
 
-    async def on_model_change(
-        self, data: dict, model: Any, is_created: bool, request: Request
-    ) -> None:
-        fields = ["media"]
-        await model_change_for_files(data, model, is_created, request, fields)
-        return await super().on_model_change(data, model, is_created, request)
 
-    async def on_model_delete(self, model: Any, request: Request) -> None:
-        field_data = getattr(model, "media", None)
-        await delete_photo(field_data)
-        return await super().on_model_delete(model, request)
-
-
-class SongSubcategoryAdmin(ModelView, model=SongSubcategory):
-    is_async = True
-
+class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
     name_plural = "Освітні під-категорії"
     category = "Освітний розділ"
     icon = "fa-solid fa-layer-group"
 
-    can_create = True
-    can_delete = True
-    can_export = False
-
-    column_list = [
-        SongSubcategory.media,
+    column_list = column_details_list = form_columns = [
         SongSubcategory.title,
+        SongSubcategory.media,
         SongSubcategory.main_category,
+        SongSubcategory.education_genres,
     ]
     column_labels = {
         SongSubcategory.title: "Назва під-категорії",
@@ -201,24 +153,16 @@ class SongSubcategoryAdmin(ModelView, model=SongSubcategory):
         SongSubcategory.main_category: "Розділ",
         SongSubcategory.education_genres: "Жанри",
     }
-    form_columns = [
-        SongSubcategory.title,
-        SongSubcategory.media,
-        SongSubcategory.main_category,
-    ]
-    column_details_list = [
-        SongSubcategory.title,
-        SongSubcategory.media,
-        SongSubcategory.main_category,
-        SongSubcategory.education_genres,
-    ]
     column_formatters = {
         SongSubcategory.media: MediaFormatter(),
     }
+    form_files_list = [
+        SongSubcategory.media,
+    ]
     form_args = {
         "media": {
             "validators": [MediaValidator()],
-            "widget": CustomFileInputWidget(is_required=True),
+            "widget": MediaInputWidget(is_required=True),
         }
     }
     form_ajax_refs = {
@@ -228,30 +172,20 @@ class SongSubcategoryAdmin(ModelView, model=SongSubcategory):
         },
     }
 
-    async def on_model_change(
-        self, data: dict, model: Any, is_created: bool, request: Request
-    ) -> None:
-        fields = ["media"]
-        await model_change_for_files(data, model, is_created, request, fields)
-        return await super().on_model_change(data, model, is_created, request)
 
-    async def on_model_delete(self, model: Any, request: Request) -> None:
-        field_data = getattr(model, "media", None)
-        await delete_photo(field_data)
-        return await super().on_model_delete(model, request)
-
-
-class EducationPageSongGenreAdmin(ModelView, model=EducationPageSongGenre):
-    is_async = True
-
+class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
     name_plural = "Освітні жанри"
     category = "Освітний розділ"
     icon = "fa-solid fa-layer-group"
 
-    can_create = True
-    can_delete = True
-    can_export = False
-
+    column_labels = {
+        EducationPageSongGenre.title: "Назва жанру",
+        EducationPageSongGenre.sub_category: "Категорія",
+        EducationPageSongGenre.description: "Опис",
+        EducationPageSongGenre.media1: "Фото",
+        EducationPageSongGenre.media2: "Фото",
+        EducationPageSongGenre.media3: "Фото",
+    }
     column_list = [
         EducationPageSongGenre.title,
         EducationPageSongGenre.description,
@@ -266,21 +200,14 @@ class EducationPageSongGenreAdmin(ModelView, model=EducationPageSongGenre):
         EducationPageSongGenre.media2,
         EducationPageSongGenre.media3,
     ]
-    column_labels = {
-        EducationPageSongGenre.title: "Назва жанру",
-        EducationPageSongGenre.sub_category: "Категорія",
-        EducationPageSongGenre.description: "Опис",
-        EducationPageSongGenre.media1: "Фото",
-        EducationPageSongGenre.media2: "Фото",
-        EducationPageSongGenre.media3: "Фото",
-    }
+
     column_formatters = {
         EducationPageSongGenre.description: TextFormatter(
             text_align="left", min_width=250
         ),
-        EducationPageSongGenre.media1: MediaSplitFormatter(MEDIA_FIELDS),
+        EducationPageSongGenre.media1: PhotoSplitFormatter(EDUCATION_PAGE_PHOTO_FIELDS),
     }
-
+    form_files_list = EDUCATION_PAGE_PHOTO_FIELDS
     form_overrides = {
         "description": TextAreaField,
     }
@@ -296,9 +223,9 @@ class EducationPageSongGenreAdmin(ModelView, model=EducationPageSongGenre):
         **{
             field: {
                 "validators": [MediaValidator()],
-                "widget": CustomFileInputWidget(),
+                "widget": MediaInputWidget(),
             }
-            for field in MEDIA_FIELDS
+            for field in EDUCATION_PAGE_PHOTO_FIELDS
         },
     }
     form_ajax_refs = {
@@ -307,15 +234,3 @@ class EducationPageSongGenreAdmin(ModelView, model=EducationPageSongGenre):
             "order_by": "id",
         },
     }
-
-    async def on_model_change(
-        self, data: dict, model: Any, is_created: bool, request: Request
-    ) -> None:
-        await model_change_for_files(data, model, is_created, request, MEDIA_FIELDS)
-        return await super().on_model_change(data, model, is_created, request)
-
-    async def on_model_delete(self, model: Any, request: Request) -> None:
-        for field in MEDIA_FIELDS:
-            field_data = getattr(model, field, None)
-            await delete_photo(field_data)
-        return await super().on_model_delete(model, request)

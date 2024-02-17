@@ -15,7 +15,7 @@
               {% if field.errors %}
               {{ field(class_="form-control is-invalid") }}
               {% else %}
-              {% if field.name in form.is_quill_field %}
+              {% if field.name in form.quill_list %}
               {% include 'editor.html' %}
               {% else %}
               {{ field() }}

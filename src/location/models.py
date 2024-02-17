@@ -57,4 +57,4 @@ class City(Base):
     news = relationship("News", back_populates="location")
 
     def __repr__(self) -> str:
-        return f"{self.name}, {self.region.name}"
+        return f"{self.name}"

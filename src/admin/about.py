@@ -1,44 +1,33 @@
-from typing import Any
-from sqladmin import ModelView
-from starlette.requests import Request
-from wtforms import Form
-
 from src.about.models import About
-from src.admin.commons.formatters import format_quill
-from src.admin.commons.utils import model_change_for_editor
+from src.admin.commons.base import BaseAdmin
+from src.admin.commons.formatters import TextFormatter, format_quill
+from src.admin.commons.validators import QuillValidator
 
 
-class AboutAdmin(ModelView, model=About):
-    is_async = True
+class AboutAdmin(BaseAdmin, model=About):
     name_plural = "Про нас"
     category = "Про проєкт"
     icon = "fa-regular fa-address-card"
 
-    column_exclude_list = [About.id]
+    can_create = False
+    can_delete = False
+
     column_labels = {
         About.title: "Заголовок",
         About.content: "Контент",
         About.slider_caption: "Підпис до слайдера",
     }
-
-    can_view_details = False
-    can_create = False
-    can_delete = False
-    can_export = False
-    column_formatters = {
+    column_exclude_list = column_details_exclude_list = [
+        About.id,
+    ]
+    column_formatters = column_formatters_detail = {
         About.content: format_quill,
     }
-
-    async def scaffold_form(self) -> type[Form]:
-        form = await super().scaffold_form()
-        form.is_quill_field = [
-            "content",
-        ]
-        del form.content.kwargs["validators"][-1]
-        return form
-
-    async def on_model_change(
-        self, data: dict, model: Any, is_created: bool, request: Request
-    ) -> None:
-        await model_change_for_editor(data, model)
-        return await super().on_model_change(data, model, is_created, request)
+    form_quill_list = [
+        About.content,
+    ]
+    form_args = {
+        "content": {
+            "validators": [QuillValidator()],
+        },
+    }

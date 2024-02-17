@@ -1,20 +1,15 @@
-from typing import Any
-
-from fastapi import Request
-from sqladmin import ModelView
-from wtforms import Form, TextAreaField
+from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 
+from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import (
-    MediaSplitFormatter,
+    PhotoSplitFormatter,
     MediaFormatter,
     format_array_of_string,
 )
-from src.admin.commons.utils import CustomFileInputWidget, model_change_for_files
+from src.admin.commons.utils import MediaInputWidget
 from src.admin.commons.validators import MediaValidator
 from src.song.models import Genre, Song, Fund
-from src.utils import delete_photo
-
 
 PHOTO_FIELDS = [
     "photo1",
@@ -37,77 +32,43 @@ SONG_FIELDS = [
 ]
 
 
-class GenreAdmin(ModelView, model=Genre):
-    is_async = True
-
+class GenreAdmin(BaseAdmin, model=Genre):
     category = "Пісенний розділ"
     name_plural = "Жанри"
     icon = "fa-solid fa-layer-group"
 
-    can_edit = True
-    can_create = True
-    can_export = False
-
-    column_list = [
-        Genre.genre_name,
-    ]
     column_labels = {
         Genre.genre_name: "Назва жанру",
     }
-    form_excluded_columns = [Genre.songs]
-    column_details_exclude_list = [Genre.id]
+    column_list = form_columns = column_details_list = [
+        Genre.genre_name,
+    ]
     form_args = {
         "genre_name": {"validators": [DataRequired()]},
     }
 
 
-class FundAdmin(ModelView, model=Fund):
-    is_async = True
-
+class FundAdmin(BaseAdmin, model=Fund):
     category = "Пісенний розділ"
     name_plural = "Фонди"
     icon = "fa-solid fa-layer-group"
 
-    can_edit = True
-    can_create = True
-    can_export = False
-
-    column_list = [
-        Fund.title,
-        Fund.songs
-    ]
     column_labels = {
         Fund.title: "Назва фонду",
     }
-    form_excluded_columns = [Fund.songs]
-    column_details_exclude_list = [Fund.id]
+    column_list = form_columns = column_details_list = [
+        Fund.title,
+    ]
     form_args = {
         "title": {"validators": [DataRequired()]},
     }
 
-class SongAdmin(ModelView, model=Song):
-    is_async = True
 
+class SongAdmin(BaseAdmin, model=Song):
     category = "Пісенний розділ"
     name_plural = "Пісні"
     icon = "fa-solid fa-music"
 
-    can_edit = True
-    can_create = True
-    can_export = False
-
-    column_list = [
-        Song.title,
-        Song.stereo_audio,
-        Song.genres,
-        Song.education_genres,
-        Song.performers,
-        Song.collectors,
-        Song.fund,
-        Song.recording_date,
-        Song.photo1,
-        Song.ethnographic_photo1,
-    ]
     column_labels = {
         Song.title: "Назва",
         Song.song_text: "Текст",
@@ -137,7 +98,18 @@ class SongAdmin(ModelView, model=Song):
         Song.multichannel_audio5: "Канал 5",
         Song.multichannel_audio6: "Канал 6",
     }
-
+    column_list = [
+        Song.title,
+        Song.stereo_audio,
+        Song.photo1,
+        Song.ethnographic_photo1,
+        Song.recording_date,
+        Song.genres,
+        Song.education_genres,
+        Song.performers,
+        Song.collectors,
+        Song.fund,
+    ]
     column_details_list = form_columns = [
         Song.title,
         Song.song_text,
@@ -169,10 +141,11 @@ class SongAdmin(ModelView, model=Song):
     ]
     column_formatters = {
         Song.collectors: format_array_of_string,
-        Song.photo1: MediaSplitFormatter(PHOTO_FIELDS),
-        Song.ethnographic_photo1: MediaSplitFormatter(ETHNOGRAPHIC_PHOTO_FIELDS),
-        Song.stereo_audio: MediaFormatter(is_audio=True),
+        Song.photo1: PhotoSplitFormatter(PHOTO_FIELDS),
+        Song.ethnographic_photo1: PhotoSplitFormatter(ETHNOGRAPHIC_PHOTO_FIELDS),
+        Song.stereo_audio: MediaFormatter(file_type="audio"),
     }
+    form_files_list = SONG_FIELDS + PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS
     form_overrides = {
         "song_text": TextAreaField,
         "song_descriotion": TextAreaField,
@@ -180,8 +153,6 @@ class SongAdmin(ModelView, model=Song):
     form_args = {
         "title": {"validators": [DataRequired()]},
         "performers": {"validators": [DataRequired()]},
-        "genres": {"validators": [DataRequired()]},
-        "city": {"validators": [DataRequired()]},
         "ethnographic_district": {"validators": [DataRequired()]},
         "recording_date": {"validators": [DataRequired()]},
         "song_text": {
@@ -203,16 +174,18 @@ class SongAdmin(ModelView, model=Song):
                 "class": "form-control",
                 "rows": 20,
             },
+            "validators": [DataRequired()],
         },
         "city": {
             "render_kw": {
                 "class": "form-control",
                 "rows": 20,
             },
+            "validators": [DataRequired()],
         },
         **{
             field: {
-                "widget": CustomFileInputWidget(),
+                "widget": MediaInputWidget(),
                 "validators": [
                     MediaValidator(),
                 ],
@@ -221,9 +194,9 @@ class SongAdmin(ModelView, model=Song):
         },
         **{
             field: {
-                "widget": CustomFileInputWidget(is_audio=True),
+                "widget": MediaInputWidget(file_type="audio"),
                 "validators": [
-                    MediaValidator(),
+                    MediaValidator(file_type="audio"),
                 ],
             }
             for field in SONG_FIELDS
@@ -244,25 +217,3 @@ class SongAdmin(ModelView, model=Song):
     #         "order_by": "id",
     #     },
     # }
-
-    async def scaffold_form(self) -> type[Form]:
-        form = await super().scaffold_form()
-        # form.city.kwargs["validators"] = form.genres.kwargs["validators"] = [DataRequired()]
-        return form
-
-    async def on_model_change(
-        self, data: dict, model: Any, is_created: bool, request: Request
-    ) -> None:
-        await model_change_for_files(
-            data,
-            model,
-            is_created,
-            request,
-            SONG_FIELDS + PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS,
-        )
-        return await super().on_model_change(data, model, is_created, request)
-
-    async def on_model_delete(self, model: Any, request: Request) -> None:
-        for field in SONG_FIELDS + PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS:
-            await delete_photo(getattr(model, field, None))
-        return await super().on_model_delete(model, request)
