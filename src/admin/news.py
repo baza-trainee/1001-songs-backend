@@ -3,6 +3,7 @@ from typing import Any
 from fastapi import Request
 from sqladmin import ModelView
 from wtforms import Form
+from src.admin.commons.base import BaseAdmin
 
 from src.admin.commons.formatters import (
     MediaFormatter,
@@ -11,20 +12,21 @@ from src.admin.commons.formatters import (
     format_quill,
     format_array_of_string,
 )
-from src.admin.commons.utils import CustomSelect2TagsField, model_change_for_editor
+from src.admin.commons.utils import (
+    CustomSelect2TagsField,
+    on_model_delete_for_quill,
+    scaffold_form_for_quill,
+)
+from src.admin.commons.validators import QuillValidator
 from src.news.models import News
 from src.our_team.models import OurTeam
 
-relation_team_fields = ["authors", "editors", "photographers"]
+MODEL_TEAM_FIELDS = ["authors", "editors", "photographers"]
 
 
-class NewsAdmin(ModelView, model=News):
-    is_async = True
-
+class NewsAdmin(BaseAdmin, model=News):
     name_plural = "Новини"
     icon = "fa-solid fa-kiwi-bird"
-
-    can_export = False
 
     column_list = [
         News.title,
@@ -50,15 +52,20 @@ class NewsAdmin(ModelView, model=News):
         News.category: "Категорія",
         News.created_at: "Дата публікації",
     }
-    form_columns = [
-        News.created_at,
-        News.category,
+
+    form_columns = column_details_list = [
         News.title,
+        News.preview_photo,
         News.authors,
         News.editors,
         News.photographers,
+        News.location,
+        News.category,
+        News.created_at,
         News.content,
+        News.slider_caption,
     ]
+
     column_formatters = {
         News.title: TextFormatter(text_align="left"),
         News.created_at: format_date,
@@ -68,11 +75,18 @@ class NewsAdmin(ModelView, model=News):
         News.photographers: format_array_of_string,
         News.preview_photo: MediaFormatter(),
     }
+    form_quill_list = [
+        News.content,
+    ]
+    form_files_list = [
+        News.preview_photo,
+    ]
     form_overrides = {
-        **{field: CustomSelect2TagsField for field in relation_team_fields}
+        **{field: CustomSelect2TagsField for field in MODEL_TEAM_FIELDS},
     }
     form_args = {
-        **{field: {"model": OurTeam} for field in relation_team_fields},
+        "content": {"validators": [QuillValidator()]},
+        **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
     }
     form_ajax_refs = {
         "category": {
@@ -80,17 +94,3 @@ class NewsAdmin(ModelView, model=News):
             "order_by": "id",
         },
     }
-
-    async def scaffold_form(self) -> type[Form]:
-        form = await super().scaffold_form()
-        form.is_quill_field = [
-            "content",
-        ]
-        del form.content.kwargs["validators"][-1]
-        return form
-
-    async def on_model_change(
-        self, data: dict, model: Any, is_created: bool, request: Request
-    ) -> None:
-        await model_change_for_editor(data, model, field_name="content")
-        return await super().on_model_change(data, model, is_created, request)

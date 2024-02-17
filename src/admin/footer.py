@@ -1,30 +1,17 @@
-from typing import Any
-
-from fastapi import Request
-from sqladmin import ModelView
-from wtforms.validators import DataRequired
-
+from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import MediaFormatter
-from src.admin.commons.utils import CustomFileInputWidget, model_change_for_files
+from src.admin.commons.utils import MediaInputWidget
 from src.admin.commons.validators import MediaValidator
 from src.footer.models import Footer
-from src.utils import delete_photo
 
-FILE_FIELDS = ["reporting", "privacy_policy", "rules_and_terms"]
+DOCUMENT_FIELDS = ["reporting", "privacy_policy", "rules_and_terms"]
 
 
-class FooterAdmin(ModelView, model=Footer):
-    is_async = True
+class FooterAdmin(BaseAdmin, model=Footer):
     name_plural = "Футер"
     icon = "fa-solid fa-shoe-prints"
-
-    column_details_exclude_list = [
-        Footer.id,
-    ]
-
-    column_exclude_list = [
-        Footer.id,
-    ]
+    can_create = False
+    can_delete = False
 
     column_labels = {
         Footer.reporting: "Звітність",
@@ -34,35 +21,19 @@ class FooterAdmin(ModelView, model=Footer):
         Footer.facebook_url: "Фейбук",
         Footer.youtube_url: "Ютуб",
     }
-
+    column_exclude_list = column_details_exclude_list = [
+        Footer.id,
+    ]
     column_formatters = {
-        Footer.reporting: MediaFormatter(is_file=True),
-        Footer.privacy_policy: MediaFormatter(is_file=True),
-        Footer.rules_and_terms: MediaFormatter(is_file=True),
+        Footer.reporting: MediaFormatter(file_type="document"),
+        Footer.privacy_policy: MediaFormatter(file_type="document"),
+        Footer.rules_and_terms: MediaFormatter(file_type="document"),
     }
-
+    form_files_list = DOCUMENT_FIELDS
     form_args = {
         field: {
-            "widget": CustomFileInputWidget(is_file=True, is_required=True),
-            "validators": [
-                MediaValidator(is_file=True),
-            ],
+            "widget": MediaInputWidget(file_type="document", is_required=True),
+            "validators": [MediaValidator(file_type="document")],
         }
-        for field in FILE_FIELDS
+        for field in DOCUMENT_FIELDS
     }
-
-    can_edit = True
-    can_create = False
-    can_delete = False
-    can_export = False
-
-    async def on_model_change(
-        self, data: dict, model: Any, is_created: bool, request: Request
-    ) -> None:
-        await model_change_for_files(data, model, is_created, request, FILE_FIELDS)
-        return await super().on_model_change(data, model, is_created, request)
-
-    async def on_model_delete(self, model: Any, request: Request) -> None:
-        for field in FILE_FIELDS:
-            await delete_photo(getattr(model, field, None))
-        return await super().on_model_delete(model, request)

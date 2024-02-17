@@ -1,3 +1,4 @@
+import asyncio
 from io import BytesIO
 import os
 from uuid import uuid4
@@ -82,7 +83,7 @@ async def lifespan(app: FastAPI):
     yield
 
 
-async def save_photo(
+def save_photo(
     file: str,
     model,
     image_extension: str,
@@ -98,7 +99,8 @@ async def save_photo(
         async with aiofiles.open(file_path, "wb") as buffer:
             await buffer.write(file)
 
-    await _save_photo(file_path)
+    loop = asyncio.get_event_loop()
+    loop.create_task(_save_photo(file_path))
     return file_path
 
 
@@ -116,8 +118,12 @@ async def write_filetype_field(file_path: str) -> UploadFile:
         return UploadFile(file=BytesIO(await buffer.read()), filename=file_name)
 
 
-async def delete_photo(path: str) -> None:
-    if path and "media" in path:
-        path_exists = os.path.exists(path)
-        if path_exists:
-            os.remove(path)
+def delete_photo(path: str) -> None:
+    async def _delete_photo(path):
+        if path and "media" in path:
+            path_exists = os.path.exists(path)
+            if path_exists:
+                os.remove(path)
+
+    loop = asyncio.get_event_loop()
+    loop.create_task(_delete_photo(path))

@@ -6,30 +6,32 @@ from src.config import settings
 
 
 class MediaFormatter:
-    def __init__(self, is_file: bool = False, is_audio: bool = False) -> None:
-        self.is_file = is_file
-        self.is_audio = is_audio
+    def __init__(
+        self, file_type: Literal["photo", "document", "audio"] = "photo"
+    ) -> None:
+        self.file_type = file_type
 
     def __call__(self, m, a):
         grid_html = ""
         if media := getattr(m, a, None):
-            if self.is_audio:
-                grid_html += (
-                    f'<audio controls class="grid-audio">'
-                    f'<source src="{settings.BASE_URL}/{media}" type="audio/mp3">'
-                    f"Your browser does not support the audio element.</audio>"
-                )
-            elif self.is_file:
-                icon_url = f"{settings.BASE_URL}/static/interface/pdf_icon.svg"
-                grid_html = f'<a href="{settings.BASE_URL}/{media}" target="_blank"><img class="grid-pdf" src="{icon_url}"></a>'
-            else:
-                grid_html = (
-                    f'<img class="grid-image" src="{settings.BASE_URL}/{media}">'
-                )
+            match self.file_type:
+                case "photo":
+                    grid_html = (
+                        f'<img class="grid-image" src="{settings.BASE_URL}/{media}">'
+                    )
+                case "document":
+                    icon_url = f"{settings.BASE_URL}/static/interface/pdf_icon.svg"
+                    grid_html = f'<a href="{settings.BASE_URL}/{media}" target="_blank"><img class="grid-pdf" src="{icon_url}"></a>'
+                case "audio":
+                    grid_html += (
+                        f'<audio controls class="grid-audio">'
+                        f'<source src="{settings.BASE_URL}/{media}" type="audio/mp3">'
+                        f"Your browser does not support the audio element.</audio>"
+                    )
         return Markup(grid_html)
 
 
-class MediaSplitFormatter:
+class PhotoSplitFormatter:
     def __init__(self, media_fields: list[str]) -> None:
         self.media_fields = media_fields
 

@@ -10,7 +10,7 @@ PHOTO_FORMATS = [
 FILE_FORMATS = [
     "application/pdf",
 ]
-
+AUDIO_FORMATS = ["audio/mpeg"]
 MAX_FILE_SIZE_MB = 3
 
 

@@ -1,63 +1,34 @@
-from sqladmin import ModelView
-from sqladmin.ajax import QueryAjaxModelLoader
-from sqladmin.fields import AjaxSelectField, QuerySelectField, Select2TagsField
 from wtforms.validators import DataRequired
 
+from src.admin.commons.base import BaseAdmin
 from src.location.models import City, Country, Region
 
 
-class CountryAdmin(ModelView, model=Country):
-    is_async = True
-
+class CountryAdmin(BaseAdmin, model=Country):
     category = "Локації"
     name_plural = "Країни"
     icon = "fa-solid fa-earth-europe"
 
-    can_edit = True
-    can_create = True
-    can_export = False
-
-    column_list = [
+    column_list = form_columns = column_details_list = [
         Country.name,
     ]
     column_labels = {
         Country.name: "Країна",
-        Country.regions: "Області",
-        Country.cities: "Міста та поселення",
     }
-    form_excluded_columns = [
-        Country.regions,
-        Country.cities,
-    ]
-    column_details_list = [
-        Country.name,
-        Country.regions,
-        Country.cities,
-    ]
 
 
-class RegionAdmin(ModelView, model=Region):
-    is_async = True
-
+class RegionAdmin(BaseAdmin, model=Region):
     category = "Локації"
     name_plural = "Області та регіони"
     icon = "fa-solid fa-map-location-dot"
 
-    can_edit = True
-    can_create = True
-    can_delete = True
-    can_export = False
-
-    column_list = [
-        Region.name,
-    ]
-    column_list = [
-        Region.name,
+    column_list = form_columns = [
         Region.country,
+        Region.name,
     ]
     column_labels = {
-        Region.name: "Область",
         Region.country: "Країна",
+        Region.name: "Область",
         Region.cities: "Міста / Поселення",
     }
     column_details_list = [
@@ -65,36 +36,28 @@ class RegionAdmin(ModelView, model=Region):
         Region.name,
         Region.cities,
     ]
-    form_excluded_columns = [
-        Region.cities,
-    ]
-
-    form_ajax_refs = {
+    form_args = {
         "country": {
-            "fields": ("name",),
-            "order_by": "id",
+            "render_kw": {
+                "class": "form-control",
+                "rows": 20,
+            },
+            "validators": [DataRequired()],
         },
     }
+    # form_ajax_refs = {
+    #     "country": {
+    #         "fields": ("name",),
+    #         "order_by": "id",
+    #     },
+    # }
 
 
-class CityAdmin(ModelView, model=City):
-    is_async = True
-
+class CityAdmin(BaseAdmin, model=City):
     category = "Локації"
     name_plural = "Міста та поселення"
     icon = "fa-solid fa-location-dot"
 
-    can_edit = True
-    can_create = True
-    can_delete = True
-
-    column_list = [
-        City.country,
-        City.region,
-        City.name,
-        City.latitude,
-        City.longitude,
-    ]
     column_labels = {
         City.country: "Країна",
         City.region: "Область",
@@ -102,14 +65,7 @@ class CityAdmin(ModelView, model=City):
         City.latitude: "Широта",
         City.longitude: "Довгота",
     }
-    column_details_list = [
-        City.country,
-        City.region,
-        City.name,
-        City.latitude,
-        City.longitude,
-    ]
-    form_columns = [
+    column_list = column_details_list = form_columns = [
         City.country,
         City.region,
         City.name,
@@ -118,9 +74,17 @@ class CityAdmin(ModelView, model=City):
     ]
     form_args = {
         "country": {
+            "render_kw": {
+                "class": "form-control",
+                "rows": 20,
+            },
             "validators": [DataRequired()],
         },
         "region": {
+            "render_kw": {
+                "class": "form-control",
+                "rows": 20,
+            },
             "validators": [DataRequired()],
         },
         "latitude": {
@@ -130,14 +94,13 @@ class CityAdmin(ModelView, model=City):
             "validators": [DataRequired()],
         },
     }
-
-    form_ajax_refs = {
-        "country": {
-            "fields": ("name",),
-            "order_by": "id",
-        },
-        "region": {
-            "fields": ("name",),
-            "order_by": "id",
-        },
-    }
+    # form_ajax_refs = {
+    #     "country": {
+    #         "fields": ("name",),
+    #         "order_by": "id",
+    #     },
+    #     "region": {
+    #         "fields": ("name",),
+    #         "order_by": "id",
+    #     },
+    # }

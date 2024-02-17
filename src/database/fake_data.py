@@ -87,19 +87,19 @@ FAKE_NEWS = [
     },
 ]
 FAKE_FUNDS = [
-    {"title": "Фонд ПНДЛ етномузикології НМАУ"}, #1
-    {"title": "Фонд ПНДЛ музичної етнології ЛНМА"}, #2
-    {"title": "Приватний фонд Людмили Іваннікової"}, #3
-    {"title": "Приватний фонд Маргарити Скаженик і Олега Коробова"}, #4
-    {"title": "Приватний фонд Віктора Ковальчука"}, #5
-    {"title": "Фонд ДНЦЗСТК"}, #6
-    {"title": "Приватний фонд Ірини Телюх"}, #7
-    {"title": "Приватний фонд Елеонори Хачатрян"}, #8
-    {"title": 'Фонд ГО "Моя провінція"'}, #9
-    {"title": "Приватний фонд Івана Синельнікова"}, #10
-    {"title": "Приватний фонд Вікторії Ярмоли"}, #11
-    {"title": "Приватний фонд Ірини Клименко"}, #12
-    {"title": "Приватний фонд Лариси Лукашенко"}, #13
+    {"title": "Фонд ПНДЛ етномузикології НМАУ"},  # 1
+    {"title": "Фонд ПНДЛ музичної етнології ЛНМА"},  # 2
+    {"title": "Приватний фонд Людмили Іваннікової"},  # 3
+    {"title": "Приватний фонд Маргарити Скаженик і Олега Коробова"},  # 4
+    {"title": "Приватний фонд Віктора Ковальчука"},  # 5
+    {"title": "Фонд ДНЦЗСТК"},  # 6
+    {"title": "Приватний фонд Ірини Телюх"},  # 7
+    {"title": "Приватний фонд Елеонори Хачатрян"},  # 8
+    {"title": 'Фонд ГО "Моя провінція"'},  # 9
+    {"title": "Приватний фонд Івана Синельнікова"},  # 10
+    {"title": "Приватний фонд Вікторії Ярмоли"},  # 11
+    {"title": "Приватний фонд Ірини Клименко"},  # 12
+    {"title": "Приватний фонд Лариси Лукашенко"},  # 13
 ]
 FAKE_COUNTRIES = [
     {"name": "Україна"},  # 1
@@ -499,7 +499,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 29,
-        "fund_id": random.randint(1, 4)
+        "fund_id": random.randint(1, 4),
     },
     {
         "title": "Ой якби ж я до Київа доріженьку знала",
@@ -527,7 +527,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 20,
-        "fund_id": random.randint(1, 4)
+        "fund_id": random.randint(1, 4),
     },
     {
         "title": "Ой ти Галино",
@@ -555,7 +555,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 33,
-        "fund_id": random.randint(1, 4)
+        "fund_id": random.randint(1, 4),
     },
     {
         "title": "Проведу я русалочки",
@@ -583,7 +583,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 36,
-        "fund_id": random.randint(1, 4)
+        "fund_id": random.randint(1, 4),
     },
     {
         "title": "Косив козак сіно",
@@ -611,7 +611,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 8,
-        "fund_id": random.randint(1, 4)
+        "fund_id": random.randint(1, 4),
     },
     {
         "title": "Щедрик-ведрик, дайте",
@@ -639,7 +639,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 7,
-        "fund_id": random.randint(1, 4)
+        "fund_id": random.randint(1, 4),
     },
     {
         "title": "А я знаю, що пан робіть",
@@ -667,7 +667,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 1,
-        "fund_id": random.randint(1, 4)
+        "fund_id": random.randint(1, 4),
     },
     {
         "title": "Зозуленька рябенькая",
@@ -695,7 +695,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 2,
-        "fund_id": random.randint(1, 4)
+        "fund_id": random.randint(1, 4),
     },
     {
         "title": "Щедрик-ведрик, дайте-2",
@@ -723,7 +723,7 @@ FAKE_SONG = [
         "multichannel_audio5": "static/song/audio1.mp3",
         "multichannel_audio6": "static/song/audio2.mp3",
         "city_id": 7,
-        "fund_id": random.randint(1, 4)
+        "fund_id": random.randint(1, 4),
     },
 ]
 LOREM = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vehicula libero nec justo convallis, nec sodales nunc pellentesque. Sed auctor efficitur sem id vestibulum. Mauris fringilla ullamcorper mauris eget pellentesque. Fusce ullamcorper elit vitae sapien tincidunt, vel molestie lacus tristique. Aliquam in ex ac risus auctor condimentum. Integer hendrerit tincidunt diam eget tempor. Integer sit amet condimentum dolor. Nullam viverra urna sit amet justo sagittis, non vehicula metus consectetur."""

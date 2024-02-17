@@ -1,41 +1,20 @@
-from typing import Any
-
-from fastapi import Request
-from sqladmin import ModelView
-from wtforms import Form
 from wtforms.validators import DataRequired
 
+from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import (
     MediaFormatter,
     format_quill,
     format_array_of_string,
 )
-from src.admin.commons.utils import model_change_for_editor
+from src.admin.commons.utils import MediaInputWidget
+from src.admin.commons.validators import MediaValidator
 from src.our_project.models import OurProject
 
 
-class OurProjectAdmin(ModelView, model=OurProject):
-    is_async = True
-
+class OurProjectAdmin(BaseAdmin, model=OurProject):
     name_plural = "Проєкти"
     icon = "fa-solid fa-hands-holding-circle"
 
-    can_view_details = True
-    can_export = False
-    can_create = True
-
-    column_list = form_columns = [
-        OurProject.title,
-        OurProject.location,
-        OurProject.project_date,
-        OurProject.short_description,
-        OurProject.preview_photo,
-        OurProject.content,
-        OurProject.authors,
-        OurProject.editors,
-        OurProject.photographers,
-        OurProject.recording,
-    ]
     column_labels = {
         OurProject.title: "Назва",
         OurProject.short_description: "Короткий опис",
@@ -48,7 +27,19 @@ class OurProjectAdmin(ModelView, model=OurProject):
         OurProject.photographers: "Світлини",
         OurProject.recording: "Запис",
     }
-    column_details_list = [
+    form_columns = column_details_list = [
+        OurProject.content,
+        OurProject.title,
+        OurProject.short_description,
+        OurProject.preview_photo,
+        OurProject.project_date,
+        OurProject.location,
+        OurProject.authors,
+        OurProject.editors,
+        OurProject.photographers,
+        OurProject.recording,
+    ]
+    column_list = [
         OurProject.title,
         OurProject.location,
         OurProject.project_date,
@@ -60,6 +51,7 @@ class OurProjectAdmin(ModelView, model=OurProject):
         OurProject.photographers,
         OurProject.recording,
     ]
+
     column_formatters = {
         OurProject.content: format_quill,
         OurProject.authors: format_array_of_string,
@@ -68,6 +60,12 @@ class OurProjectAdmin(ModelView, model=OurProject):
         OurProject.recording: format_array_of_string,
         OurProject.preview_photo: MediaFormatter(),
     }
+    form_quill_list = [
+        OurProject.content,
+    ]
+    form_files_list = [
+        OurProject.preview_photo,
+    ]
     form_args = {
         "title": {"validators": [DataRequired()]},
         "short_description": {"validators": [DataRequired()]},
@@ -75,19 +73,8 @@ class OurProjectAdmin(ModelView, model=OurProject):
         "category": {"validators": [DataRequired()]},
         "content": {"validators": [DataRequired()]},
         "project_date": {"validators": [DataRequired()]},
-        "preview_photo": {"validators": [DataRequired()]},
+        "preview_photo": {
+            "validators": [MediaValidator()],
+            "widget": MediaInputWidget(is_required=True),
+        },
     }
-
-    async def scaffold_form(self) -> type[Form]:
-        form = await super().scaffold_form()
-        form.is_quill_field = [
-            "content",
-        ]
-        del form.content.kwargs["validators"][-1]
-        return form
-
-    async def on_model_change(
-        self, data: dict, model: Any, is_created: bool, request: Request
-    ) -> None:
-        await model_change_for_editor(data, model, field_name="content")
-        return await super().on_model_change(data, model, is_created, request)
