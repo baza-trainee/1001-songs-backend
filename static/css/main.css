@@ -162,3 +162,7 @@ a[class^="forgot_password"] {
     display: block;
     padding-bottom: 20px;
 }
+.required-label::after {
+    content: "*";
+    color: red;
+}
