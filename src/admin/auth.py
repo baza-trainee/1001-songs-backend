@@ -1,6 +1,7 @@
 from httpx import AsyncClient
 from sqladmin.authentication import AuthenticationBackend
 from fastapi import Request
+
 from src.config import settings
 
 
@@ -32,7 +33,12 @@ class AdminAuth(AuthenticationBackend):
         token = request.session.get("token")
         if not token:
             return False
-        return True
+        async with AsyncClient() as client:
+            response = await client.post(
+                f"{settings.BASE_URL}/api/v1/auth/is-accessible",
+                headers={"Authorization": f"Bearer {token}"},
+            )
+        return response.status_code == 204
 
 
 authentication_backend = AdminAuth(secret_key=settings.SECRET_AUTH)

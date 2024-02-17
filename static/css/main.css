@@ -166,3 +166,11 @@ a[class^="forgot_password"] {
     content: "*";
     color: red;
 }
+
+/* NAV-BAR */
+.ps-lg-3  {
+    padding-left: 1.5rem!important;
+}
+.navbar .navbar-nav .nav-link {
+    border-radius: 0;
+}
