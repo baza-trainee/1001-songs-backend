@@ -12,7 +12,7 @@ payment_router = APIRouter(prefix="/payment", tags=["Payment"])
 
 
 @payment_router.get("", response_model=PaymentDetailsSchema)
-async def get_hero(
+async def get_payment(
     session: AsyncSession = Depends(get_async_session),
 ):
     try:

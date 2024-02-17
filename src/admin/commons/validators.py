@@ -7,16 +7,19 @@ from bs4 import BeautifulSoup
 from wtforms import ValidationError
 
 from src.config import AUDIO_FORMATS, FILE_FORMATS, MAX_FILE_SIZE_MB, PHOTO_FORMATS
-from src.exceptions import INVALID_FILE, MAX_FIELD_LENTH, OVERSIZE_FILE
+from src.exceptions import DATA_REQUIRED, INVALID_FILE, MAX_FIELD_LENTH, OVERSIZE_FILE
 from src.utils import delete_photo, save_photo
 from src.config import settings
 
 
 class MediaValidator:
     def __init__(
-        self, file_type: Literal["photo", "document", "audio"] = "photo"
+        self,
+        file_type: Literal["photo", "document", "audio"] = "photo",
+        is_required: bool = False,
     ) -> None:
         self.file_type = file_type
+        self.is_required = is_required
 
     def __call__(self, form, field):
         file = field.data
@@ -41,6 +44,9 @@ class MediaValidator:
                         raise ValidationError(
                             message=INVALID_FILE % (file.content_type, AUDIO_FORMATS)
                         )
+        else:
+            if self.is_required and not form.model_instance:
+                raise ValidationError(message=DATA_REQUIRED)
 
 
 class QuillValidator:
@@ -85,7 +91,7 @@ class QuillValidator:
                 )
             field.data = result.replace("'", "&#x27;")
 
-            old_data = getattr(form.model_instance, field.name)
+            old_data = getattr(form.model_instance, field.name, None)
             if old_data:
                 soup_old = BeautifulSoup(old_data, "lxml")
                 old_img_tags = soup_old.find_all("img")

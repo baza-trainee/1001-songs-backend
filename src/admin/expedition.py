@@ -9,11 +9,11 @@ from src.admin.commons.formatters import (
     format_array_of_string,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
-from src.admin.commons.validators import MediaValidator
+from src.admin.commons.validators import MediaValidator, QuillValidator
 from src.expedition.models import Expedition
 from src.our_team.models import OurTeam
 
-MODEL_TEAM_FIELDS = ["authors", "editors", "photographers"]
+MODEL_TEAM_FIELDS = ["authors", "editors", "photographers", "recording"]
 
 
 class ExpeditionAdmin(BaseAdmin, model=Expedition):
@@ -39,9 +39,9 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         Expedition.content,
         Expedition.title,
         Expedition.short_description,
-        Expedition.location,
         Expedition.preview_photo,
         Expedition.map_photo,
+        Expedition.location,
         Expedition.expedition_date,
         Expedition.category,
         Expedition.authors,
@@ -49,7 +49,7 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         Expedition.photographers,
         Expedition.recording,
     ]
-    column_details_list = form_columns = [
+    form_columns = column_details_list = [
         Expedition.title,
         Expedition.short_description,
         Expedition.preview_photo,
@@ -74,6 +74,11 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         Expedition.preview_photo: MediaFormatter(),
         Expedition.expedition_date: format_date,
     }
+    column_searchable_list = [
+        Expedition.title,
+    ]
+    column_sortable_list = [Expedition.expedition_date]
+    column_default_sort = ("expedition_date", True)
     form_files_list = [
         Expedition.preview_photo,
         Expedition.map_photo,
@@ -88,13 +93,14 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         "category": {"validators": [DataRequired()]},
         "location": {"validators": [DataRequired()]},
         "expedition_date": {"validators": [DataRequired()]},
+        "content": {"validators": [QuillValidator()]},
         "map_photo": {
             "widget": MediaInputWidget(is_required=True),
-            "validators": [MediaValidator()],
+            "validators": [MediaValidator(is_required=True)],
         },
         "preview_photo": {
             "widget": MediaInputWidget(is_required=True),
-            "validators": [MediaValidator()],
+            "validators": [MediaValidator(is_required=True)],
         },
         **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
     }

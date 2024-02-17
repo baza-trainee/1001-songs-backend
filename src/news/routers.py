@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from fastapi_pagination import Page
@@ -25,22 +25,25 @@ async def get_categories(session: AsyncSession = Depends(get_async_session)):
 
 @news_router.get("/news", response_model=Page[NewsSchemaList])
 async def get_news(
-    id: List[int] = Query(
+    category_id: int = Query(
         None, description="Press the button to add a field for a new ID"
     ),
+    news_exclude: Optional[int] = Query(None),
     session: AsyncSession = Depends(get_async_session),
 ):
     """
     Use this endpoint to retrieve news. You can filter them by category by passing one or more **category `ID`s**.
     """
     try:
-        if await session.scalar(select(func.count()).select_from(News)) == 0:
-            raise NoResultFound
-
         query = select(News).order_by(News.created_at.desc())
-        if id:
-            query = query.filter(News.category_id.in_(id))
-        return await paginate(session, query)
+        if category_id:
+            query = query.filter(News.category_id == category_id)
+        if news_exclude:
+            query = query.filter(News.id != news_exclude)
+        result = await paginate(session, query)
+        if not result.items:
+            raise NoResultFound
+        return result
 
     except NoResultFound:
         raise HTTPException(

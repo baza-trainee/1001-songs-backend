@@ -1,10 +1,6 @@
-from typing import Any
+from wtforms.validators import DataRequired
 
-from fastapi import Request
-from sqladmin import ModelView
-from wtforms import Form
 from src.admin.commons.base import BaseAdmin
-
 from src.admin.commons.formatters import (
     MediaFormatter,
     TextFormatter,
@@ -12,12 +8,8 @@ from src.admin.commons.formatters import (
     format_quill,
     format_array_of_string,
 )
-from src.admin.commons.utils import (
-    CustomSelect2TagsField,
-    on_model_delete_for_quill,
-    scaffold_form_for_quill,
-)
-from src.admin.commons.validators import QuillValidator
+from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
+from src.admin.commons.validators import MediaValidator, QuillValidator
 from src.news.models import News
 from src.our_team.models import OurTeam
 
@@ -28,22 +20,10 @@ class NewsAdmin(BaseAdmin, model=News):
     name_plural = "Новини"
     icon = "fa-solid fa-kiwi-bird"
 
-    column_list = [
-        News.title,
-        News.content,
-        News.slider_caption,
-        News.authors,
-        News.editors,
-        News.photographers,
-        News.preview_photo,
-        News.location,
-        News.category,
-        News.created_at,
-    ]
     column_labels = {
         News.title: "Заголовок",
         News.content: "Контент",
-        News.slider_caption: "Підпис до слайдера",
+        News.short_description: "Короткий опис",
         News.authors: "Автори",
         News.editors: "Редактори",
         News.photographers: "Світлини",
@@ -53,17 +33,36 @@ class NewsAdmin(BaseAdmin, model=News):
         News.created_at: "Дата публікації",
     }
 
-    form_columns = column_details_list = [
+    column_list = [
+        News.content,
         News.title,
+        News.short_description,
         News.preview_photo,
+        News.location,
+        News.created_at,
+        News.category,
         News.authors,
         News.editors,
         News.photographers,
-        News.location,
-        News.category,
+    ]
+    column_searchable_list = [
+        News.title,
+    ]
+    column_sortable_list = [
         News.created_at,
+    ]
+    column_default_sort = ("created_at", True)
+    form_columns = column_details_list = [
+        News.title,
+        News.short_description,
+        News.preview_photo,
+        News.location,
+        News.created_at,
+        News.category,
+        News.authors,
+        News.editors,
+        News.photographers,
         News.content,
-        News.slider_caption,
     ]
 
     column_formatters = {
@@ -86,11 +85,18 @@ class NewsAdmin(BaseAdmin, model=News):
     }
     form_args = {
         "content": {"validators": [QuillValidator()]},
+        "category": {"validators": [DataRequired()]},
+        "location": {"validators": [DataRequired()]},
         **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
-    }
-    form_ajax_refs = {
-        "category": {
-            "fields": ("name",),
-            "order_by": "id",
+        "preview_photo": {
+            "validators": [MediaValidator(is_required=True)],
+            "widget": MediaInputWidget(is_required=True),
         },
     }
+
+    # form_ajax_refs = {
+    #     "category": {
+    #         "fields": ("name",),
+    #         "order_by": "id",
+    #     },
+    # }

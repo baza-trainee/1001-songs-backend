@@ -1,6 +1,6 @@
 from typing import Any, ClassVar, Union
-from fastapi import Request
 
+from fastapi import Request
 from sqladmin import ModelView
 from sqladmin.models import ModelViewMeta
 from sqlalchemy import Sequence
@@ -28,6 +28,8 @@ class BaseAdmin(ModelView, metaclass=ModelViewMeta):
 
     form_files_list: ClassVar[Sequence[MODEL_ATTR]] = []
     form_quill_list: ClassVar[Sequence[MODEL_ATTR]] = []
+
+    model_instance = None
 
     async def scaffold_form(self) -> type[Form]:
         form = await super().scaffold_form()

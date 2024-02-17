@@ -30,7 +30,6 @@ class Expedition(Base):
     preview_photo: str = Column(FileType(storage=storage))
     expedition_date = Column(Date)
     content: str = Column(String(10000), nullable=False)
-
     category_id = Column(Integer, ForeignKey("expedition_category.id"))
     category = relationship(
         "ExpeditionCategory", back_populates="expeditions", lazy="selectin"

@@ -101,9 +101,8 @@ async def on_model_change_for_files(
 
 class CustomSelect2TagsField(Select2TagsField):
     def __init__(self, model, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.coerce
         self.model = model
+        super().__init__(*args, **kwargs)
 
     async def __call__(self, **kwargs: object) -> Markup:
         async with async_session_maker() as session:

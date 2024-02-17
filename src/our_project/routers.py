@@ -30,7 +30,7 @@ async def get_all_projects(
         query = select(OurProject)
         if project_exclude:
             query = query.filter(OurProject.id != project_exclude)
-        query = query.order_by(OurProject.id)
+        query = query.order_by(OurProject.project_date.desc())
         result = await session.execute(query)
         response = result.scalars().all()
         if not response:
