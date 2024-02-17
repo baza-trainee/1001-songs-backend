@@ -46,7 +46,7 @@ class ExpeditionSchema(BaseModel):
     short_description: Optional[str]
     expedition_date: date
     map_photo: Optional[str] = Field(None)
-    category: str
+    category: ExpeditionCategorySchema
     content: Optional[str] = Field(None, max_length=CONTENT_LEN)
     authors: Optional[List[str]] = Field(None, max_length=AUTHORS_LEN)
     editors: Optional[List[str]] = Field(None, max_length=EDITORS_LEN)
@@ -63,4 +63,4 @@ class ExpeditionSchema(BaseModel):
                 if value:
                     return f"{settings.BASE_URL}/{value}"
             case "category":
-                return value.title
+                return {"id": value.id, "title": value.title}
