@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy import or_, select
+from sqlalchemy import or_, select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_pagination import Page
 from fastapi_pagination.ext.async_sqlalchemy import paginate
@@ -41,6 +41,7 @@ async def get_all_categories(session: AsyncSession = Depends(get_async_session))
 async def get_expeditions_list_by_category(
     search: Optional[str] = Query(None),
     id: Optional[int] = Query(None),
+    expedition_exclude: Optional[int] = Query(None),
     session: AsyncSession = Depends(get_async_session),
 ):
     """
@@ -48,10 +49,11 @@ async def get_expeditions_list_by_category(
     In addition to filtering by **ID**, you can also use a search by title or descriptin.
     """
     try:
+        query = select(Expedition).order_by(desc(Expedition.expedition_date))
         if id:
-            query = select(Expedition).filter(Expedition.category_id == id)
-        else:
-            query = select(Expedition)
+            query = query.filter(Expedition.category_id == id)
+        if expedition_exclude:
+            query = query.filter(Expedition.id != expedition_exclude)
         if search:
             search_expr = f"%{search}%"
             query = query.filter(
