@@ -14,7 +14,7 @@ from .song import SongAdmin, GenreAdmin, FundAdmin
 from .news import NewsAdmin
 from .expedition import ExpeditionAdmin
 from .project import OurProjectAdmin
-from .pass_change import ChangePasswordAdmin
+from .pass_change import ChangePasswordAdmin, PasswordRecoveryAdmin
 
 __all__ = [
     CountryAdmin,
@@ -35,4 +35,5 @@ __all__ = [
     PaymentAdmin,
     FundAdmin,
     ChangePasswordAdmin,
+    PasswordRecoveryAdmin,
 ]

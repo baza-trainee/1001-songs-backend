@@ -30,6 +30,8 @@ class AdminAuth(AuthenticationBackend):
         return response.status_code == 204
 
     async def authenticate(self, request: Request) -> bool:
+        if str(request.url).startswith(f"{request.base_url}admin/forgot-password"):
+            return True
         token = request.session.get("token")
         if not token:
             return False
