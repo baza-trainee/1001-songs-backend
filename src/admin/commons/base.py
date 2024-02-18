@@ -33,6 +33,7 @@ class BaseAdmin(ModelView, metaclass=ModelViewMeta):
 
     async def scaffold_form(self) -> type[Form]:
         form = await super().scaffold_form()
+        form.model_instance = self.model_instance
         if self.form_quill_list:
             form = await scaffold_form_for_quill(self, form)
         return form

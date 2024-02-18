@@ -1,5 +1,4 @@
 from wtforms import TextAreaField
-from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import MediaFormatter
@@ -42,7 +41,7 @@ class OurTeamAdmin(BaseAdmin, model=OurTeam):
         "photo": {
             "widget": MediaInputWidget(is_required=True),
             "validators": [
-                MediaValidator(),
+                MediaValidator(is_required=True),
             ],
         },
     }
