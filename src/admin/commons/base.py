@@ -26,6 +26,10 @@ class BaseAdmin(ModelView, metaclass=ModelViewMeta):
     can_view_details = True
     can_export = False
 
+    save_and_another = False
+    save_as = False
+    save_as_continue = True
+
     form_files_list: ClassVar[Sequence[MODEL_ATTR]] = []
     form_quill_list: ClassVar[Sequence[MODEL_ATTR]] = []
 

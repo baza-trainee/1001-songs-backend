@@ -38,7 +38,6 @@ def upgrade() -> None:
         sa.Column("archive", sa.String(length=255), nullable=True),
         sa.Column("researcher_comment", sa.String(length=1000), nullable=True),
         sa.PrimaryKeyConstraint("id"),
-        sa.UniqueConstraint("title"),
     )
     op.create_table(
         "song_genre_association",

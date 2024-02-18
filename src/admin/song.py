@@ -75,6 +75,8 @@ class SongAdmin(BaseAdmin, model=Song):
     name_plural = "Пісні"
     icon = "fa-solid fa-music"
 
+    save_as = True
+
     column_labels = {
         Song.title: "Назва",
         Song.song_text: "Текст",
