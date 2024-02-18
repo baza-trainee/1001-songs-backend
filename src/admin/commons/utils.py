@@ -9,8 +9,9 @@ from sqlalchemy import select
 from wtforms import Field, widgets
 
 from src.admin.commons.formatters import MediaFormatter
+from src.admin.commons.validators import QuillValidator
 from src.database.database import async_session_maker
-from src.utils import delete_photo, generate_file_name
+from src.utils import delete_photo, generate_file_name, write_filetype_field
 
 
 class MediaInputWidget(widgets.FileInput):
@@ -60,6 +61,9 @@ async def scaffold_form_for_quill(self, form):
     for quil_field in self.form_quill_list:
         if not isinstance(quil_field, str):
             quil_field = quil_field.name
+            old_validators = getattr(form, quil_field)
+            old_validators.kwargs["validators"].append(QuillValidator())
+            setattr(form, quil_field, old_validators)
         form.quill_list.append(quil_field)
     return form
 
@@ -93,10 +97,15 @@ async def on_model_change_for_files(
                         if model_data and model_data != field_data.filename:
                             data[field].filename = file_name
                             delete_photo(model_data)
+                elif request._form.get(f"save", None) == "Save as new":
+                    data[field] = await write_filetype_field(field_data.file.name)
                 else:
                     fields_do_not_del.append(field)
         for field in fields_do_not_del:
-            del data[field]
+            if is_created:
+                pass
+            else:
+                del data[field]
 
 
 class CustomSelect2TagsField(Select2TagsField):

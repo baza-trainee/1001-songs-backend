@@ -7,13 +7,14 @@ from src.admin.commons.formatters import (
     format_array_of_string,
 )
 from src.admin.commons.utils import MediaInputWidget
-from src.admin.commons.validators import MediaValidator, QuillValidator
+from src.admin.commons.validators import MediaValidator
 from src.our_project.models import OurProject
 
 
 class OurProjectAdmin(BaseAdmin, model=OurProject):
     name_plural = "Проєкти"
     icon = "fa-solid fa-hands-holding-circle"
+    save_as = True
 
     column_labels = {
         OurProject.title: "Назва",
@@ -78,7 +79,6 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
         "short_description": {"validators": [DataRequired()]},
         "location": {"validators": [DataRequired()]},
         "category": {"validators": [DataRequired()]},
-        "content": {"validators": [QuillValidator()]},
         "project_date": {"validators": [DataRequired()]},
         "preview_photo": {
             "widget": MediaInputWidget(is_required=True),

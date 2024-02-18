@@ -9,7 +9,7 @@ from src.admin.commons.formatters import (
     format_array_of_string,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
-from src.admin.commons.validators import MediaValidator, QuillValidator
+from src.admin.commons.validators import MediaValidator
 from src.expedition.models import Expedition
 from src.our_team.models import OurTeam
 
@@ -19,6 +19,8 @@ MODEL_TEAM_FIELDS = ["authors", "editors", "photographers", "recording"]
 class ExpeditionAdmin(BaseAdmin, model=Expedition):
     name_plural = "Експедиції"
     icon = "fa-solid fa-route"
+
+    save_as = True
 
     column_labels = {
         Expedition.title: "Назва",
@@ -93,7 +95,6 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         "category": {"validators": [DataRequired()]},
         "location": {"validators": [DataRequired()]},
         "expedition_date": {"validators": [DataRequired()]},
-        "content": {"validators": [QuillValidator()]},
         "map_photo": {
             "widget": MediaInputWidget(is_required=True),
             "validators": [MediaValidator(is_required=True)],

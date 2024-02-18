@@ -9,7 +9,7 @@ from src.admin.commons.formatters import (
     format_array_of_string,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
-from src.admin.commons.validators import MediaValidator, QuillValidator
+from src.admin.commons.validators import MediaValidator
 from src.news.models import News
 from src.our_team.models import OurTeam
 
@@ -19,6 +19,7 @@ MODEL_TEAM_FIELDS = ["authors", "editors", "photographers"]
 class NewsAdmin(BaseAdmin, model=News):
     name_plural = "Новини"
     icon = "fa-solid fa-kiwi-bird"
+    save_as = True
 
     column_labels = {
         News.title: "Заголовок",
@@ -84,7 +85,6 @@ class NewsAdmin(BaseAdmin, model=News):
         **{field: CustomSelect2TagsField for field in MODEL_TEAM_FIELDS},
     }
     form_args = {
-        "content": {"validators": [QuillValidator()]},
         "category": {"validators": [DataRequired()]},
         "location": {"validators": [DataRequired()]},
         **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},

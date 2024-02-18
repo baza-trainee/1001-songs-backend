@@ -10,7 +10,7 @@ from src.admin.commons.formatters import (
     format_quill,
 )
 from src.admin.commons.utils import MediaInputWidget
-from src.admin.commons.validators import MediaValidator, QuillValidator
+from src.admin.commons.validators import MediaValidator
 from src.education.models import (
     EducationPage,
     CalendarAndRitualCategory,
@@ -65,7 +65,6 @@ class EducationAdmin(BaseAdmin, model=EducationPage):
         "title": {
             "validators": [DataRequired()],
         },
-        "recommendations": {"validators": [QuillValidator()]},
     }
     form_quill_list = [
         EducationPage.recommendations,
@@ -130,7 +129,7 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
             },
         },
         "media": {
-            "validators": [MediaValidator()],
+            "validators": [MediaValidator(is_required=True)],
             "widget": MediaInputWidget(is_required=True),
         },
     }
