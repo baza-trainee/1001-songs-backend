@@ -32,6 +32,11 @@ class EducationGenreBaseSchema(BaseModel):
 class SubCategoryBaseSchema(BaseCycleSchema):
     education_genres: List[EducationGenreBaseSchema]
 
+    @field_validator("education_genres", mode="before")
+    @classmethod
+    def sort_education_genres(cls, value: List[str], info: ValidationInfo) -> str:
+        return sorted(value, key=lambda x: x.id)
+
 
 class EducationGenreSchema(EducationGenreBaseSchema):
     media: Optional[List[AnyHttpUrl]] = Field(None, max_items=5)
@@ -61,6 +66,11 @@ class CategorySchema(EducationGenreBaseSchema):
         None, max_length=RECOMENDATIONS_LEN
     )
     song_subcategories: List[SubCategoryBaseSchema]
+
+    @field_validator("song_subcategories", mode="before")
+    @classmethod
+    def sort_subcategories(cls, value: List[str], info: ValidationInfo) -> str:
+        return sorted(value, key=lambda x: x.id)
 
 
 class GenreSchema(BaseModel):

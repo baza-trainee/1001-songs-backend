@@ -174,3 +174,34 @@ a[class^="forgot_password"] {
 .navbar .navbar-nav .nav-link {
     border-radius: 0;
 }
+
+input[type="password"]::-ms-reveal,
+input[type="password"]::-webkit-reveal {
+    display: none;
+}
+.btn-toggle-password {
+    position: absolute;
+    right: 0;
+    top: 0;
+    background-color: transparent;
+    border: var(--tblr-border-width) solid var(--tblr-border-color);
+    border-left: none; 
+    border-radius: 0;
+    background-color: rgb(255, 255, 255);
+    color: #1D273B;
+    font-size: 1rem;
+}
+.btn-toggle-password:hover {
+    color:  var(--tblr-btn-hover-bg);
+    text-decoration: none;
+    background-color: var(--tblr-btn-hover-color);
+    border: var(--tblr-border-width) solid var(--tblr-border-color);
+    border-left: none; 
+}
+.btn-toggle-password:checked+.btn-toggle-password, .btn-toggle-password.active, .btn-toggle-password.show, .btn-toggle-password:first-child:active, :not(.btn-toggle-password)+.btn-toggle-password:active {
+    color:  var(--tblr-btn-hover-bg);
+    text-decoration: none;
+    background-color: var(--tblr-btn-hover-color);
+    border: var(--tblr-border-width) solid var(--tblr-border-color);
+    border-left: none; 
+}

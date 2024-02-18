@@ -7,7 +7,6 @@ from fastapi_pagination.utils import disable_installed_extensions_check
 
 from src.database.database import get_async_session
 from src.exceptions import NO_DATA_FOUND
-from src.location.models import City, Country, Region
 from src.song.models import Song
 from .models import (
     EducationPage,
@@ -68,22 +67,7 @@ async def get_category(id: int, session: AsyncSession = Depends(get_async_sessio
         record = await session.get(CalendarAndRitualCategory, id)
         if not record:
             raise NoResultFound
-        song_subcategories = [
-            {
-                "id": subcategory.id,
-                "title": subcategory.title,
-                "media": subcategory.media,
-                "education_genres": [
-                    {"id": genre.id, "title": genre.title}
-                    for genre in subcategory.education_genres
-                ],
-            }
-            for subcategory in record.song_subcategories
-        ]
-        return {
-            **record.__dict__,
-            "song_subcategories": song_subcategories,
-        }
+        return record
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
     except Exception as e:
