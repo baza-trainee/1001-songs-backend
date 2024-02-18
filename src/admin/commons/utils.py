@@ -57,7 +57,6 @@ async def on_model_delete_for_quill(self, model):
 
 async def scaffold_form_for_quill(self, form):
     form.quill_list = []
-    form.model_instance = self.model_instance
     for quil_field in self.form_quill_list:
         if not isinstance(quil_field, str):
             quil_field = quil_field.name
@@ -76,6 +75,7 @@ async def on_model_change_for_files(
     for field in self.form_files_list:
         if not isinstance(field, str):
             field = field.name
+        fields_name.append(field)
 
     fields_do_not_del = []
     if fields_name:

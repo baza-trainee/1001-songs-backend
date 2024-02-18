@@ -141,18 +141,23 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
     category = "Освітний розділ"
     icon = "fa-solid fa-layer-group"
 
-    column_list = column_details_list = form_columns = [
-        SongSubcategory.title,
-        SongSubcategory.media,
-        SongSubcategory.main_category,
-        SongSubcategory.education_genres,
-    ]
     column_labels = {
         SongSubcategory.title: "Назва під-категорії",
         SongSubcategory.media: "Фото",
         SongSubcategory.main_category: "Розділ",
         SongSubcategory.education_genres: "Жанри",
     }
+    column_list = column_details_list = [
+        SongSubcategory.title,
+        SongSubcategory.media,
+        SongSubcategory.main_category,
+        SongSubcategory.education_genres,
+    ]
+    form_columns = [
+        SongSubcategory.title,
+        SongSubcategory.media,
+        SongSubcategory.main_category,
+    ]
     column_formatters = {
         SongSubcategory.media: MediaFormatter(),
     }
@@ -160,17 +165,20 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
         SongSubcategory.media,
     ]
     form_args = {
-        "media": {
-            "validators": [MediaValidator()],
-            "widget": MediaInputWidget(is_required=True),
-        }
-    }
-    form_ajax_refs = {
         "main_category": {
-            "fields": ("title",),
-            "order_by": "id",
+            "validators": [DataRequired()],
+        },
+        "media": {
+            "validators": [MediaValidator(is_required=True)],
+            "widget": MediaInputWidget(is_required=True),
         },
     }
+    # form_ajax_refs = {
+    #     "main_category": {
+    #         "fields": ("title",),
+    #         "order_by": "id",
+    #     },
+    # }
 
 
 class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
@@ -180,7 +188,7 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
 
     column_labels = {
         EducationPageSongGenre.title: "Назва жанру",
-        EducationPageSongGenre.sub_category: "Категорія",
+        EducationPageSongGenre.sub_category: "Під-категорія",
         EducationPageSongGenre.description: "Опис",
         EducationPageSongGenre.media1: "Фото",
         EducationPageSongGenre.media2: "Фото",
@@ -212,6 +220,9 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
         "description": TextAreaField,
     }
     form_args = {
+        "sub_category": {
+            "validators": [DataRequired()],
+        },
         "description": {
             "render_kw": {
                 "class": "form-control",
@@ -228,9 +239,9 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
             for field in EDUCATION_PAGE_PHOTO_FIELDS
         },
     }
-    form_ajax_refs = {
-        "sub_category": {
-            "fields": ("title",),
-            "order_by": "id",
-        },
-    }
+    # form_ajax_refs = {
+    #     "sub_category": {
+    #         "fields": ("title",),
+    #         "order_by": "id",
+    #     },
+    # }
