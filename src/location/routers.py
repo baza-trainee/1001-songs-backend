@@ -289,7 +289,7 @@ async def get_genres(
         return [
             {
                 "id": record.id,
-                "genre_name": record.genre_name,
+                "name": record.genre_name,
                 "song_count": record.count,
             }
             for record in result
