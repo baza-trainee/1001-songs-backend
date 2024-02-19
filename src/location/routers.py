@@ -354,7 +354,7 @@ async def get_funds(
         return [
             {
                 "id": record.id,
-                "fund_name": record.title,
+                "name": record.title,
                 "song_count": record.count,
             }
             for record in result
