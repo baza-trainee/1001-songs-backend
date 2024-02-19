@@ -42,6 +42,10 @@ async def process_change_password(
     user_token,
 ):
     _, token = user_token
+    if new_password != new_password_confirm:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=PASSWORD_NOT_MATCH
+        )
     try:
         await user_manager.validate_password(password=new_password_confirm, user=user)
     except InvalidPasswordException as ex:
@@ -49,10 +53,6 @@ async def process_change_password(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=ex.reason
         )
     password_helper = PasswordHelper()
-    if new_password != new_password_confirm:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=PASSWORD_NOT_MATCH
-        )
     verified, updated = password_helper.verify_and_update(
         old_password, user.hashed_password
     )
