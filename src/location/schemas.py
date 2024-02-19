@@ -40,7 +40,7 @@ class CitySchema(BaseLocation):
 
 class GenreFilterSchema(BaseModel):
     id: int = Field(..., ge=1)
-    genre_name: str = Field(..., max_length=NAME_GENRE_LEN)
+    name: str = Field(..., max_length=NAME_GENRE_LEN)
     song_count: int = Field(..., ge=1)
 
 
