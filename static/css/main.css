@@ -1,7 +1,9 @@
 :root {
     --table-border-color-inner: rgba(97, 114, 118, 0.16);
     --table-border-color-outer: rgba(29, 39, 59, 0.2);
-    --tblr-border-radius: 4px
+    --tblr-border-radius: 4px;
+    --tblr-border-width: 1px;
+    --tblr-border-color: #e6e7e9;
   }
 
 div[class^="ql-editor"] {
@@ -216,6 +218,9 @@ input[type="password"]::-webkit-reveal {
 .input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3), .input-group:not(.has-validation)>.form-floating:not(:last-child)>.form-control, .input-group:not(.has-validation)>.form-floating:not(:last-child)>.form-select, .input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating) {
     border-top-right-radius: var(--tblr-border-radius);
     border-bottom-right-radius: var(--tblr-border-radius)
+}
+.form-control:not(:last-child) {
+    border-right: var(--tblr-border-width) solid var(--tblr-border-color) !important;
 }
 .form-control.is-invalid {
     border-right: 1px solid var(--tblr-danger) !important
