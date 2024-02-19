@@ -50,12 +50,15 @@ class UserManager(IntegerIDMixin, BaseUserManager[User, int]):
     async def validate_password(
         self, password: str, user: Union[UserCreate, User]
     ) -> None:
+        errors = []
         if not (8 <= len(password) <= 64):
-            raise InvalidPasswordException(reason=PASSWORD_LEN_ERROR)
+            errors.append(PASSWORD_LEN_ERROR)
         if user.email.lower().split("@")[0] in password.lower():
-            raise InvalidPasswordException(reason=PASSWORD_UNIQUE_ERROR)
+            errors.append(PASSWORD_UNIQUE_ERROR)
         if not check_password_strength(password):
-            raise InvalidPasswordException(reason=PASSWORD_STRENGTH_ERROR)
+            errors.append(PASSWORD_STRENGTH_ERROR)
+        if errors:
+            raise InvalidPasswordException(reason=" ".join(errors))
 
     async def on_after_login(
         self,
