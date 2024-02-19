@@ -46,7 +46,7 @@ class GenreFilterSchema(BaseModel):
 
 class FundFilterSchema(BaseModel):
     id: int = Field(..., ge=1)
-    fund_name: str = Field(..., max_length=NAME_GENRE_LEN)
+    name: str = Field(..., max_length=NAME_GENRE_LEN)
     song_count: int = Field(..., ge=1)
 
 
