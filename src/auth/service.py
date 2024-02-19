@@ -41,6 +41,14 @@ async def process_change_password(
     user_manager,
     user_token,
 ):
+    password_helper = PasswordHelper()
+    verified, updated = password_helper.verify_and_update(
+        old_password, user.hashed_password
+    )
+    if not verified:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=OLD_PASS_INCORRECT
+        )
     _, token = user_token
     if new_password != new_password_confirm:
         raise HTTPException(
@@ -51,14 +59,6 @@ async def process_change_password(
     except InvalidPasswordException as ex:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=ex.reason
-        )
-    password_helper = PasswordHelper()
-    verified, updated = password_helper.verify_and_update(
-        old_password, user.hashed_password
-    )
-    if not verified:
-        raise HTTPException(
-            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail=OLD_PASS_INCORRECT
         )
     query = (
         update(User)
