@@ -6,43 +6,55 @@
       <h2 class="card-title text-center mb-4">Login to {{ admin.title }}</h2>
       {% if error_message %}
       <div class="alert alert-danger" role="alert" id="errorAlert">
-          {{ error_message }}
+        {{ error_message }}
       </div>
       {% endif %}
       {% if success_message %}
       <div class="alert alert-success" role="alert" id="successAlert">
-          {{ success_message }}
+        {{ success_message }}
       </div>
       {% endif %}
       <div class="mb-3">
         <label class="form-label">Username</label>
         {% if error %}
+        <div class="input-group input-group-flat">
         <input name="username" type="text" class="form-control is-invalid" placeholder="Enter username"
           autocomplete="off">
+        </div>
         <div class="invalid-feedback">{{ error }}</div>
         {% else %}
+        <div class="input-group input-group-flat">
         <input name="username" type="text" class="form-control" placeholder="Enter username" autocomplete="off">
+        </div>
         {% endif %}
       </div>
       <div class="mb-2">
         <label class="form-label">
           Password
         </label>
+        {% if error %}
         <div class="input-group input-group-flat">
-          {% if error %}
-          <input name="password" type="password" class="form-control is-invalid" placeholder="Password"
+          <input name="password" id="password" type="password" class="form-control is-invalid" placeholder="Password"
             autocomplete="off">
-          <div class="invalid-feedback">{{ error }}</div>
-          {% else %}
-          <input name="password" type="password" class="form-control" placeholder="Password" autocomplete="off">
-          {% endif %}
+          {% set input_id = 'password' %}
+          {% include 'toggle_password.html' %}
         </div>
+        <div class="invalid-feedback">{{ error }}</div>
+        {% else %}
+        <div class="input-group input-group-flat">
+          <input name="password" id="password" type="password" class="form-control" placeholder="Password"
+            autocomplete="off">
+          {% set input_id = 'password' %}
+          {% include 'toggle_password.html' %}
+        </div>
+        {% endif %}
       </div>
-      <div class="form-footer">
-          <a class="forgot_password" href="{{ url_for('admin:forgot_password') }}"><u><b>Forgot password?</b></u></a>
-        <button type="submit" class="btn btn-primary w-100">Login</button>
+      <div class="under_forgot_password form-footer">
+        <a href="{{ url_for('admin:forgot_password') }}"><b>Forgot password?</b></a>
+        <button type="submit" class="btn-login btn btn-primary w-100">Login</button>
       </div>
     </div>
   </form>
 </div>
+<script type="text/javascript" src="{{ url_for('static', path='js/toggle_password.js') }}"></script>
 {% endblock %}
