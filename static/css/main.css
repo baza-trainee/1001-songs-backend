@@ -1,7 +1,7 @@
 :root {
     --table-border-color-inner: rgba(97, 114, 118, 0.16);
     --table-border-color-outer: rgba(29, 39, 59, 0.2);
-    --размер-шрифта: 16px;
+    --tblr-border-radius: 4px
   }
 
 div[class^="ql-editor"] {
@@ -156,14 +156,8 @@ select[id="education_genres"],
 select[id="genres"] {
     height: 200px;
 }
-
-/* FORGOT PASSWORD */
-a[class^="forgot_password"] {
-    display: block;
-    padding-bottom: 20px;
-}
 .required-label::after {
-    content: " *";
+    content: "*";
     color: red;
 }
 
@@ -181,7 +175,7 @@ input[type="password"]::-webkit-reveal {
 }
 .btn-toggle-password {
     position: absolute !important; /* Позиционирование абсолютное */
-    right: 0; /* Поместить кнопку справа */
+    right: 10px; /* Поместить кнопку справа */
     top: 50%; /* Выравнивание по вертикали по центру поля ввода */
     transform: translateY(-50%);
     z-index: 6!important;
@@ -189,7 +183,7 @@ input[type="password"]::-webkit-reveal {
     border: none;
     border-left: none; 
     border-radius: 0;
-    background-color: rgba(255, 255, 255, 0);
+    opacity: 0.5;
     color: #1D273B;
     font-size: 1rem;
     box-shadow: none;
@@ -198,6 +192,7 @@ input[type="password"]::-webkit-reveal {
     color:  var(--tblr-btn-hover-bg);
     text-decoration: none;
     background-color: rgba(245, 222, 179, 0);
+    opacity: 1;
     border: none;
 }
 .btn-toggle-password:checked+.btn-toggle-password, .btn-toggle-password.active, .btn-toggle-password.show, .btn-toggle-password:first-child:active, :not(.btn-toggle-password)+.btn-toggle-password:active {
@@ -208,6 +203,24 @@ input[type="password"]::-webkit-reveal {
     border: none; 
     background-color: rgba(255, 255, 255, 0);
 }
-.rounded-input-password-change {
+.btn-login {
+    margin-top: 20px
+}
+.under_forgot_password {
+    margin-top: 5px
+}
+.rounded-input {
     border-radius: 5px !important;
+}
+
+.input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3), .input-group:not(.has-validation)>.form-floating:not(:last-child)>.form-control, .input-group:not(.has-validation)>.form-floating:not(:last-child)>.form-select, .input-group:not(.has-validation)>:not(:last-child):not(.dropdown-toggle):not(.dropdown-menu):not(.form-floating) {
+    border-top-right-radius: var(--tblr-border-radius);
+    border-bottom-right-radius: var(--tblr-border-radius)
+}
+.form-control.is-invalid {
+    border-right: 1px solid var(--tblr-danger) !important
+}
+.invalid-feedback {
+    display: block;
+    margin-bottom: 8px;
 }
