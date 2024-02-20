@@ -100,9 +100,7 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
     column_formatters = {
         CalendarAndRitualCategory.recommended_sources: format_array_of_string,
         CalendarAndRitualCategory.media: MediaFormatter(),
-        CalendarAndRitualCategory.description: TextFormatter(
-            text_align="left", min_width=250
-        ),
+        CalendarAndRitualCategory.description: format_quill,
     }
     form_files_list = [
         CalendarAndRitualCategory.media,

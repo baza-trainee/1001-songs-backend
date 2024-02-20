@@ -38,8 +38,8 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
     }
 
     column_list = [
-        Expedition.content,
         Expedition.title,
+        Expedition.content,
         Expedition.short_description,
         Expedition.preview_photo,
         Expedition.map_photo,
@@ -78,6 +78,7 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
     }
     column_searchable_list = [
         Expedition.title,
+        Expedition.short_description,
     ]
     column_sortable_list = [Expedition.expedition_date]
     column_default_sort = ("expedition_date", True)
