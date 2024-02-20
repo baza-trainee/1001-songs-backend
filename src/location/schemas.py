@@ -145,7 +145,7 @@ class SongMapPageSchema(BaseModel):
                     return f"{settings.BASE_URL}/{value}"
             case "genres":
                 if value:
-                    return [genre.genre_name for genre in value.genres]
+                    return [item.genre_name for item in value]
                 return []
             case "location":
                 return f"{value.name}, {value.region.name}, {value.country.name}"
