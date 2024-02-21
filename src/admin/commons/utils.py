@@ -1,3 +1,4 @@
+import json
 import re
 from typing import Any, Literal
 from markupsafe import Markup
@@ -5,8 +6,10 @@ from markupsafe import Markup
 from bs4 import BeautifulSoup
 from fastapi import Request
 from sqladmin.fields import Select2TagsField
+from sqladmin.widgets import AjaxSelect2Widget
 from sqlalchemy import select
 from wtforms import Field, widgets
+from wtforms.widgets import html_params
 
 from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.validators import QuillValidator
@@ -25,7 +28,9 @@ class MediaInputWidget(widgets.FileInput):
         self.is_required = is_required
 
     def __call__(self, field: Field, **kwargs: Any) -> str:
-        file_input = super().__call__(field, **kwargs)
+        file_input = super().__call__(
+            field, **kwargs, required=(self.is_required and not field.data)
+        )
         checkbox_id = f"{field.id}_checkbox"
         formatter = MediaFormatter(self.file_type)
         checkbox_label = Markup(
@@ -40,6 +45,7 @@ class MediaInputWidget(widgets.FileInput):
                 f'<div class="form-check">{checkbox_input}{checkbox_label}</div>'
             )
             widget_data += checkbox
+
         return widget_data
 
 
@@ -121,3 +127,32 @@ class CustomSelect2TagsField(Select2TagsField):
                 set([str(choice) for choice in self.choices] + self.data)
             )
         return super().__call__(**kwargs)
+
+
+class CustomAjaxSelect2Widget(AjaxSelect2Widget):
+    def __init__(self, multiple: bool = False):
+        super().__init__(multiple)
+
+    def __call__(self, field, **kwargs: Any) -> Markup:
+        kwargs.setdefault("data-role", "select2-ajax")
+        identity = field.loader.model_admin.identity
+        field.loader.model_admin.ajax_lookup_url = f"/admin/{identity}/ajax/new_lookup"
+        kwargs.setdefault("data-url", field.loader.model_admin.ajax_lookup_url)
+
+        allow_blank = getattr(field, "allow_blank", False)
+        if allow_blank and not self.multiple:
+            kwargs["data-allow-blank"] = "1"
+
+        kwargs.setdefault("id", field.id)
+        kwargs.setdefault("type", "hidden")
+
+        if self.multiple:
+            result = [field.loader.format(value) for value in field.data]
+            kwargs["data-json"] = json.dumps(result)
+            kwargs["multiple"] = "1"
+        else:
+            data = field.loader.format(field.data)
+            if data:
+                kwargs["data-json"] = json.dumps([data])
+
+        return Markup(f"<select {html_params(name=field.name, **kwargs)}></select>")

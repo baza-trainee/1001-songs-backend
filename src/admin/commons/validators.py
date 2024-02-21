@@ -45,7 +45,7 @@ class MediaValidator:
                             message=INVALID_FILE % (file.content_type, AUDIO_FORMATS)
                         )
         else:
-            if self.is_required and not getattr(form.model_instance, field.name):
+            if self.is_required and not form.model_instance:
                 raise ValidationError(message=DATA_REQUIRED)
 
 

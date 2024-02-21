@@ -229,3 +229,7 @@ input[type="password"]::-webkit-reveal {
     display: block;
     margin-bottom: 8px;
 }
+.form-check-input[type=checkbox] {
+    border-radius: var(--tblr-border-radius);
+    border: 1px solid rgba(32, 107, 196, 0.3);
+}

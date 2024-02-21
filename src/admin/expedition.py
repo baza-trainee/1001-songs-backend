@@ -27,7 +27,7 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         Expedition.short_description: "Короткий опис",
         Expedition.map_photo: "Фото карти",
         Expedition.preview_photo: "Фото прев'ю",
-        Expedition.expedition_date: "Дата експедиції",
+        Expedition.expedition_date: "Дата",
         Expedition.content: "Контент",
         Expedition.category: "Категорія",
         Expedition.location: "Розташування",

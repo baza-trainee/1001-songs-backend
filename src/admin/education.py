@@ -79,13 +79,19 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
     can_create = False
     can_delete = False
 
-    column_list = column_details_list = form_columns = [
+    column_list = column_details_list = [
         CalendarAndRitualCategory.title,
         CalendarAndRitualCategory.media,
         CalendarAndRitualCategory.description,
         CalendarAndRitualCategory.recommended_sources,
         CalendarAndRitualCategory.education_genres,
         CalendarAndRitualCategory.song_subcategories,
+    ]
+    form_columns = [
+        CalendarAndRitualCategory.title,
+        CalendarAndRitualCategory.media,
+        CalendarAndRitualCategory.description,
+        CalendarAndRitualCategory.recommended_sources,
     ]
 
     column_labels = {
@@ -166,16 +172,22 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
             "validators": [DataRequired()],
         },
         "media": {
-            "validators": [MediaValidator(is_required=True)],
+            "validators": [MediaValidator()],
             "widget": MediaInputWidget(is_required=True),
         },
     }
-    # form_ajax_refs = {
-    #     "main_category": {
-    #         "fields": ("title",),
-    #         "order_by": "id",
-    #     },
-    # }
+    form_ajax_refs = {
+        "main_category": {
+            "fields": ("title",),
+            "order_by": "id",
+        },
+    }
+
+    form_widget_args = {
+        "category": {
+            "required": True,
+        }
+    }
 
 
 class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
