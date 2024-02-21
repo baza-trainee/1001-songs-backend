@@ -17,7 +17,7 @@ RECORDING_LEN = Expedition.recording.type.item_type.length
 
 class ExpeditionCategorySchema(BaseModel):
     id: Optional[int] = Field(..., ge=1)
-    title: Optional[str] = Field(..., max_length=TITLE_CATEGORY_LEN)
+    name: Optional[str] = Field(..., max_length=TITLE_CATEGORY_LEN, validation_alias="title")
 
 
 class ExpedListSchema(BaseModel):
