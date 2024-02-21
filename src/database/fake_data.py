@@ -1653,3 +1653,18 @@ for i in range(10):
         "recording": recording,
     }
     FAKE_EXPEDITIONS.append(fake_expedition)
+
+PARTNERS = [
+    {
+        "photo": "static/partners/1.svg",
+        "link": "https://knmau.com.ua/nauka/laboratoriya-etnomuzikologiyi/",
+    },
+    {
+        "photo": "static/partners/2.svg",
+        "link": "https://lnma.edu.ua/kafedry/kafedra-muzychnoji-folklorystyky-ta-pndlme/",
+    },
+    {
+        "photo": "static/partners/3.svg",
+        "link": "https://baza-trainee.tech/ua",
+    },
+]

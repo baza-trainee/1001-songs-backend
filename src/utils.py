@@ -16,6 +16,7 @@ from src.auth.models import User
 from src.footer.utils import create_footer
 from src.news.utils import create_news, create_news_category
 from src.our_team.utils import create_fake_team
+from src.partners.utils import create_partners
 from src.payment.utils import create_payment
 from src.education.utils import (
     create_calendar_and_ritual_categories,
@@ -47,6 +48,7 @@ from src.database.fake_data import (
     FAKE_PROJECTS,
     FAKE_EXPEDITIONS,
     FAKE_FUNDS,
+    PARTNERS,
 )
 
 
@@ -79,6 +81,7 @@ async def lifespan(app: FastAPI):
                 await create_expeditions(FAKE_EXPEDITIONS, s)
                 await create_projects(FAKE_PROJECTS, s)
                 await create_funds(FAKE_FUNDS, s)
+                await create_partners(PARTNERS, s)
     await lock.release()
     yield
 
