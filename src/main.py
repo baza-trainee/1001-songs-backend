@@ -28,6 +28,8 @@ from src.location.routers import location_router, map_router
 from src.news.routers import news_router
 from src.expedition.routers import expedition_router
 from src.our_project.routers import project_router
+from src.partners.routers import partners_router
+
 
 app = FastAPI(
     swagger_ui_parameters=SWAGGER_PARAMETERS,
@@ -49,12 +51,13 @@ api_routers = [
     auth_router,
     payment_router,
     footer_router,
+    partners_router,
     team_router,
-    education_router,
     about_router,
     location_router,
-    news_router,
     map_router,
+    education_router,
+    news_router,
     expedition_router,
     project_router,
 ]
