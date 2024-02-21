@@ -88,7 +88,7 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.song_descriotion: "Опис",
         Song.collectors: "Збирачі",
         Song.fund: "Фонд",
-        Song.recording_date: "Дата запису",
+        Song.recording_date: "Дата",
         Song.recording_location: "Місце запису",
         Song.comment_map: "Коментар для карти",
         Song.photo1: "Фото",

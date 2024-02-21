@@ -31,12 +31,12 @@ class NewsAdmin(BaseAdmin, model=News):
         News.preview_photo: "Фото прев'ю",
         News.location: "Розташування",
         News.category: "Категорія",
-        News.created_at: "Дата публікації",
+        News.created_at: "Дата",
     }
 
     column_list = [
-        News.content,
         News.title,
+        News.content,
         News.short_description,
         News.preview_photo,
         News.location,
@@ -85,7 +85,6 @@ class NewsAdmin(BaseAdmin, model=News):
         **{field: CustomSelect2TagsField for field in MODEL_TEAM_FIELDS},
     }
     form_args = {
-        "category": {"validators": [DataRequired()]},
         "location": {"validators": [DataRequired()]},
         **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
         "preview_photo": {
@@ -94,9 +93,19 @@ class NewsAdmin(BaseAdmin, model=News):
         },
     }
 
-    # form_ajax_refs = {
-    #     "category": {
-    #         "fields": ("name",),
-    #         "order_by": "id",
-    #     },
-    # }
+    form_ajax_refs = {
+        "category": {
+            "fields": ("name",),
+            "order_by": "id",
+        },
+        "location": {
+            "fields": ("name",),
+            "order_by": "id",
+        },
+    }
+    form_widget_args = {
+        "category": {
+            "required": True,
+            # "multiple" : True,
+        },
+    }

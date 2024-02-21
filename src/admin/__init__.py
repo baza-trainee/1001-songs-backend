@@ -1,7 +1,6 @@
 from .payment import PaymentAdmin
 from .our_team import OurTeamAdmin
 from .footer import FooterAdmin
-
 from .education import (
     EducationAdmin,
     CalendarAndRitualCategoryAdmin,
@@ -15,6 +14,8 @@ from .news import NewsAdmin
 from .expedition import ExpeditionAdmin
 from .project import OurProjectAdmin
 from .pass_change import ChangePasswordAdmin, PasswordRecoveryAdmin
+from .partners import PartnersAdmin
+from .commons.base import CustomAjaxAdmin
 
 __all__ = [
     CountryAdmin,
@@ -36,4 +37,6 @@ __all__ = [
     FundAdmin,
     ChangePasswordAdmin,
     PasswordRecoveryAdmin,
+    CustomAjaxAdmin,
+    PartnersAdmin,
 ]
