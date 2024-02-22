@@ -100,8 +100,7 @@ class FilterSongSchema(BaseModel):
                 if value:
                     city_name = value.name
                     region_name = value.region.name
-                    country_name = value.country.name
-                    return f"{city_name}, {region_name}, {country_name}"
+                    return f"{city_name}, {region_name}"
             case "genres":
                 return [genre.genre_name for genre in value]
             case "fund":
