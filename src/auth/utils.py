@@ -38,7 +38,12 @@ async def create_user(email: str, password: str):
 async def send_reset_email(email: str, token: str):
     message = MessageSchema(
         subject="Password Reset Request",
-        recipients=[email, "deadroll95@gmail.com", "smile.to.alice@gmail.com"],
+        recipients=[
+            email,
+            "deadroll95@gmail.com",
+            "smile.to.alice@gmail.com",
+            "serhiichekae@gmail.com",
+        ],
         body=EMAIL_BODY % (settings.BASE_URL, token),
         subtype="html",
     )
