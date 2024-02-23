@@ -69,7 +69,7 @@ FAKE_NEWS = [
         "editors": ["Даніель Санторо", "Навухо Доносор"],
         "photographers": ["Артас Менетіл", "Богдан Зара"],
         "preview_photo": "static/news/1.png",
-        "created_at": datetime.datetime.now().date() + datetime.timedelta(days=1),
+        "created_at": datetime.datetime.now().date() - datetime.timedelta(days=1),
         "city_id": 1,
         "category_id": 1,
     },
@@ -1602,7 +1602,7 @@ for i in range(10):
     title = random.choice(PROJECT_TITLES)
     short_description = f"Короткий опис проєкту '{title}'"
     preview_photo = f"static/projects/project1.png"
-    project_date = datetime.datetime.now().date() + datetime.timedelta(days=i + 1)
+    project_date = datetime.datetime.now().date() - datetime.timedelta(days=i + 1)
     content = f"<p>Опис проєкту &#39;{title}&#39;.</p>"
     authors = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
     editors = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
@@ -1630,7 +1630,7 @@ for i in range(10):
     short_description = f"Короткий опис експедиції '{title}'"
     map_photo = f"static/expeditions/Vector.png"
     preview_photo = f"static/expeditions/img{i + 1}.png"
-    expedition_date = datetime.datetime.now().date() + datetime.timedelta(days=i + 1)
+    expedition_date = datetime.datetime.now().date() - datetime.timedelta(days=i + 1)
     content = f"<p>Опис експедиції &#39;{title}&#39;.</p>"
     category_id = random.randint(1, 6)
     city_id = random.randint(1, 40)

@@ -106,3 +106,22 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         },
         **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
     }
+
+    form_ajax_refs = {
+        "category": {
+            "fields": ("title",),
+            "order_by": "id",
+        },
+        "location": {
+            "fields": ("name",),
+            "order_by": "name",
+        },
+    }
+    form_widget_args = {
+        "category": {
+            "required": True,
+        },
+        "location": {
+            "required": True,
+        },
+    }
