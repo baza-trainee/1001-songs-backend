@@ -4,6 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
+from fastapi_pagination import Page
+from fastapi_pagination.ext.async_sqlalchemy import paginate
 
 from src.database.database import get_async_session
 from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
@@ -15,7 +17,7 @@ from .exceptions import NO_PROJECT_FOUND
 project_router = APIRouter(prefix="/projects", tags=["Projects"])
 
 
-@project_router.get("", response_model=List[ProjectSliderSchema])
+@project_router.get("", response_model=Page[ProjectSliderSchema])
 async def get_all_projects(
     project_exclude: Optional[int] = Query(None),
     session: AsyncSession = Depends(get_async_session),
@@ -31,11 +33,10 @@ async def get_all_projects(
         if project_exclude:
             query = query.filter(OurProject.id != project_exclude)
         query = query.order_by(OurProject.project_date.desc())
-        result = await session.execute(query)
-        response = result.scalars().all()
-        if not response:
+        result = await paginate(session, query)
+        if not result.items:
             raise NoResultFound
-        return response
+        return result
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
     except Exception:

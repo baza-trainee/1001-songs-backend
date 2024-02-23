@@ -6,18 +6,22 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi_pagination import Page
 from fastapi_pagination.ext.async_sqlalchemy import paginate
 from sqlalchemy.orm.exc import NoResultFound
+from fastapi_cache.decorator import cache
 
 from src.database.database import get_async_session
+from src.database.redis import my_key_builder
 from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
 from .models import Expedition, ExpeditionCategory
 from .schemas import ExpeditionCategorySchema, ExpedListSchema, ExpeditionSchema
 from .exceptions import EXPED_NOT_FOUND
+from src.config import DAY
 
 
 expedition_router = APIRouter(prefix="/expedition", tags=["Expedition"])
 
 
 @expedition_router.get("/categories", response_model=List[ExpeditionCategorySchema])
+@cache(expire=DAY, key_builder=my_key_builder)
 async def get_all_categories(session: AsyncSession = Depends(get_async_session)):
     """Although the expedition categories are persistent,
     you can use this endpoint to see what identifier each
