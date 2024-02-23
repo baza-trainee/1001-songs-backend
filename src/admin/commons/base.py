@@ -82,7 +82,12 @@ class CustomAjaxAdmin(BaseView):
         model_view = self._admin_ref._find_model_view(identity)
 
         name = request.query_params.get("name")
-        term = request.query_params.get("term").strip()
+        term = request.query_params.get("term", None)
+
+        if term:
+            term = term.strip()
+        else:
+            term = ""
 
         if not name:
             raise HTTPException(status_code=400)
@@ -92,5 +97,5 @@ class CustomAjaxAdmin(BaseView):
         except KeyError:
             raise HTTPException(status_code=400)
 
-        data = [loader.format(m) for m in await loader.get_list(term)]
+        data = [loader.format(m) for m in await loader.get_list(term, limit=100)]
         return JSONResponse({"results": data})

@@ -67,9 +67,7 @@ async def scaffold_form_for_quill(self, form):
     for quil_field in self.form_quill_list:
         if not isinstance(quil_field, str):
             quil_field = quil_field.name
-            old_validators = getattr(form, quil_field)
-            old_validators.kwargs["validators"].append(QuillValidator())
-            setattr(form, quil_field, old_validators)
+            getattr(form, quil_field).kwargs["validators"].append(QuillValidator())
         form.quill_list.append(quil_field)
     return form
 
@@ -122,10 +120,9 @@ class CustomSelect2TagsField(Select2TagsField):
     async def __call__(self, **kwargs: object) -> Markup:
         async with async_session_maker() as session:
             query = await session.execute(select(self.model))
-            self.choices = query.scalars().all()
-            self.choices = list(
-                set([str(choice) for choice in self.choices] + self.data)
-            )
+            query_result = query.scalars().all()
+            query_result = set([str(record) for record in query_result])
+            self.choices = list(query_result - set(self.data))
         return super().__call__(**kwargs)
 
 

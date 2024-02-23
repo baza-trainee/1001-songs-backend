@@ -90,6 +90,7 @@ class QuillValidator:
                     message=MAX_FIELD_LENTH % (field.name, result_len, self.max_length)
                 )
             field.data = result.replace("'", "&#x27;")
+            field.errors = []
 
             old_data = getattr(form.model_instance, field.name, None)
             if old_data:

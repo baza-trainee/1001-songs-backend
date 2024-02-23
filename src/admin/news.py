@@ -86,6 +86,7 @@ class NewsAdmin(BaseAdmin, model=News):
     }
     form_args = {
         "location": {"validators": [DataRequired()]},
+        "category": {"validators": [DataRequired()]},
         **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
         "preview_photo": {
             "validators": [MediaValidator(is_required=True)],
@@ -107,5 +108,8 @@ class NewsAdmin(BaseAdmin, model=News):
         "category": {
             "required": True,
             # "multiple" : True,
+        },
+        "location": {
+            "required": True,
         },
     }
