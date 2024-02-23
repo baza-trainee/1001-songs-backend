@@ -85,3 +85,15 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
             "validators": [MediaValidator(is_required=True)],
         },
     }
+    form_ajax_refs = {
+        "location": {
+            "fields": ("name",),
+            "order_by": "name",
+        },
+    }
+
+    form_widget_args = {
+        "location": {
+            "required": True,
+        },
+    }

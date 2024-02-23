@@ -167,8 +167,10 @@ class SongAdmin(BaseAdmin, model=Song):
     form_overrides = {
         "song_text": TextAreaField,
         "song_descriotion": TextAreaField,
+        "collectors": CustomSelect2TagsField,
     }
     form_args = {
+        "collectors": {"model": OurTeam},
         "title": {"validators": [DataRequired()]},
         "performers": {"validators": [DataRequired()]},
         "ethnographic_district": {"validators": [DataRequired()]},
@@ -188,17 +190,9 @@ class SongAdmin(BaseAdmin, model=Song):
             },
         },
         "genres": {
-            "render_kw": {
-                "class": "form-control",
-                "rows": 20,
-            },
             "validators": [DataRequired()],
         },
         "city": {
-            "render_kw": {
-                "class": "form-control",
-                "rows": 20,
-            },
             "validators": [DataRequired()],
         },
         **{
@@ -220,18 +214,25 @@ class SongAdmin(BaseAdmin, model=Song):
             for field in SONG_FIELDS
         },
     }
-
-    # form_ajax_refs = {
-    #     "genres": {
-    #         "fields": ("genre_name",),
-    #         "order_by": "id",
-    #     },
-    #     "education_genres": {
-    #         "fields": ("title",),
-    #         "order_by": "id",
-    #     },
-    #     "city": {
-    #         "fields": ("name",),
-    #         "order_by": "id",
-    #     },
-    # }
+    form_ajax_refs = {
+        "genres": {
+            "fields": ("genre_name",),
+            "order_by": "genre_name",
+        },
+        "education_genres": {
+            "fields": ("title",),
+            "order_by": "title",
+        },
+        "city": {
+            "fields": ("name",),
+            "order_by": "name",
+        },
+    }
+    form_widget_args = {
+        "genres": {
+            "required": True,
+        },
+        "city": {
+            "required": True,
+        },
+    }

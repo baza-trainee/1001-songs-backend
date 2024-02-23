@@ -38,19 +38,20 @@ class RegionAdmin(BaseAdmin, model=Region):
     ]
     form_args = {
         "country": {
-            "render_kw": {
-                "class": "form-control",
-                "rows": 20,
-            },
             "validators": [DataRequired()],
         },
     }
-    # form_ajax_refs = {
-    #     "country": {
-    #         "fields": ("name",),
-    #         "order_by": "id",
-    #     },
-    # }
+    form_ajax_refs = {
+        "country": {
+            "fields": ("name",),
+            "order_by": "name",
+        },
+    }
+    form_widget_args = {
+        "country": {
+            "required": True,
+        },
+    }
 
 
 class CityAdmin(BaseAdmin, model=City):
@@ -74,17 +75,9 @@ class CityAdmin(BaseAdmin, model=City):
     ]
     form_args = {
         "country": {
-            "render_kw": {
-                "class": "form-control",
-                "rows": 20,
-            },
             "validators": [DataRequired()],
         },
         "region": {
-            "render_kw": {
-                "class": "form-control",
-                "rows": 20,
-            },
             "validators": [DataRequired()],
         },
         "latitude": {
@@ -94,13 +87,21 @@ class CityAdmin(BaseAdmin, model=City):
             "validators": [DataRequired()],
         },
     }
-    # form_ajax_refs = {
-    #     "country": {
-    #         "fields": ("name",),
-    #         "order_by": "id",
-    #     },
-    #     "region": {
-    #         "fields": ("name",),
-    #         "order_by": "id",
-    #     },
-    # }
+    form_ajax_refs = {
+        "country": {
+            "fields": ("name",),
+            "order_by": "name",
+        },
+        "region": {
+            "fields": ("name",),
+            "order_by": "name",
+        },
+    }
+    form_widget_args = {
+        "country": {
+            "required": True,
+        },
+        "region": {
+            "required": True,
+        },
+    }

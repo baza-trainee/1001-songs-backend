@@ -101,7 +101,7 @@ class NewsAdmin(BaseAdmin, model=News):
         },
         "location": {
             "fields": ("name",),
-            "order_by": "id",
+            "order_by": "name",
         },
     }
     form_widget_args = {

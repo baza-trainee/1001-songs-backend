@@ -184,7 +184,7 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
     }
 
     form_widget_args = {
-        "category": {
+        "main_category": {
             "required": True,
         }
     }
@@ -248,9 +248,15 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
             for field in EDUCATION_PAGE_PHOTO_FIELDS
         },
     }
-    # form_ajax_refs = {
-    #     "sub_category": {
-    #         "fields": ("title",),
-    #         "order_by": "id",
-    #     },
-    # }
+    form_ajax_refs = {
+        "sub_category": {
+            "fields": ("title",),
+            "order_by": "title",
+        },
+    }
+
+    form_widget_args = {
+        "sub_category": {
+            "required": True,
+        },
+    }

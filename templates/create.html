@@ -46,7 +46,9 @@
             <div class="btn-group flex-wrap" data-toggle="buttons">
               <input type="submit" name="save" value="Save" class="btn">
               <input type="submit" name="save" value="Save and continue editing" class="btn">
+              {% if model_view.save_and_another %}
               <input type="submit" name="save" value="Save and add another" class="btn">
+              {% endif %}
             </div>
           </div>
         </div>
