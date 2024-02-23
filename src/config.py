@@ -49,6 +49,10 @@ REDIS_URL = (
     f"redis://default:{settings.REDIS_PASS}@{settings.REDIS_HOST}:{settings.REDIS_PORT}"
 )
 CACHE_PREFIX = "fastapi-cache"
+HOUR = 3600
+DAY = HOUR * 24
+HALF_DAY = HOUR * 12
+MONTH = DAY * 30
 
 mail_config = ConnectionConfig(
     MAIL_USERNAME=settings.EMAIL_USER,

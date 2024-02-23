@@ -3,11 +3,14 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, status, Query
 from fastapi_pagination import Page
 from fastapi_pagination.ext.async_sqlalchemy import paginate
-from sqlalchemy import func, select
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
+from fastapi_cache.decorator import cache
 
+from src.config import DAY
 from src.database.database import get_async_session
+from src.database.redis import my_key_builder
 from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
 from src.location.exceptions import NO_REGION_FOUND
 from .service import get_records
@@ -19,6 +22,7 @@ news_router = APIRouter(prefix="/news", tags=["News"])
 
 
 @news_router.get("/categories", response_model=List[NewCategorySchema])
+@cache(expire=DAY, key_builder=my_key_builder)
 async def get_categories(session: AsyncSession = Depends(get_async_session)):
     return await get_records(NewsCategory, session)
 
