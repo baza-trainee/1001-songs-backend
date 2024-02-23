@@ -1,7 +1,10 @@
+from typing import Any
+from fastapi import Request
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.utils import MediaInputWidget
 from src.admin.commons.validators import MediaValidator
+from src.database.redis import invalidate_cache
 from src.payment.models import PaymentDetails
 
 
@@ -38,3 +41,9 @@ class PaymentAdmin(BaseAdmin, model=PaymentDetails):
             "widget": MediaInputWidget(is_required=True),
         },
     }
+
+    async def after_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        await invalidate_cache("get_payment")
+        return await super().after_model_change(data, model, is_created, request)

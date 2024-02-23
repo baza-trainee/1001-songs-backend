@@ -1,7 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
+from fastapi_cache.decorator import cache
 
+from src.config import HOUR
+from src.database.redis import my_key_builder
 from src.database.database import get_async_session
 from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
 from .schemas import PaymentDetailsSchema
@@ -12,6 +15,7 @@ payment_router = APIRouter(prefix="/payment", tags=["Payment"])
 
 
 @payment_router.get("", response_model=PaymentDetailsSchema)
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_payment(
     session: AsyncSession = Depends(get_async_session),
 ):
