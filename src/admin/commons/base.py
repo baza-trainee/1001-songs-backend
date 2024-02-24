@@ -1,11 +1,11 @@
-from typing import Any, ClassVar, List, Union
+from typing import Any, ClassVar, Union
 
 from fastapi import HTTPException, Request, Response
 from fastapi.responses import JSONResponse
 from sqladmin import BaseView, ModelView, expose
 from sqladmin.models import ModelViewMeta
 from sqladmin.ajax import QueryAjaxModelLoader
-from sqlalchemy import Sequence, cast, or_, select, String
+from sqlalchemy import Sequence
 from sqlalchemy.orm import InstrumentedAttribute
 from wtforms import Form
 
@@ -44,7 +44,8 @@ class BaseAdmin(ModelView, metaclass=ModelViewMeta):
         if self.form_quill_list:
             form = await scaffold_form_for_quill(self, form)
         for ajax_key in self.form_ajax_refs.keys():
-            getattr(form, ajax_key).field_class.widget = CustomAjaxSelect2Widget()
+            field_class = getattr(form, ajax_key).field_class
+            field_class.widget = CustomAjaxSelect2Widget(field_class.widget.multiple)
         return form
 
     async def get_object_for_edit(self, value: Any) -> Any:
