@@ -56,6 +56,7 @@ class RegionAdmin(BaseAdmin, model=Region):
         Region.name,
     ]
 
+
 class CityAdmin(BaseAdmin, model=City):
     category = "Локації"
     name_plural = "Міста та поселення"
