@@ -52,6 +52,9 @@ class RegionAdmin(BaseAdmin, model=Region):
             "required": True,
         },
     }
+    column_searchable_list = [
+        Region.name,
+    ]
 
 
 class CityAdmin(BaseAdmin, model=City):
@@ -105,3 +108,6 @@ class CityAdmin(BaseAdmin, model=City):
             "required": True,
         },
     }
+    column_searchable_list = [
+        City.name,
+    ]
