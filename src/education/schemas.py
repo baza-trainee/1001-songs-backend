@@ -41,6 +41,7 @@ class SubCategoryBaseSchema(BaseCycleSchema):
 class EducationGenreSchema(EducationGenreBaseSchema):
     media: Optional[List[AnyHttpUrl]] = Field(None, max_items=5)
     description: Optional[str] = Field(None, max_length=DESCRIPTION_LEN)
+    main_category: EducationGenreBaseSchema
 
     @field_validator("media", mode="before")
     @classmethod
@@ -102,7 +103,7 @@ class SongsSchema(BaseModel):
 
 class OneSongSchema(BaseModel):
     id: int = Field(..., ge=1)
-    genres: List[str] = Field(..., validation_alias="education_genres")
+    genres: List[dict] = Field(..., validation_alias="education_genres")
     title: str = Field(..., max_length=TITLE_LEN)
     stereo_audio: Optional[AnyHttpUrl] = Field(None)
     song_text: Optional[str] = Field(None)
@@ -135,7 +136,21 @@ class OneSongSchema(BaseModel):
                     return f"{settings.BASE_URL}/{value}"
             case "genres":
                 if value:
-                    return [genre.title for genre in value]
+                    return [
+                        {
+                            "id": genre.id,
+                            "title": genre.title,
+                            "sub_category": {
+                                "id": genre.sub_category.id,
+                                "title": genre.sub_category.title,
+                            },
+                            "main_category": {
+                                "id": genre.main_category.id,
+                                "title": genre.main_category.title,
+                            },
+                        }
+                        for genre in value
+                    ]
                 return []
             case "location":
                 return f"{value.name}, {value.region.name}, {value.country.name}"
