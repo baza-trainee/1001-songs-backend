@@ -77,9 +77,15 @@ class EducationPageSongGenre(Base):
     sub_category_id: int = Column(Integer, ForeignKey("song_subcategories.id"))
 
     main_category = relationship(
-        "CalendarAndRitualCategory", back_populates="education_genres"
+        "CalendarAndRitualCategory",
+        back_populates="education_genres",
+        lazy="selectin",
     )
-    sub_category = relationship("SongSubcategory", back_populates="education_genres")
+    sub_category = relationship(
+        "SongSubcategory",
+        back_populates="education_genres",
+        lazy="selectin",
+    )
     songs = relationship(
         "Song",
         secondary="song_education_genre_association",
