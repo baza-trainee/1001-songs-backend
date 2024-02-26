@@ -31,7 +31,7 @@ def upgrade() -> None:
         type_=sa.String(length=100),
         existing_nullable=True,
     )
-    op.add_column("song", sa.Column("song_text", sa.String(length=2000), nullable=True))
+    op.add_column("song", sa.Column("song_text", sa.String(length=5000), nullable=True))
     op.add_column(
         "song", sa.Column("song_descriotion", sa.String(length=2000), nullable=True)
     )

@@ -24,7 +24,7 @@ class Song(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     title = Column(String(200))
-    song_text = Column(String(2000))
+    song_text = Column(String(5000))
     song_descriotion = Column(String(2000))
     recording_date = Column(Date)
     performers = Column(String(200))
