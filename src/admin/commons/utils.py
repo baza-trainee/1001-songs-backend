@@ -143,13 +143,16 @@ class CustomAjaxSelect2Widget(AjaxSelect2Widget):
         kwargs.setdefault("id", field.id)
         kwargs.setdefault("type", "hidden")
 
-        if self.multiple:
-            result = [field.loader.format(value) for value in field.data]
-            kwargs["data-json"] = json.dumps(result)
-            kwargs["multiple"] = "1"
-        else:
-            data = field.loader.format(field.data)
-            if data:
-                kwargs["data-json"] = json.dumps([data])
+        try:
+            if self.multiple:
+                data = [field.loader.format(value) for value in field.data]
+                kwargs["multiple"] = "1"
+            else:
+                data = field.loader.format(field.data)
+        except:
+            data = None
+
+        if data:
+            kwargs["data-json"] = json.dumps(data if self.multiple else [data])
 
         return Markup(f"<select {html_params(name=field.name, **kwargs)}></select>")
