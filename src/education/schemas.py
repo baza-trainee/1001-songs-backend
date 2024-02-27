@@ -101,9 +101,23 @@ class SongsSchema(BaseModel):
                 return f"{settings.BASE_URL}/{value}"
 
 
+class SubCategorySchema(BaseModel):
+    id: int
+    title: str
+
+
+class GenreForSongPageSchema(BaseModel):
+    id: int
+    title: str
+    sub_category: SubCategorySchema
+    main_category: EducationGenreBaseSchema
+
+
 class OneSongSchema(BaseModel):
     id: int = Field(..., ge=1)
-    genres: List[dict] = Field(..., validation_alias="education_genres")
+    genres: List[GenreForSongPageSchema] = Field(
+        ..., validation_alias="education_genres"
+    )
     title: str = Field(..., max_length=TITLE_LEN)
     stereo_audio: Optional[AnyHttpUrl] = Field(None)
     song_text: Optional[str] = Field(None)

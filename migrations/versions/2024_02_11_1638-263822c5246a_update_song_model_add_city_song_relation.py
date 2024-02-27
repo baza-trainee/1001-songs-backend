@@ -33,7 +33,7 @@ def upgrade() -> None:
     )
     op.add_column("song", sa.Column("song_text", sa.String(length=5000), nullable=True))
     op.add_column(
-        "song", sa.Column("song_descriotion", sa.String(length=2000), nullable=True)
+        "song", sa.Column("song_description", sa.String(length=2000), nullable=True)
     )
     op.add_column(
         "song", sa.Column("ethnographic_district", sa.String(length=100), nullable=True)
@@ -100,7 +100,7 @@ def downgrade() -> None:
     op.drop_column("song", "comment_map")
     op.drop_column("song", "recording_location")
     op.drop_column("song", "ethnographic_district")
-    op.drop_column("song", "song_descriotion")
+    op.drop_column("song", "song_description")
     op.drop_column("song", "song_text")
     op.alter_column(
         "genre",

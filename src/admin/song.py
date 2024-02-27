@@ -85,7 +85,7 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.performers: "Виконавці",
         Song.city: "Місто / Поселення",
         Song.ethnographic_district: "Етнографічний регіон",
-        Song.song_descriotion: "Опис",
+        Song.song_description: "Опис",
         Song.collectors: "Збирачі",
         Song.fund: "Фонд",
         Song.recording_date: "Дата",
@@ -122,7 +122,7 @@ class SongAdmin(BaseAdmin, model=Song):
     column_details_list = form_columns = [
         Song.title,
         Song.song_text,
-        Song.song_descriotion,
+        Song.song_description,
         Song.performers,
         Song.city,
         Song.ethnographic_district,
@@ -166,7 +166,7 @@ class SongAdmin(BaseAdmin, model=Song):
     form_files_list = SONG_FIELDS + PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS
     form_overrides = {
         "song_text": TextAreaField,
-        "song_descriotion": TextAreaField,
+        "song_description": TextAreaField,
         "collectors": CustomSelect2TagsField,
     }
     form_args = {
@@ -182,11 +182,11 @@ class SongAdmin(BaseAdmin, model=Song):
                 "maxlength": Song.song_text.type.length,
             },
         },
-        "song_descriotion": {
+        "song_description": {
             "render_kw": {
                 "class": "form-control",
                 "rows": 3,
-                "maxlength": Song.song_descriotion.type.length,
+                "maxlength": Song.song_description.type.length,
             },
         },
         "genres": {

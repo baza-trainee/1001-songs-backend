@@ -91,9 +91,9 @@ class PasswordRecoveryAdmin(BaseView):
             email = form.get("email", None)
             response = await self.call_forgot_password_endpoint(email)
             if response.status_code == 202:
-                context["success_message"] = (
-                    "Password recovery request sent successfully."
-                )
+                context[
+                    "success_message"
+                ] = "Password recovery request sent successfully."
             else:
                 context["error_message"] = (
                     response.json().get("detail", None)
@@ -118,9 +118,9 @@ class PasswordRecoveryAdmin(BaseView):
             if new_password == confirm_password:
                 response = await self.call_reset_password_endpoint(token, new_password)
                 if response.status_code == 200:
-                    context["success_message"] = (
-                        "Password has been successfully recovered."
-                    )
+                    context[
+                        "success_message"
+                    ] = "Password has been successfully recovered."
                 else:
                     error = response.json().get("detail", None)
                     if error:
