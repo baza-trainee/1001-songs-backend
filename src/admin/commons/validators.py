@@ -33,7 +33,6 @@ class MediaValidator:
             raise ValidationError(message=OVERSIZE_FILE % (file_size, max_size))
 
     def __call__(self, form, field):
-        return
         file = field.data
         if file and file.size:
             content_type = file.content_type
