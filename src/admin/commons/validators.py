@@ -6,7 +6,14 @@ from typing import Literal
 from bs4 import BeautifulSoup
 from wtforms import ValidationError
 
-from src.config import AUDIO_FORMATS, FILE_FORMATS, MAX_FILE_SIZE_MB, PHOTO_FORMATS
+from src.config import (
+    AUDIO_FORMATS,
+    DOCUMENT_FORMATS,
+    PHOTO_FORMATS,
+    MAX_AUDIO_SIZE_MB,
+    MAX_DOCUMENT_SIZE_MB,
+    MAX_PHOTO_SIZE_MB,
+)
 from src.exceptions import DATA_REQUIRED, INVALID_FILE, MAX_FIELD_LENTH, OVERSIZE_FILE
 from src.utils import delete_photo, save_photo
 from src.config import settings
@@ -21,29 +28,34 @@ class MediaValidator:
         self.file_type = file_type
         self.is_required = is_required
 
+    def validate_size(self, file_size: int, max_size: int):
+        if round(file_size / 1024 / 1024, 2) > max_size:
+            raise ValidationError(message=OVERSIZE_FILE % (file_size, max_size))
+
     def __call__(self, form, field):
+        return
         file = field.data
         if file and file.size:
-            if file_size := round(file.size / 1024 / 1024, 2) > MAX_FILE_SIZE_MB:
-                raise ValidationError(
-                    message=OVERSIZE_FILE % (file_size, MAX_FILE_SIZE_MB)
-                )
+            content_type = file.content_type
             match self.file_type:
                 case "photo":
-                    if not file.content_type in PHOTO_FORMATS:
+                    if not content_type in PHOTO_FORMATS:
                         raise ValidationError(
-                            message=INVALID_FILE % (file.content_type, PHOTO_FORMATS)
+                            message=INVALID_FILE % (content_type, PHOTO_FORMATS)
                         )
+                    self.validate_size(file.size, MAX_PHOTO_SIZE_MB)
                 case "document":
-                    if not file.content_type in FILE_FORMATS:
+                    if not content_type in DOCUMENT_FORMATS:
                         raise ValidationError(
-                            message=INVALID_FILE % (file.content_type, FILE_FORMATS)
+                            message=INVALID_FILE % (content_type, DOCUMENT_FORMATS)
                         )
+                    self.validate_size(file.size, MAX_DOCUMENT_SIZE_MB)
                 case "audio":
-                    if not file.content_type in AUDIO_FORMATS:
+                    if not content_type in AUDIO_FORMATS:
                         raise ValidationError(
-                            message=INVALID_FILE % (file.content_type, AUDIO_FORMATS)
+                            message=INVALID_FILE % (content_type, AUDIO_FORMATS)
                         )
+                    self.validate_size(file.size, MAX_AUDIO_SIZE_MB)
         else:
             if self.is_required and not form.model_instance:
                 raise ValidationError(message=DATA_REQUIRED)

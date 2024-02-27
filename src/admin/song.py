@@ -23,6 +23,9 @@ ETHNOGRAPHIC_PHOTO_FIELDS = [
     "ethnographic_photo2",
     "ethnographic_photo3",
 ]
+MAP_FIELDS = [
+    "map_photo",
+]
 SONG_FIELDS = [
     "stereo_audio",
     "multichannel_audio1",
@@ -90,6 +93,7 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.fund: "Фонд",
         Song.recording_date: "Дата",
         Song.recording_location: "Місце запису",
+        Song.map_photo: "Карта",
         Song.comment_map: "Коментар для карти",
         Song.photo1: "Фото",
         Song.photo2: "Фото",
@@ -118,6 +122,7 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.performers,
         Song.collectors,
         Song.fund,
+        Song.map_photo,
     ]
     column_details_list = form_columns = [
         Song.title,
@@ -132,8 +137,9 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.education_genres,
         Song.recording_date,
         Song.recording_location,
-        Song.comment_map,
         Song.video_url,
+        Song.map_photo,
+        Song.comment_map,
         Song.photo1,
         Song.photo2,
         Song.photo3,
@@ -159,11 +165,14 @@ class SongAdmin(BaseAdmin, model=Song):
     column_formatters = {
         Song.song_text: TextFormatter(text_align="left", min_width=200),
         Song.collectors: format_array_of_string,
+        Song.map_photo: MediaFormatter(),
         Song.photo1: PhotoSplitFormatter(PHOTO_FIELDS),
         Song.ethnographic_photo1: PhotoSplitFormatter(ETHNOGRAPHIC_PHOTO_FIELDS),
         Song.stereo_audio: MediaFormatter(file_type="audio"),
     }
-    form_files_list = SONG_FIELDS + PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS
+    form_files_list = (
+        SONG_FIELDS + PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS + MAP_FIELDS
+    )
     form_overrides = {
         "song_text": TextAreaField,
         "song_description": TextAreaField,
@@ -202,7 +211,7 @@ class SongAdmin(BaseAdmin, model=Song):
                     MediaValidator(),
                 ],
             }
-            for field in PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS
+            for field in PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS + MAP_FIELDS
         },
         **{
             field: {

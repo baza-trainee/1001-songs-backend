@@ -6,12 +6,16 @@ PHOTO_FORMATS = [
     "image/png",
     "image/jpeg",
 ]
-
-FILE_FORMATS = [
+DOCUMENT_FORMATS = [
     "application/pdf",
 ]
-AUDIO_FORMATS = ["audio/mpeg"]
-MAX_FILE_SIZE_MB = 3
+AUDIO_FORMATS = [
+    "audio/mpeg",
+]
+
+MAX_PHOTO_SIZE_MB = 1
+MAX_DOCUMENT_SIZE_MB = 5
+MAX_AUDIO_SIZE_MB = 10
 
 
 class Settings(BaseSettings):
