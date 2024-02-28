@@ -10,12 +10,18 @@ from pydantic import (
 )
 
 from src.config import settings
-from src.song.models import Genre
+from src.song.models import Fund, Genre
 from .models import City
 
 
 NAME_LEN = City.name.type.length
 NAME_GENRE_LEN = Genre.genre_name.type.length
+FUND_LEN = Fund.title.type.length
+
+
+class FundSchema(BaseModel):
+    id: int = Field(..., ge=1)
+    title: str = Field(..., max_length=NAME_LEN)
 
 
 class BaseLocation(BaseModel):
@@ -126,6 +132,7 @@ class SongMapPageSchema(BaseModel):
     photos: Optional[List[AnyHttpUrl]] = Field(None)
     stereo_audio: Optional[str] = Field(None)
     multichannels: Optional[List[str]] = Field(None)
+    fund: FundSchema
 
     @field_validator(
         "photos", "multichannels", "stereo_audio", "genres", "location", mode="before"
