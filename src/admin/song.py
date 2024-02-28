@@ -201,6 +201,9 @@ class SongAdmin(BaseAdmin, model=Song):
         "genres": {
             "validators": [DataRequired()],
         },
+        "fund": {
+            "validators": [DataRequired()],
+        },
         "city": {
             "validators": [DataRequired()],
         },
