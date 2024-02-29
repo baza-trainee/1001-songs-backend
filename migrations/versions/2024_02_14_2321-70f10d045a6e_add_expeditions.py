@@ -33,8 +33,10 @@ def upgrade() -> None:
     op.create_table(
         "expedition",
         sa.Column("id", sa.Integer(), nullable=False),
-        sa.Column("title", sa.String(length=250), nullable=False),
-        sa.Column("short_description", sa.String(length=120), nullable=False),
+        sa.Column("title", sa.String(length=250), nullable=False, index=True),
+        sa.Column(
+            "short_description", sa.String(length=120), nullable=False, index=True
+        ),
         sa.Column("map_photo", FileType(storage), nullable=True),
         sa.Column("preview_photo", FileType(storage), nullable=True),
         sa.Column("expedition_date", sa.Date(), nullable=True),
