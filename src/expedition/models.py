@@ -24,8 +24,8 @@ class Expedition(Base):
     __tablename__ = "expedition"
 
     id: int = Column(Integer, primary_key=True)
-    title: str = Column(String(250), nullable=False)
-    short_description: str = Column(String(120), nullable=False)
+    title: str = Column(String(250), nullable=False, index=True)
+    short_description: str = Column(String(120), nullable=False, index=True)
     map_photo: str = Column(FileType(storage=storage))
     preview_photo: str = Column(FileType(storage=storage))
     expedition_date = Column(Date)
