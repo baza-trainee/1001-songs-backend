@@ -37,7 +37,8 @@ class NewsSchemaList(BaseModel):
     def add_base_url(cls, value: dict, info: ValidationInfo) -> str:
         match info.field_name:
             case "location":
-                return f"{value.name}, {value.region.name}, {value.region.country.name}"
+                if value:
+                    return f"{value.name}, {value.region.name}, {value.region.country.name}"
             case "preview_photo":
                 if value:
                     return f"{settings.BASE_URL}/{value}"

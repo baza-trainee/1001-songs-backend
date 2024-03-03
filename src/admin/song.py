@@ -9,7 +9,7 @@ from src.admin.commons.formatters import (
     format_array_of_string,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
-from src.admin.commons.validators import MediaValidator
+from src.admin.commons.validators import MediaValidator, PastDateValidator
 from src.our_team.models import OurTeam
 from src.song.models import Genre, Song, Fund
 
@@ -183,7 +183,7 @@ class SongAdmin(BaseAdmin, model=Song):
         "title": {"validators": [DataRequired()]},
         "performers": {"validators": [DataRequired()]},
         "ethnographic_district": {"validators": [DataRequired()]},
-        "recording_date": {"validators": [DataRequired()]},
+        "recording_date": {"validators": [DataRequired(), PastDateValidator()]},
         "song_text": {
             "render_kw": {
                 "class": "form-control",

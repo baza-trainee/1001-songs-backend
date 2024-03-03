@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime
 import mimetypes
 import re
 from typing import Literal
@@ -117,3 +118,14 @@ class QuillValidator:
                                 match.group(0) if match else img_tag["src"]
                             )  # FOR DEBUG
                             delete_photo(result)
+
+
+class PastDateValidator(object):
+    def __init__(self, message=None):
+        if not message:
+            message = "Дата запису має бути в минулому."
+        self.message = message
+
+    def __call__(self, form, field):
+        if field.data > datetime.today().date():
+            raise ValidationError(self.message)
