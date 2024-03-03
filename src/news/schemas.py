@@ -39,6 +39,8 @@ class NewsSchemaList(BaseModel):
             case "location":
                 if value:
                     return f"{value.name}, {value.region.name}, {value.region.country.name}"
+                else:
+                    return ""
             case "preview_photo":
                 if value:
                     return f"{settings.BASE_URL}/{value}"
