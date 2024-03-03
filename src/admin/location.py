@@ -34,7 +34,7 @@ class RegionAdmin(BaseAdmin, model=Region):
     column_details_list = [
         Region.country,
         Region.name,
-        Region.cities,
+        # Region.cities,
     ]
     form_args = {
         "country": {
