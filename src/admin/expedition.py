@@ -6,7 +6,7 @@ from src.admin.commons.formatters import (
     TextFormatter,
     format_date,
     format_quill,
-    format_array_of_string,
+    ArrayFormatter,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
 from src.admin.commons.validators import MediaValidator
@@ -68,10 +68,10 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
     column_formatters = {
         Expedition.short_description: TextFormatter(text_align="left"),
         Expedition.content: format_quill,
-        Expedition.authors: format_array_of_string,
-        Expedition.editors: format_array_of_string,
-        Expedition.photographers: format_array_of_string,
-        Expedition.recording: format_array_of_string,
+        Expedition.authors: ArrayFormatter(),
+        Expedition.editors: ArrayFormatter(),
+        Expedition.photographers: ArrayFormatter(),
+        Expedition.recording: ArrayFormatter(),
         Expedition.map_photo: MediaFormatter(),
         Expedition.preview_photo: MediaFormatter(),
         Expedition.expedition_date: format_date,

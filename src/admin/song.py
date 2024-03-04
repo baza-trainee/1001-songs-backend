@@ -3,10 +3,10 @@ from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import (
+    ArrayFormatter,
     PhotoSplitFormatter,
     MediaFormatter,
     TextFormatter,
-    format_array_of_string,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
 from src.admin.commons.validators import MediaValidator, PastDateValidator
@@ -113,16 +113,17 @@ class SongAdmin(BaseAdmin, model=Song):
     column_list = [
         Song.title,
         Song.stereo_audio,
-        Song.song_text,
         Song.photo1,
         Song.ethnographic_photo1,
+        Song.map_photo,
         Song.recording_date,
         Song.genres,
         Song.education_genres,
         Song.performers,
         Song.collectors,
         Song.fund,
-        Song.map_photo,
+        Song.song_text,
+        Song.song_description,
     ]
     column_details_list = form_columns = [
         Song.title,
@@ -157,15 +158,18 @@ class SongAdmin(BaseAdmin, model=Song):
     column_searchable_list = [
         Song.title,
         Song.song_text,
+        Song.fund,
     ]
     column_sortable_list = [
         Song.recording_date,
     ]
     column_default_sort = ("recording_date", True)
     column_formatters = {
-        Song.song_text: TextFormatter(text_align="left", min_width=200),
-        Song.collectors: format_array_of_string,
-        Song.map_photo: MediaFormatter(),
+        Song.song_text: TextFormatter(to_bool=True),
+        Song.song_description: TextFormatter(to_bool=True),
+        Song.performers: TextFormatter(max_lenth=50),
+        Song.collectors: ArrayFormatter(width=150),
+        Song.map_photo: MediaFormatter(heigth=80),
         Song.photo1: PhotoSplitFormatter(PHOTO_FIELDS),
         Song.ethnographic_photo1: PhotoSplitFormatter(ETHNOGRAPHIC_PHOTO_FIELDS),
         Song.stereo_audio: MediaFormatter(file_type="audio"),
