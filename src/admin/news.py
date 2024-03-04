@@ -104,12 +104,3 @@ class NewsAdmin(BaseAdmin, model=News):
             "order_by": "name",
         },
     }
-    form_widget_args = {
-        "category": {
-            "required": True,
-            # "multiple" : True,
-        },
-        "location": {
-            "required": True,
-        },
-    }
