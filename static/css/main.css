@@ -114,13 +114,15 @@ table {
 }
 .grid-image {
     max-width: fit-content;
-    height: 120px;
     padding: 2px;
 }
 .grid-split-image {
     max-width: fit-content;
     height: 60px;
     padding: 2px;
+}
+.grid-split-image-container{
+    white-space: nowrap;
 }
 .grid-pdf {
     display: block;
@@ -137,11 +139,11 @@ table {
     border-radius: 4px;
     cursor: default;
     float: left;
-    margin-right: 5px;
-    margin-top: 5px;
-    padding: 0 5px;
-    max-width: 300px;
+    margin: 3px 0 3px 0;
+    padding: 0 2px;
     text-overflow: ellipsis;
+    min-width: 150px;
+    max-width: 300px;
     overflow: hidden;
     white-space: nowrap;
 }
@@ -176,9 +178,9 @@ input[type="password"]::-webkit-reveal {
     display: none;
 }
 .btn-toggle-password {
-    position: absolute !important; /* Позиционирование абсолютное */
-    right: 10px; /* Поместить кнопку справа */
-    top: 50%; /* Выравнивание по вертикали по центру поля ввода */
+    position: absolute !important; 
+    right: 10px;
+    top: 50%;
     transform: translateY(-50%);
     z-index: 6!important;
     background-color: transparent;

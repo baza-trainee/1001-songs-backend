@@ -1,11 +1,7 @@
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
-from src.admin.commons.formatters import (
-    MediaFormatter,
-    format_quill,
-    format_array_of_string,
-)
+from src.admin.commons.formatters import MediaFormatter, format_quill, ArrayFormatter
 from src.admin.commons.utils import MediaInputWidget
 from src.admin.commons.validators import MediaValidator
 from src.our_project.models import OurProject
@@ -55,10 +51,10 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
 
     column_formatters = {
         OurProject.content: format_quill,
-        OurProject.authors: format_array_of_string,
-        OurProject.editors: format_array_of_string,
-        OurProject.photographers: format_array_of_string,
-        OurProject.recording: format_array_of_string,
+        OurProject.authors: ArrayFormatter(),
+        OurProject.editors: ArrayFormatter(),
+        OurProject.photographers: ArrayFormatter(),
+        OurProject.recording: ArrayFormatter(),
         OurProject.preview_photo: MediaFormatter(),
     }
     form_quill_list = [

@@ -6,7 +6,7 @@ from src.admin.commons.formatters import (
     MediaFormatter,
     PhotoSplitFormatter,
     TextFormatter,
-    format_array_of_string,
+    ArrayFormatter,
     format_quill,
 )
 from src.admin.commons.utils import MediaInputWidget
@@ -48,7 +48,7 @@ class EducationAdmin(BaseAdmin, model=EducationPage):
     column_formatters = {
         EducationPage.description: TextFormatter(text_align="left", min_width=300),
         EducationPage.recommendations: format_quill,
-        EducationPage.recommended_sources: format_array_of_string,
+        EducationPage.recommended_sources: ArrayFormatter(),
     }
     form_overrides = {
         "description": TextAreaField,
@@ -104,7 +104,7 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
     }
 
     column_formatters = {
-        CalendarAndRitualCategory.recommended_sources: format_array_of_string,
+        CalendarAndRitualCategory.recommended_sources: ArrayFormatter(),
         CalendarAndRitualCategory.media: MediaFormatter(),
         CalendarAndRitualCategory.description: format_quill,
     }

@@ -6,7 +6,7 @@ from src.admin.commons.formatters import (
     TextFormatter,
     format_date,
     format_quill,
-    format_array_of_string,
+    ArrayFormatter,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
 from src.admin.commons.validators import MediaValidator
@@ -70,9 +70,9 @@ class NewsAdmin(BaseAdmin, model=News):
         News.title: TextFormatter(text_align="left"),
         News.created_at: format_date,
         News.content: format_quill,
-        News.authors: format_array_of_string,
-        News.editors: format_array_of_string,
-        News.photographers: format_array_of_string,
+        News.authors: ArrayFormatter(),
+        News.editors: ArrayFormatter(),
+        News.photographers: ArrayFormatter(),
         News.preview_photo: MediaFormatter(),
     }
     form_quill_list = [

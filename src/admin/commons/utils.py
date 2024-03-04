@@ -130,7 +130,7 @@ class CustomAjaxSelect2Widget(AjaxSelect2Widget):
     def __init__(self, multiple: bool = False):
         super().__init__(multiple)
 
-    def __call__(self, field, **kwargs: Any) -> Markup:
+    async def __call__(self, field, **kwargs: Any) -> Markup:
         kwargs.setdefault("data-role", "select2-ajax")
         identity = field.loader.model_admin.identity
         field.loader.model_admin.ajax_lookup_url = f"/admin/{identity}/ajax/new_lookup"
@@ -142,6 +142,10 @@ class CustomAjaxSelect2Widget(AjaxSelect2Widget):
 
         kwargs.setdefault("id", field.id)
         kwargs.setdefault("type", "hidden")
+
+        if field.data and isinstance(field.data, str):
+            # async with async_session_maker() as session:
+            pass
 
         try:
             if self.multiple:
