@@ -183,12 +183,6 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
         },
     }
 
-    form_widget_args = {
-        "main_category": {
-            "required": True,
-        }
-    }
-
 
 class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
     name_plural = "Освітні жанри"
@@ -252,11 +246,5 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
         "sub_category": {
             "fields": ("title",),
             "order_by": "title",
-        },
-    }
-
-    form_widget_args = {
-        "sub_category": {
-            "required": True,
         },
     }

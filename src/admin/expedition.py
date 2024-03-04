@@ -117,11 +117,3 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
             "order_by": "name",
         },
     }
-    form_widget_args = {
-        "category": {
-            "required": True,
-        },
-        "location": {
-            "required": True,
-        },
-    }

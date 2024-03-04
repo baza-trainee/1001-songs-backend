@@ -87,9 +87,3 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
             "order_by": "name",
         },
     }
-
-    form_widget_args = {
-        "location": {
-            "required": True,
-        },
-    }

@@ -1,3 +1,4 @@
+from markupsafe import Markup
 from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 
@@ -158,7 +159,6 @@ class SongAdmin(BaseAdmin, model=Song):
     column_searchable_list = [
         Song.title,
         Song.song_text,
-        Song.fund,
     ]
     column_sortable_list = [
         Song.recording_date,
@@ -242,13 +242,5 @@ class SongAdmin(BaseAdmin, model=Song):
         "city": {
             "fields": ("name",),
             "order_by": "name",
-        },
-    }
-    form_widget_args = {
-        "genres": {
-            "required": True,
-        },
-        "city": {
-            "required": True,
         },
     }

@@ -143,18 +143,27 @@ class CustomAjaxSelect2Widget(AjaxSelect2Widget):
         kwargs.setdefault("id", field.id)
         kwargs.setdefault("type", "hidden")
 
-        if field.data and isinstance(field.data, str):
-            # async with async_session_maker() as session:
-            pass
+        if field.data and isinstance(field.data, (str, set)):
+            if isinstance(field.data, str):
+                field.data = [field.data]
+            field.data = map(int, field.data)
+            async with async_session_maker() as session:
+                query = await session.execute(
+                    select(field.loader.model).where(
+                        field.loader.model.id.in_(field.data)
+                    )
+                )
+                query_result = query.scalars().all()
+                if self.multiple:
+                    field.data = query_result
+                else:
+                    field.data = query_result[0] if query_result else None
 
-        try:
-            if self.multiple:
-                data = [field.loader.format(value) for value in field.data]
-                kwargs["multiple"] = "1"
-            else:
-                data = field.loader.format(field.data)
-        except:
-            data = None
+        if self.multiple:
+            data = [field.loader.format(value) for value in field.data]
+            kwargs["multiple"] = "1"
+        else:
+            data = field.loader.format(field.data)
 
         if data:
             kwargs["data-json"] = json.dumps(data if self.multiple else [data])

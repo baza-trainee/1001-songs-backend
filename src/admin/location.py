@@ -47,11 +47,6 @@ class RegionAdmin(BaseAdmin, model=Region):
             "order_by": "name",
         },
     }
-    form_widget_args = {
-        "country": {
-            "required": True,
-        },
-    }
     column_searchable_list = [
         Region.name,
     ]
@@ -98,14 +93,6 @@ class CityAdmin(BaseAdmin, model=City):
         "region": {
             "fields": ("name",),
             "order_by": "name",
-        },
-    }
-    form_widget_args = {
-        "country": {
-            "required": True,
-        },
-        "region": {
-            "required": True,
         },
     }
     column_searchable_list = [
