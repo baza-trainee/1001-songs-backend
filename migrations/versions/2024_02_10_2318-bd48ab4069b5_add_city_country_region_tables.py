@@ -44,6 +44,7 @@ def upgrade() -> None:
         sa.Column("name", sa.String(length=100), nullable=False),
         sa.Column("latitude", sa.Float(), nullable=True),
         sa.Column("longitude", sa.Float(), nullable=True),
+        sa.Column("administrative_code", sa.String(length=50), nullable=True),
         sa.Column("region_id", sa.Integer(), nullable=True),
         sa.Column("country_id", sa.Integer(), nullable=True),
         sa.ForeignKeyConstraint(

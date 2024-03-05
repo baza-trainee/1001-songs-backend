@@ -63,6 +63,7 @@ class CityAdmin(BaseAdmin, model=City):
         City.name: "Населений пункт",
         City.latitude: "Широта",
         City.longitude: "Довгота",
+        City.administrative_code: "Адміністративний код",
     }
     column_list = column_details_list = form_columns = [
         City.country,
@@ -70,6 +71,7 @@ class CityAdmin(BaseAdmin, model=City):
         City.name,
         City.latitude,
         City.longitude,
+        City.administrative_code,
     ]
     form_args = {
         "country": {
