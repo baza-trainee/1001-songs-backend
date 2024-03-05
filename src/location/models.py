@@ -38,6 +38,7 @@ class City(Base):
     name = Column(String(100), nullable=False)
     latitude = Column(Float)
     longitude = Column(Float)
+    administrative_code = Column(String(50))
     region_id = Column(Integer, ForeignKey("regions.id"))
     country_id = Column(Integer, ForeignKey("countries.id"))
 
