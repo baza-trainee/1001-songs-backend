@@ -5,6 +5,7 @@ from uuid import uuid4
 
 import aiofiles
 from fastapi import FastAPI, UploadFile
+from fastapi_limiter import FastAPILimiter
 from sqlalchemy import func, select
 
 from src.about.utils import create_about
@@ -84,6 +85,7 @@ async def lifespan(app: FastAPI):
                 await create_partners(PARTNERS, s)
     await lock.release()
     yield
+    await FastAPILimiter.close()
 
 
 def save_photo(

@@ -1,10 +1,16 @@
 from fastapi import Request
-from fastapi.responses import RedirectResponse
 from sqladmin import BaseView, expose
 from httpx import AsyncClient
-from starlette.responses import HTMLResponse
+from src.admin.commons.exceptions import (
+    ERROR_429_MESSAGE,
+    INVALID_LINK,
+    SUCCESS_202_MESSAGE,
+    SUCCESS_CHANGED,
+    SUCCESS_RECOVERED,
+)
 
 from src.config import settings
+from src.exceptions import SERVER_ERROR
 
 
 class ChangePasswordAdmin(BaseView):
@@ -40,7 +46,7 @@ class ChangePasswordAdmin(BaseView):
                 old_password, new_password, confirm_password, token
             )
             if response.status_code == 200:
-                success_message = "Password changed successfully!"
+                success_message = SUCCESS_CHANGED
             else:
                 error_message = response.json().get("detail")
         return await self.templates.TemplateResponse(
@@ -90,16 +96,18 @@ class PasswordRecoveryAdmin(BaseView):
             form = await request.form()
             email = form.get("email", None)
             response = await self.call_forgot_password_endpoint(email)
-            if response.status_code == 202:
-                context[
-                    "success_message"
-                ] = "Password recovery request sent successfully."
-            else:
-                context["error_message"] = (
-                    response.json().get("detail", None)
-                    if response.json()
-                    else "Unexpected error"
-                )
+            match response.status_code:
+                case 202:
+                    context["success_message"] = SUCCESS_202_MESSAGE
+                case 429:
+                    retry_after = int(response.headers.get("retry-after", 0)) // 60
+                    context["error_message"] = ERROR_429_MESSAGE % retry_after
+                case _:
+                    context["error_message"] = (
+                        response.json().get("detail", None)
+                        if response.json()
+                        else "Unexpected error"
+                    )
         return await self.templates.TemplateResponse(request, "login.html", context)
 
     @expose("/forgot-password/reset", methods=["GET", "POST"])
@@ -118,15 +126,13 @@ class PasswordRecoveryAdmin(BaseView):
             if new_password == confirm_password:
                 response = await self.call_reset_password_endpoint(token, new_password)
                 if response.status_code == 200:
-                    context[
-                        "success_message"
-                    ] = "Password has been successfully recovered."
+                    context["success_message"] = SUCCESS_RECOVERED
                 else:
                     error = response.json().get("detail", None)
                     if error:
-                        context["error_message"] = "SERVER ERROR"
+                        context["error_message"] = SERVER_ERROR
                         if error == "RESET_PASSWORD_BAD_TOKEN":
-                            context["error_message"] = "Invalid password recovery link"
+                            context["error_message"] = INVALID_LINK
                         elif isinstance(error, dict):
                             reason = error.get("reason")
                             if reason:

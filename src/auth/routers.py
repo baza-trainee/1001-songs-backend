@@ -16,6 +16,7 @@ from fastapi_users.authentication import Strategy
 from fastapi_users import models
 from fastapi_users.manager import BaseUserManager
 from fastapi_users.router.reset import RESET_PASSWORD_RESPONSES
+from fastapi_limiter.depends import RateLimiter
 
 from src.database.database import get_async_session
 from .responses import login_responses, logout_responses, is_accessible_resposes
@@ -51,12 +52,14 @@ async def logout(
     user_token: Tuple[models.UP, str] = Depends(get_current_user_token),
     strategy: Strategy[models.UP, models.ID] = Depends(auth_backend.get_strategy),
 ):
-    # user, _ = user_token
-    # await invalidate_cache("get_me", user.email)
     return await process_logout(user_token, strategy)
 
 
-@auth_router.post("/forgot-password", status_code=status.HTTP_202_ACCEPTED)
+@auth_router.post(
+    "/forgot-password",
+    status_code=status.HTTP_202_ACCEPTED,
+    dependencies=[Depends(RateLimiter(times=1, minutes=15))],
+)
 async def forgot_password(
     request: Request,
     background_tasks: BackgroundTasks,
