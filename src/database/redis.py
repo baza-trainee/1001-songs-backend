@@ -1,4 +1,6 @@
 from typing import Union
+
+from fastapi_limiter import FastAPILimiter
 from redis import asyncio as aioredis
 
 from fastapi_cache import FastAPICache
@@ -13,6 +15,7 @@ cache_key = lambda func, arg: f"{CACHE_PREFIX}:{func}{f':{arg}' if arg else ''}"
 
 async def init_redis() -> None:
     FastAPICache.init(RedisBackend(redis), prefix=CACHE_PREFIX)
+    await FastAPILimiter.init(redis)
 
 
 async def invalidate_cache(func: str, id_or_mail: Union[int, str] = None):
