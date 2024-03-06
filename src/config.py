@@ -7,6 +7,7 @@ PHOTO_FORMATS = [
     "image/webp",
     "image/png",
     "image/jpeg",
+    "image/svg+xml",
 ]
 DOCUMENT_FORMATS = [
     "application/pdf",
@@ -61,9 +62,7 @@ sentry_sdk.init(
 PROJECT_NAME = "1000 and 1 songs"
 API_PREFIX = "/api/v1"
 DATABASE_URL = f"postgresql+asyncpg://{settings.POSTGRES_USER}:{settings.POSTGRES_PASSWORD}@{settings.POSTGRES_HOST}:{settings.POSTGRES_PORT}/{settings.POSTGRES_DB}"
-REDIS_URL = (
-    f"redis://default:{settings.REDIS_PASS}@{settings.REDIS_HOST}:{settings.REDIS_PORT}"
-)
+REDIS_URL = f"redis://default:{settings.REDIS_PASS}@{settings.REDIS_HOST}:{settings.REDIS_PORT}"
 CACHE_PREFIX = "fastapi-cache"
 HOUR = 3600
 DAY = HOUR * 24
@@ -90,6 +89,11 @@ ALLOW_HEADERS = [
     "Access-Control-Allow-Headers",
     "Access-Control-Allow-Origin",
     "Authorization",
+    "If-None-Match",
+]
+
+EXPOSE_HEADERS = [
+    "ETag",
 ]
 ORIGINS = ["*"]
 

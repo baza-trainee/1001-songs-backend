@@ -10,6 +10,7 @@ from sqladmin import Admin
 from src.config import (
     ALLOW_HEADERS,
     ALLOW_METHODS,
+    EXPOSE_HEADERS,
     ORIGINS,
     PROJECT_NAME,
     SWAGGER_PARAMETERS,
@@ -73,6 +74,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=ALLOW_METHODS,
     allow_headers=ALLOW_HEADERS,
+    expose_headers=EXPOSE_HEADERS,
 )
 
 
