@@ -90,6 +90,11 @@ ALLOW_HEADERS = [
     "Access-Control-Allow-Headers",
     "Access-Control-Allow-Origin",
     "Authorization",
+    "If-None-Match",
+]
+
+EXPOSE_HEADERS = [
+    "ETag",
 ]
 ORIGINS = ["*"]
 
