@@ -20,8 +20,8 @@ async def init_redis() -> None:
     await FastAPILimiter.init(redis)
 
 
-async def invalidate_cache(func: str, id: int = None):
-    key = cache_key(func, id)
+async def invalidate_cache(func: str, id: int = None, paginate: str = None):
+    key = cache_key(func, id, paginate)
     await redis.delete(key)
 
 

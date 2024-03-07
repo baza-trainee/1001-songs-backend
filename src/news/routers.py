@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
 from fastapi_cache.decorator import cache
 
-from src.config import DAY
+from src.config import DAY, HOUR
 from src.database.database import get_async_session
 from src.database.redis import my_key_builder
 from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
@@ -28,6 +28,7 @@ async def get_categories(session: AsyncSession = Depends(get_async_session)):
 
 
 @news_router.get("/news", response_model=Page[NewsSchemaList])
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_news(
     category_id: int = Query(
         None, description="Press the button to add a field for a new ID"
@@ -61,6 +62,7 @@ async def get_news(
 
 
 @news_router.get("/news/{id}", response_model=NewsSchema)
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_one_news(id: int, session: AsyncSession = Depends(get_async_session)):
     try:
         record = await session.get(News, id)
