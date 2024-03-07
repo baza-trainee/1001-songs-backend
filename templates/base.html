@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="{{ url_for('admin:statics', path='css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('admin:statics', path='css/flatpickr.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='css/main.css') }}">
+    <script type="text/javascript" src="{{ url_for('admin:statics', path='js/jquery.min.js') }}"></script>
     {% block head %}
     {% endblock %}
     <title>{{ admin.title }}</title>
@@ -20,7 +21,6 @@
       {% endblock %}
     </main>
     {% endblock %}
-    <script type="text/javascript" src="{{ url_for('admin:statics', path='js/jquery.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('admin:statics', path='js/tabler.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('admin:statics', path='js/popper.min.js') }}"></script>
     <script type="text/javascript" src="{{ url_for('admin:statics', path='js/bootstrap.min.js') }}"></script>

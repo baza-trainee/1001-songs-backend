@@ -727,87 +727,61 @@ FAKE_SONG = [
     },
 ]
 LOREM = """Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vehicula libero nec justo convallis, nec sodales nunc pellentesque. Sed auctor efficitur sem id vestibulum. Mauris fringilla ullamcorper mauris eget pellentesque. Fusce ullamcorper elit vitae sapien tincidunt, vel molestie lacus tristique. Aliquam in ex ac risus auctor condimentum. Integer hendrerit tincidunt diam eget tempor. Integer sit amet condimentum dolor. Nullam viverra urna sit amet justo sagittis, non vehicula metus consectetur."""
+SOURCES = """<html><body><ul><li><a href=\"https://kunsht.com.ua/articles/nastane-nash-chas\" target=\"_blank\">Куншт - настане наш час</a></li><li><a href=\"https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F\" target=\"_blank\">Українські народні пісні</a></li><li><a href=\"https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F\" target=\"_blank\">Дунаю, Дунаю, чому смутен течеш?</a></li></ul><p><br/></p></body></html>"""
 FAKE_DESC_FOR_ES_SONG = """Ритуальні зимові обходи дворів зі спеціальними піснями тривають від Різдва до Водохреща. Мета обходів – побажати господарям добробуту і здоров’я на весь майбутній рік. За давніми (дохристиянськими) уявленнями учасники обходів виконують волю предків – опікунів роду. У більшості традицій на Різдво колядують (колядування могло тривати до Водохреща), ставлять Вертеп; напередодні Нового Року – щедрують (в зоні Карпат, в Галичині щедрування відсутні), водять Козу, Меланку, Коня тощо. На Новий рік посівають. Діти і молодь (хлопці, дівчата) колядують/щедрують попід хатою (під вікном або під дверима), зрідка могли заходити в сіни. Дорослих (одружених чоловіків і жінок), співаків церковної півчої – які співали колядки переважно християнської тематики – запрошують до хати. Ряджену «Козу» заводять до хати. Раніше господарі обдаровували колядників/щедрівників наїдками (ритуальне годування задобрення духів предків): пампушками, млинцями, коржиками, горіхами, насінням; пізніше – солодощами; у наш час – грошима."""
 ES_MAIN_SONG_CATEGORY = [
     {
         "title": "Пісні зимового циклу",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [
-            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
-            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
-        ],
+        "recommended_sources": SOURCES,
         "media": "static/calendar_and_ritual_categories/1.jfif",
     },
     {
         "title": "Пісні весняного циклу",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [
-            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
-            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
-        ],
+        "recommended_sources": SOURCES,
         "media": "static/calendar_and_ritual_categories/2.jfif",
     },
     {
         "title": "Пісні літнього циклу",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [
-            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
-            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
-        ],
+        "recommended_sources": SOURCES,
         "media": "static/calendar_and_ritual_categories/3.jfif",
     },
     {
         "title": "Весільні пісні",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [
-            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
-            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
-        ],
+        "recommended_sources": SOURCES,
         "media": "static/calendar_and_ritual_categories/4.jfif",
     },
     {
         "title": "Родини і хрестини. Материнський і дитячий фольклор",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [
-            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
-            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
-        ],
+        "recommended_sources": SOURCES,
         "media": "static/calendar_and_ritual_categories/5.jfif",
     },
     {
         "title": "Звичайні пісні",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [
-            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
-            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
-        ],
+        "recommended_sources": SOURCES,
         "media": "static/calendar_and_ritual_categories/6.jfif",
     },
     {
         "title": "Музичний епос",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [
-            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
-            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
-        ],
+        "recommended_sources": SOURCES,
         "media": "static/calendar_and_ritual_categories/7.jfif",
     },
     {
         "title": "Інструментальна музика. Народні танці",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [
-            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
-            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
-        ],
+        "recommended_sources": SOURCES,
         "media": "static/calendar_and_ritual_categories/8.jfif",
     },
     {
         "title": "Традиційний похорон: музичне оформлення",
         "description": FAKE_DESC_FOR_ES_SONG,
-        "recommended_sources": [
-            "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
-            "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
-        ],
+        "recommended_sources": SOURCES,
         "media": "static/calendar_and_ritual_categories/9.jpg",
     },
 ]
@@ -1558,10 +1532,7 @@ FAKE_EDUCATION = {
     "title": "Освітній розділ",
     "description": "Пріоритети сучасних – заповнення «білих плям» на фольклористичній карті України (східна Волинь, Наддніпрянщина, південна Чернігівщина, Сумщина, Берестейщина та інші території) та спеціалізовані регіональні програми з видання пісенних збірок за матеріалами певних етнографічних локусів.",
     "recommendations": f"<p>{LOREM}</p>",
-    "recommended_sources": [
-        "https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96_%D0%BD%D0%B0%D1%80%D0%BE%D0%B4%D0%BD%D1%96_%D0%BF%D1%96%D1%81%D0%BD%D1%96",
-        "https://uk.wikipedia.org/wiki/%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D0%94%D1%83%D0%BD%D0%B0%D1%8E,_%D1%87%D0%BE%D0%BC%D1%83_%D1%81%D0%BC%D1%83%D1%82%D0%B5%D0%BD_%D1%82%D0%B5%D1%87%D0%B5%D1%88%3F",
-    ],
+    "recommended_sources": SOURCES,
 }
 FAKE_EXPED_CATEGORY = [
     {"title": "Розвідка"},

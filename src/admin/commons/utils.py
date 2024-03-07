@@ -10,6 +10,7 @@ from sqladmin.widgets import AjaxSelect2Widget
 from sqlalchemy import select
 from wtforms import Field, widgets
 from wtforms.widgets import html_params
+from wtforms.validators import Length
 
 from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.validators import QuillValidator
@@ -67,7 +68,13 @@ async def scaffold_form_for_quill(self, form):
     for quil_field in self.form_quill_list:
         if not isinstance(quil_field, str):
             quil_field = quil_field.name
-            getattr(form, quil_field).kwargs["validators"].append(QuillValidator())
+            validators = getattr(form, quil_field).kwargs["validators"]
+            [
+                validators.remove(validator)
+                for validator in validators
+                if isinstance(validator, Length)
+            ]
+            validators.append(QuillValidator())
         form.quill_list.append(quil_field)
     return form
 

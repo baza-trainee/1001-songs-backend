@@ -6,7 +6,6 @@ from src.admin.commons.formatters import (
     MediaFormatter,
     PhotoSplitFormatter,
     TextFormatter,
-    ArrayFormatter,
     format_quill,
 )
 from src.admin.commons.utils import MediaInputWidget
@@ -48,7 +47,7 @@ class EducationAdmin(BaseAdmin, model=EducationPage):
     column_formatters = {
         EducationPage.description: TextFormatter(text_align="left", min_width=300),
         EducationPage.recommendations: format_quill,
-        EducationPage.recommended_sources: ArrayFormatter(),
+        EducationPage.recommended_sources: format_quill,
     }
     form_overrides = {
         "description": TextAreaField,
@@ -68,6 +67,7 @@ class EducationAdmin(BaseAdmin, model=EducationPage):
     }
     form_quill_list = [
         EducationPage.recommendations,
+        EducationPage.recommended_sources,
     ]
 
 
@@ -93,7 +93,6 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
         CalendarAndRitualCategory.description,
         CalendarAndRitualCategory.recommended_sources,
     ]
-
     column_labels = {
         CalendarAndRitualCategory.title: "Назва категорії",
         CalendarAndRitualCategory.media: "Фото",
@@ -104,10 +103,13 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
     }
 
     column_formatters = {
-        CalendarAndRitualCategory.recommended_sources: ArrayFormatter(),
+        CalendarAndRitualCategory.recommended_sources: format_quill,
         CalendarAndRitualCategory.media: MediaFormatter(),
         CalendarAndRitualCategory.description: format_quill,
     }
+    form_quill_list = [
+        CalendarAndRitualCategory.recommended_sources,
+    ]
     form_files_list = [
         CalendarAndRitualCategory.media,
     ]
@@ -124,12 +126,6 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
                 "class": "form-control",
                 "rows": 7,
                 "maxlength": CalendarAndRitualCategory.description.type.length,
-            },
-        },
-        "recommended_sources": {
-            "render_kw": {
-                "class": "form-control",
-                "rows": 7,
             },
         },
         "media": {
