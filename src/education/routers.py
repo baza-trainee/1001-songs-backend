@@ -4,10 +4,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
 from fastapi_pagination import Page, paginate
 from fastapi_pagination.utils import disable_installed_extensions_check
+from fastapi_cache.decorator import cache
 
+from src.database.database import get_async_session
+from src.database.redis import my_key_builder
 from src.database.database import get_async_session
 from src.exceptions import NO_DATA_FOUND
 from src.song.models import Song
+from src.config import HOUR
 from .models import (
     EducationPage,
     CalendarAndRitualCategory,
@@ -26,6 +30,7 @@ education_router = APIRouter(prefix="/education", tags=["Education"])
 
 
 @education_router.get("", response_model=EducationSchema)
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_education_page(session: AsyncSession = Depends(get_async_session)):
     """
     This endpoint returns information for the education section page.\n
@@ -40,7 +45,10 @@ async def get_education_page(session: AsyncSession = Depends(get_async_session))
         categories_result = await session.execute(query)
         categories = categories_result.scalars().all()
         return {
-            **record.__dict__,
+            "title": record.title,
+            "description": record.description,
+            "recommendations": record.recommendations,
+            "recommended_sources": record.recommended_sources,
             "calendar_and_ritual_categories": [
                 {"id": category.id, "title": category.title, "media": category.media}
                 for category in categories
@@ -55,6 +63,7 @@ async def get_education_page(session: AsyncSession = Depends(get_async_session))
 
 
 @education_router.get("/category/{id}", response_model=CategorySchema)
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_category(id: int, session: AsyncSession = Depends(get_async_session)):
     """
     Accepts the **`ID` of one of the main categories** and returns more detailed information about the category. \n

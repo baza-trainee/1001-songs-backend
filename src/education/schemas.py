@@ -35,7 +35,7 @@ class SubCategoryBaseSchema(BaseCycleSchema):
     @field_validator("education_genres", mode="before")
     @classmethod
     def sort_education_genres(cls, value: List[str], info: ValidationInfo) -> str:
-        return sorted(value, key=lambda x: x.id)
+        return sorted(value, key=lambda x: x.get("id") if isinstance(x, dict) else x.id)
 
 
 class EducationGenreSchema(EducationGenreBaseSchema):
@@ -69,7 +69,7 @@ class CategorySchema(EducationGenreBaseSchema):
     @field_validator("song_subcategories", mode="before")
     @classmethod
     def sort_subcategories(cls, value: List[str], info: ValidationInfo) -> str:
-        return sorted(value, key=lambda x: x.id)
+        return sorted(value, key=lambda x: x.get("id") if isinstance(x, dict) else x.id)
 
 
 class GenreSchema(BaseModel):

@@ -1,3 +1,5 @@
+from typing import Any
+from fastapi import Request
 from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 
@@ -10,6 +12,7 @@ from src.admin.commons.formatters import (
 )
 from src.admin.commons.utils import MediaInputWidget
 from src.admin.commons.validators import MediaValidator
+from src.database.redis import invalidate_cache
 from src.education.models import (
     EducationPage,
     CalendarAndRitualCategory,
@@ -69,6 +72,12 @@ class EducationAdmin(BaseAdmin, model=EducationPage):
         EducationPage.recommendations,
         EducationPage.recommended_sources,
     ]
+
+    async def after_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        await invalidate_cache("get_education_page")
+        return await super().after_model_change(data, model, is_created, request)
 
 
 class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory):
@@ -134,6 +143,13 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
         },
     }
 
+    async def after_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        await invalidate_cache("get_education_page")
+        await invalidate_cache("get_category", model.id)
+        return await super().after_model_change(data, model, is_created, request)
+
 
 class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
     name_plural = "Освітні під-категорії"
@@ -178,6 +194,16 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
             "order_by": "id",
         },
     }
+
+    async def after_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        await invalidate_cache("get_category", model.main_category_id)
+        return await super().after_model_change(data, model, is_created, request)
+
+    async def after_model_delete(self, model: Any, request: Request) -> None:
+        await invalidate_cache("get_category", model.main_category_id)
+        return await super().after_model_delete(model, request)
 
 
 class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
@@ -244,3 +270,15 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
             "order_by": "title",
         },
     }
+
+    async def after_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        await invalidate_cache("get_category", model.main_category_id)
+        # await invalidate_cache("get_genre_info", model.id)
+        return await super().after_model_change(data, model, is_created, request)
+
+    async def after_model_delete(self, model: Any, request: Request) -> None:
+        await invalidate_cache("get_category", model.main_category_id)
+        # await invalidate_cache("get_genre_info", model.id)
+        return await super().after_model_delete(model, request)
