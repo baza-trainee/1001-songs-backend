@@ -27,7 +27,7 @@ async def get_categories(session: AsyncSession = Depends(get_async_session)):
     return await get_records(NewsCategory, session)
 
 
-@news_router.get("/news", response_model=Page[NewsSchemaList])
+@news_router.get("", response_model=Page[NewsSchemaList])
 @cache(expire=HOUR, key_builder=my_key_builder)
 async def get_news(
     category_id: int = Query(
@@ -61,7 +61,7 @@ async def get_news(
         )
 
 
-@news_router.get("/news/{id}", response_model=NewsSchema)
+@news_router.get("/{id}", response_model=NewsSchema)
 @cache(expire=HOUR, key_builder=my_key_builder)
 async def get_one_news(id: int, session: AsyncSession = Depends(get_async_session)):
     try:
