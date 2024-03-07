@@ -20,7 +20,7 @@ project_router = APIRouter(prefix="/projects", tags=["Projects"])
 
 
 @project_router.get("", response_model=Page[ProjectSliderSchema])
-@cache(expire=60, key_builder=my_key_builder)
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_all_projects(
     project_exclude: Optional[int] = Query(None),
     session: AsyncSession = Depends(get_async_session),
@@ -49,7 +49,7 @@ async def get_all_projects(
 
 
 @project_router.get("/{id}", response_model=ProjectSchema)
-@cache(expire=10, key_builder=my_key_builder)
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_project(id: int, session: AsyncSession = Depends(get_async_session)):
     """Returns data for the requested project page by **ID**."""
     try:
