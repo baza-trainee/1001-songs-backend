@@ -4,7 +4,10 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
+from fastapi_cache.decorator import cache
 
+from src.config import HOUR
+from src.database.redis import my_key_builder
 from src.database.database import get_async_session
 from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
 from .models import Partners
@@ -15,7 +18,8 @@ partners_router = APIRouter(prefix="/patners", tags=["Partners"])
 
 
 @partners_router.get("", response_model=List[PartnersSchema])
-async def get_team_list(
+@cache(expire=HOUR, key_builder=my_key_builder)
+async def get_partners(
     session: AsyncSession = Depends(get_async_session),
 ):
     try:
