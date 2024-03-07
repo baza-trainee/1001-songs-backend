@@ -28,8 +28,9 @@ class ProjectSliderSchema(BaseModel):
     def add_base_url(cls, value: dict, info: ValidationInfo) -> str:
         match info.field_name:
             case "preview_photo":
-                if value:
+                if value and not value.startswith(("https://", "http://")):
                     return f"{settings.BASE_URL}/{value}"
+                return value
 
 
 class ProjectSchema(BaseModel):
@@ -48,4 +49,6 @@ class ProjectSchema(BaseModel):
     def add_base_url(cls, value: dict, info: ValidationInfo) -> str:
         match info.field_name:
             case "location":
-                return f"{value.name}, {value.region.name}, {value.region.name}"
+                if isinstance(value, dict):
+                    return f'{value.get("name")}, {value.get("region").get("name")}, {value.get("country").get("name")}'
+                return f"{value.name}, {value.region.name}, {value.country.name}"

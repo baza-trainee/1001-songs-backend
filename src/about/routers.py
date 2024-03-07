@@ -4,7 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.about.models import About
 from src.database.database import get_async_session
 from sqlalchemy.orm.exc import NoResultFound
+from fastapi_cache.decorator import cache
 
+from src.config import HOUR
+from src.database.redis import my_key_builder
 from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
 
 from .schemas import AboutSchema
@@ -13,6 +16,7 @@ about_router = APIRouter(prefix="/about", tags=["About"])
 
 
 @about_router.get("", response_model=AboutSchema)
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_about(
     session: AsyncSession = Depends(get_async_session),
 ):
