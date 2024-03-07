@@ -18,7 +18,7 @@ class EducationPage(Base):
     title: str = Column(String(100), nullable=True)
     description: str = Column(String(5000))
     recommendations: str = Column(String(10000))
-    recommended_sources: list[str] = Column(ARRAY(String(1000)))
+    recommended_sources: str = Column(String(10000), nullable=False)
 
 
 class CalendarAndRitualCategory(Base):
@@ -28,7 +28,7 @@ class CalendarAndRitualCategory(Base):
     title: str = Column(String(100))
     media = Column(FileType(storage=storage1))
     description: str = Column(String(2000))
-    recommended_sources: list[str] = Column(ARRAY(String(1000)))
+    recommended_sources: str = Column(String(10000), nullable=False)
 
     song_subcategories = relationship(
         "SongSubcategory", back_populates="main_category", lazy="selectin"

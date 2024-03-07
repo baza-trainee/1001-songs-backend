@@ -13,7 +13,7 @@
     Quill.prototype.setHTML = function (html) {
         this.container.querySelector('.ql-editor').innerHTML = html;
     };
-    let toolbarOptions = [
+    let toolbarOptions{{ field.name }} = [
         ['bold', 'italic', 'underline', 'strike'],
         ['blockquote'],
         [{ 'list': 'ordered' }, { 'list': 'bullet' }],
@@ -25,17 +25,17 @@
         ['clean']
     ]
 
-    let quill = new Quill('#editor-{{ field.name }}', {
+    let quill{{ field.name }} = new Quill('#editor-{{ field.name }}', {
         modules: {
-            toolbar: toolbarOptions
+            toolbar: toolbarOptions{{ field.name }}
         },
         theme: 'snow'
     });
     {% if field.object_data %}
-    quill.setHTML('{{ field.object_data|safe }}');
+    quill{{ field.name }}.setHTML('{{ field.object_data|safe }}');
     {% endif %}
 
-    quill.on('text-change', function (delta, oldDelta, source) {
-        $('input[name={{ field.name }}]').val(quill.getHTML())
+    quill{{ field.name }}.on('text-change', function (delta, oldDelta, source) {
+        $('input[name={{ field.name }}]').val(quill{{ field.name }}.getHTML())
     });
 </script>

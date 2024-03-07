@@ -9,7 +9,7 @@ from .models import EducationPage
 TITLE_LEN = EducationPage.title.type.length
 DESCRIPTION_LEN = EducationPage.description.type.length
 RECOMENDATIONS_LEN = EducationPage.recommendations.type.length
-SOURCES_LEN = EducationPage.recommended_sources.type.item_type.length
+SOURCES_LEN = EducationPage.recommended_sources.type.length
 
 
 class BaseCycleSchema(BaseModel):
@@ -57,15 +57,13 @@ class EducationSchema(BaseModel):
     title: str = Field(..., max_length=TITLE_LEN)
     description: Optional[str] = Field(None, max_length=DESCRIPTION_LEN)
     recommendations: Optional[str] = Field(None, max_length=RECOMENDATIONS_LEN)
-    recommended_sources: Optional[List[str]] = Field(None, max_length=SOURCES_LEN)
+    recommended_sources: Optional[str] = Field(None, max_length=SOURCES_LEN)
     calendar_and_ritual_categories: List[BaseCycleSchema]
 
 
 class CategorySchema(EducationGenreBaseSchema):
     description: Optional[str] = Field(None, max_length=DESCRIPTION_LEN)
-    recommended_sources: Optional[List[str]] = Field(
-        None, max_length=RECOMENDATIONS_LEN
-    )
+    recommended_sources: Optional[str] = Field(None, max_length=SOURCES_LEN)
     song_subcategories: List[SubCategoryBaseSchema]
 
     @field_validator("song_subcategories", mode="before")
