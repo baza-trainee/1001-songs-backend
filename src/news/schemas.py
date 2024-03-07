@@ -37,13 +37,15 @@ class NewsSchemaList(BaseModel):
     def add_base_url(cls, value: dict, info: ValidationInfo) -> str:
         match info.field_name:
             case "location":
-                if value:
-                    return f"{value.name}, {value.region.name}, {value.region.country.name}"
-                else:
-                    return ""
+                if isinstance(value, str):
+                    return value
+                elif isinstance(value, dict):
+                    return f'{value.get("name")}, {value.get("region").get("name")}, {value.get("country").get("name")}'
+                return f"{value.name}, {value.region.name}, {value.country.name}"
             case "preview_photo":
-                if value:
+                if value and not value.startswith(("https://", "http://")):
                     return f"{settings.BASE_URL}/{value}"
+                return value
 
 
 class NewsSchema(NewsSchemaList):

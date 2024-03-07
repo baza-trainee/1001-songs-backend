@@ -35,10 +35,15 @@ class ExpedListSchema(BaseModel):
     def add_base_url(cls, value: dict, info: ValidationInfo) -> str:
         match info.field_name:
             case "location":
+                if isinstance(value, str):
+                    return value
+                elif isinstance(value, dict):
+                    return f'{value.get("name")}, {value.get("region").get("name")}'
                 return f"{value.name}, {value.region.name}"
             case "preview_photo":
-                if value:
+                if value and not value.startswith(("https://", "http://")):
                     return f"{settings.BASE_URL}/{value}"
+                return value
 
 
 class ExpeditionSchema(BaseModel):
@@ -60,9 +65,14 @@ class ExpeditionSchema(BaseModel):
     def add_base_url(cls, value: dict, info: ValidationInfo) -> str:
         match info.field_name:
             case "location":
+                if isinstance(value, dict):
+                    return f'{value.get("name")}, {value.get("region").get("name")}'
                 return f"{value.name}, {value.region.name}"
             case "map_photo":
-                if value:
+                if value and not value.startswith(("https://", "http://")):
                     return f"{settings.BASE_URL}/{value}"
+                return value
             case "category":
+                if isinstance(value, dict):
+                    return {"id": value.get("id"), "title": value.get("title")}
                 return {"id": value.id, "title": value.title}

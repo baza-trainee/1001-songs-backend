@@ -14,7 +14,7 @@ from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
 from .models import Expedition, ExpeditionCategory
 from .schemas import ExpeditionCategorySchema, ExpedListSchema, ExpeditionSchema
 from .exceptions import EXPED_NOT_FOUND
-from src.config import DAY
+from src.config import DAY, HOUR
 
 
 expedition_router = APIRouter(prefix="/expedition", tags=["Expedition"])
@@ -42,6 +42,7 @@ async def get_all_categories(session: AsyncSession = Depends(get_async_session))
 
 
 @expedition_router.get("/filter", response_model=Page[ExpedListSchema])
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_expeditions_list_by_category(
     search: Optional[str] = Query(None),
     id: Optional[int] = Query(None),
@@ -81,6 +82,7 @@ async def get_expeditions_list_by_category(
 
 
 @expedition_router.get("/{id}", response_model=ExpeditionSchema)
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_expedition(id: int, session: AsyncSession = Depends(get_async_session)):
     """Returns detailed information on the expedition by ID."""
     try:

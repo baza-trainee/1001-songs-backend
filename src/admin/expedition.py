@@ -1,3 +1,5 @@
+from typing import Any
+from fastapi import Request
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
@@ -10,6 +12,7 @@ from src.admin.commons.formatters import (
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
 from src.admin.commons.validators import MediaValidator
+from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.expedition.models import Expedition
 from src.our_team.models import OurTeam
 
@@ -117,3 +120,17 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
             "order_by": "name",
         },
     }
+
+    async def after_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        if not is_created:
+            await invalidate_cache_partial("get_expeditions_list_by_category")
+            await invalidate_cache("get_expedition", model.id)
+        await invalidate_cache_partial("get_expeditions_list_by_category")
+        return await super().after_model_change(data, model, is_created, request)
+
+    async def after_model_delete(self, model: Any, request: Request) -> None:
+        await invalidate_cache_partial("get_expeditions_list_by_category")
+        await invalidate_cache("get_expedition", model.id)
+        return await super().after_model_delete(model, request)
