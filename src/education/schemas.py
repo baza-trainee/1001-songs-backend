@@ -28,6 +28,9 @@ class EducationGenreBaseSchema(BaseModel):
     id: int = Field(..., ge=1)
     title: str = Field(..., max_length=TITLE_LEN)
 
+    class Config:
+        from_attributes = True
+
 
 class SubCategoryBaseSchema(BaseCycleSchema):
     education_genres: List[EducationGenreBaseSchema]
@@ -48,9 +51,14 @@ class EducationGenreSchema(EducationGenreBaseSchema):
     def add_base_url(cls, value: List[str], info: ValidationInfo) -> str:
         result = []
         for url in value:
-            if url:
+            if url and not url.startswith(("https://", "http://")):
                 result.append(f"{settings.BASE_URL}/{url}")
+            else:
+                result.append(url)
         return result
+
+    class Config:
+        from_attributes = True
 
 
 class EducationSchema(BaseModel):
@@ -91,8 +99,10 @@ class SongsSchema(BaseModel):
         if info.field_name == "photos":
             result = []
             for url in value:
-                if url:
+                if url and not url.startswith(("https://", "http://")):
                     result.append(f"{settings.BASE_URL}/{url}")
+                else:
+                    result.append(url)
             return result
         else:
             if value:

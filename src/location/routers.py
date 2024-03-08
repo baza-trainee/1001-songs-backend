@@ -6,7 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
 from fastapi_pagination import Page
 from fastapi_pagination.ext.async_sqlalchemy import paginate
+from fastapi_cache.decorator import cache
 
+from src.config import HOUR
+from src.database.redis import my_key_builder
 from src.database.database import get_async_session
 from src.exceptions import NO_DATA_FOUND
 from src.song.models import Fund, Song, Genre
@@ -371,6 +374,7 @@ async def get_funds(
 
 
 @map_router.get("/filter/songs", response_model=Page[FilterSongSchema])
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def filter_songs(
     search: Optional[str] = Query(None),
     country_id: List[int] = Query(None),
@@ -430,6 +434,7 @@ async def filter_songs(
 
 
 @map_router.get("/filter/geotag", response_model=List[FilterMapSchema])
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def filter_song_geotags(
     search: Optional[str] = Query(None),
     country_id: List[int] = Query(None),

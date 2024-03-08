@@ -99,23 +99,35 @@ class FilterSongSchema(BaseModel):
             case "photos":
                 result = []
                 for url in value:
-                    if url:
+                    if url and not url.startswith(("https://", "http://")):
                         result.append(f"{settings.BASE_URL}/{url}")
+                    else:
+                        result.append(url)
                 return result
             case "city":
-                if value:
+                if value and not isinstance(value, str):
                     city_name = value.name
                     region_name = value.region.name
                     return f"{city_name}, {region_name}"
+                return value
             case "genres":
-                return [genre.genre_name for genre in value]
+                return [
+                    genre.genre_name if not isinstance(genre, str) else genre
+                    for genre in value
+                ]
             case "fund":
-                return value.title
+                if value and not isinstance(value, str):
+                    return value.title
+                return value
             case "education_genres":
-                return [genre.title for genre in value]
+                return [
+                    genre.title if not isinstance(genre, str) else genre
+                    for genre in value
+                ]
             case "stereo_audio":
-                if value:
+                if value and not value.startswith(("https://", "http://")):
                     return f"{settings.BASE_URL}/{value}"
+                return value
 
 
 class SongMapPageSchema(BaseModel):
