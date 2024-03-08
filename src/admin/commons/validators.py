@@ -2,19 +2,10 @@ import base64
 from datetime import datetime
 import mimetypes
 import re
-from typing import Literal
 
 from bs4 import BeautifulSoup
 from wtforms import ValidationError
 
-from src.config import (
-    AUDIO_FORMATS,
-    DOCUMENT_FORMATS,
-    PHOTO_FORMATS,
-    MAX_AUDIO_SIZE_MB,
-    MAX_DOCUMENT_SIZE_MB,
-    MAX_PHOTO_SIZE_MB,
-)
 from src.exceptions import DATA_REQUIRED, INVALID_FILE, MAX_FIELD_LENTH, OVERSIZE_FILE
 from src.utils import delete_photo, save_photo
 from src.config import settings
@@ -23,39 +14,27 @@ from src.config import settings
 class MediaValidator:
     def __init__(
         self,
-        file_type: Literal["photo", "document", "audio"] = "photo",
+        media_types: list,
+        max_size: int,
         is_required: bool = False,
     ) -> None:
-        self.file_type = file_type
+        self.media_types = media_types
+        self.max_size = max_size
         self.is_required = is_required
 
     def validate_size(self, file_size: int, max_size: int):
-        if round(file_size / 1024 / 1024, 2) > max_size:
+        if file_size := round(file_size / 1024 / 1024, 2) > max_size:
             raise ValidationError(message=OVERSIZE_FILE % (file_size, max_size))
 
     def __call__(self, form, field):
         file = field.data
         if file and file.size:
             content_type = file.content_type
-            match self.file_type:
-                case "photo":
-                    if not content_type in PHOTO_FORMATS:
-                        raise ValidationError(
-                            message=INVALID_FILE % (content_type, PHOTO_FORMATS)
-                        )
-                    self.validate_size(file.size, MAX_PHOTO_SIZE_MB)
-                case "document":
-                    if not content_type in DOCUMENT_FORMATS:
-                        raise ValidationError(
-                            message=INVALID_FILE % (content_type, DOCUMENT_FORMATS)
-                        )
-                    self.validate_size(file.size, MAX_DOCUMENT_SIZE_MB)
-                case "audio":
-                    if not content_type in AUDIO_FORMATS:
-                        raise ValidationError(
-                            message=INVALID_FILE % (content_type, AUDIO_FORMATS)
-                        )
-                    self.validate_size(file.size, MAX_AUDIO_SIZE_MB)
+            if not content_type in self.media_types:
+                raise ValidationError(
+                    message=INVALID_FILE % (content_type, self.media_types)
+                )
+            self.validate_size(file.size, self.max_size)
         else:
             if self.is_required and not form.model_instance:
                 raise ValidationError(message=DATA_REQUIRED)
@@ -66,9 +45,15 @@ class QuillValidator:
         self.max_length = max_length
 
     def __call__(self, form, field):
+        def raise_required():
+            raise ValidationError("field is required")
+
         if field.data:
             is_clear = False
             soup = BeautifulSoup(field.data, "lxml")
+            if not soup.get_text():
+                raise_required()
+
             img_tags = soup.find_all("img")
             if img_tags:
                 for tag in img_tags:
@@ -118,6 +103,8 @@ class QuillValidator:
                                 match.group(0) if match else img_tag["src"]
                             )  # FOR DEBUG
                             delete_photo(result)
+        else:
+            raise_required()
 
 
 class PastDateValidator(object):

@@ -3,20 +3,22 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 import sentry_sdk
 
 
-PHOTO_FORMATS = [
+IMAGE_TYPES = [
     "image/webp",
     "image/png",
     "image/jpeg",
+]
+EXTENDED_IMAGE_TYPE = IMAGE_TYPES + [
     "image/svg+xml",
 ]
-DOCUMENT_FORMATS = [
+DOCUMENT_TYPES = [
     "application/pdf",
 ]
-AUDIO_FORMATS = [
+AUDIO_TYPES = [
     "audio/mpeg",
 ]
 
-MAX_PHOTO_SIZE_MB = 1
+MAX_IMAGE_SIZE_MB = 1
 MAX_DOCUMENT_SIZE_MB = 5
 MAX_AUDIO_SIZE_MB = 15
 

@@ -4,6 +4,7 @@ from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.utils import MediaInputWidget
 from src.admin.commons.validators import MediaValidator
+from src.config import DOCUMENT_TYPES, MAX_DOCUMENT_SIZE_MB
 from src.database.redis import invalidate_cache
 from src.footer.models import Footer
 
@@ -36,7 +37,13 @@ class FooterAdmin(BaseAdmin, model=Footer):
     form_args = {
         field: {
             "widget": MediaInputWidget(file_type="document", is_required=True),
-            "validators": [MediaValidator(file_type="document")],
+            "validators": [
+                MediaValidator(
+                    media_types=DOCUMENT_TYPES,
+                    max_size=MAX_DOCUMENT_SIZE_MB,
+                    is_required=True,
+                )
+            ],
         }
         for field in DOCUMENT_FIELDS
     }
