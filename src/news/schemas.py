@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date
 from typing import Annotated, Optional, List
 
 from pydantic import AnyHttpUrl, BaseModel, Field, ValidationInfo, field_validator
@@ -28,7 +28,7 @@ class NewsSchemaList(BaseModel):
     title: str = Field(max_length=TITLE_LEN)
     short_description: str = Field(max_length=SHORT_DESCRIPTION_LEN)
     preview_photo: AnyHttpUrl
-    created_at: datetime
+    created_at: date
     category: NewCategorySchema
     location: str
 
