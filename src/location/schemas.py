@@ -1,4 +1,5 @@
 from typing import List, Optional
+from datetime import date
 
 from pydantic import (
     AnyHttpUrl,
@@ -74,7 +75,7 @@ class FilterSongSchema(BaseModel):
     title: str = Field(...)
     song_text: Optional[str] = Field(None)
     collectors: Optional[List[str]] = Field(None)
-    recording_date: PastDate
+    recording_date: date
     stereo_audio: Optional[str] = Field(None)
     video_url: Optional[str] = Field(None)
     ethnographic_district: Optional[str]
@@ -101,8 +102,6 @@ class FilterSongSchema(BaseModel):
                 for url in value:
                     if url and not url.startswith(("https://", "http://")):
                         result.append(f"{settings.BASE_URL}/{url}")
-                    else:
-                        result.append(url)
                 return result
             case "city":
                 if value and not isinstance(value, str):
