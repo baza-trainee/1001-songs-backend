@@ -135,6 +135,7 @@ async def get_songs_by_education_genre(
 
 
 @education_router.get("/genre/song/{id}", response_model=OneSongSchema)
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_song_by_id(id: int, session: AsyncSession = Depends(get_async_session)):
     """
     Accepts the song `ID` and returns detailed information about it.
@@ -143,7 +144,7 @@ async def get_song_by_id(id: int, session: AsyncSession = Depends(get_async_sess
         record = await session.get(Song, id)
         if not record:
             raise NoResultFound
-        return record
+        return OneSongSchema.model_validate(record, from_attributes=True)
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
     except Exception as e:

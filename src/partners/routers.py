@@ -14,7 +14,7 @@ from .models import Partners
 from .schemas import PartnersSchema
 
 
-partners_router = APIRouter(prefix="/patners", tags=["Partners"])
+partners_router = APIRouter(prefix="/partners", tags=["Partners"])
 
 
 @partners_router.get("", response_model=List[PartnersSchema])
