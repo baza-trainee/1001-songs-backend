@@ -112,12 +112,12 @@ class NewsAdmin(BaseAdmin, model=News):
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
         if not is_created:
-            await invalidate_cache_partial("get_news")
+            await invalidate_cache_partial(["get_news"])
             await invalidate_cache("get_one_news", model.id)
-        await invalidate_cache_partial("get_news")
+        await invalidate_cache_partial(["get_news"])
         return await super().after_model_change(data, model, is_created, request)
 
     async def after_model_delete(self, model: Any, request: Request) -> None:
-        await invalidate_cache_partial("get_news")
+        await invalidate_cache_partial(["get_news"])
         await invalidate_cache("get_one_news", model.id)
         return await super().after_model_delete(model, request)

@@ -95,12 +95,12 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
         if not is_created:
-            await invalidate_cache_partial("get_all_projects")
+            await invalidate_cache_partial(["get_all_projects"])
             await invalidate_cache("get_project", model.id)
-        await invalidate_cache_partial("get_all_projects")
+        await invalidate_cache_partial(["get_all_projects"])
         return await super().after_model_change(data, model, is_created, request)
 
     async def after_model_delete(self, model: Any, request: Request) -> None:
-        await invalidate_cache_partial("get_all_projects")
+        await invalidate_cache_partial(["get_all_projects"])
         await invalidate_cache("get_project", model.id)
         return await super().after_model_delete(model, request)

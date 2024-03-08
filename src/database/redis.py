@@ -1,4 +1,4 @@
-from typing import Union
+from typing import List, Union
 
 from fastapi_limiter import FastAPILimiter
 from redis import asyncio as aioredis
@@ -25,10 +25,11 @@ async def invalidate_cache(func: str, id: int = None, paginate: str = None):
     await redis.delete(key)
 
 
-async def invalidate_cache_partial(func: str):
-    keys = await redis.keys(f"{CACHE_PREFIX}:{func}*")
-    for key in keys:
-        await redis.delete(key)
+async def invalidate_cache_partial(funcs: List[str]):
+    for func in funcs:
+        keys = await redis.keys(f"{CACHE_PREFIX}:{func}*")
+        for key in keys:
+            await redis.delete(key)
 
 
 def my_key_builder(func, *args, **kwargs):

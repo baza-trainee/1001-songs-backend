@@ -1,6 +1,6 @@
 from typing import Any
+
 from fastapi import Request
-from markupsafe import Markup
 from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 
@@ -57,7 +57,7 @@ class GenreAdmin(BaseAdmin, model=Genre):
     }
 
     async def after_model_delete(self, model: Any, request: Request) -> None:
-        await invalidate_cache_partial("filter_songs")
+        await invalidate_cache_partial(["filter_songs"])
         return await super().after_model_delete(model, request)
 
 
@@ -255,13 +255,27 @@ class SongAdmin(BaseAdmin, model=Song):
     async def after_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
-        await invalidate_cache_partial("get_songs_by_education_genre")
-        await invalidate_cache_partial("filter_song_geotags")
-        await invalidate_cache_partial("filter_songs")
+        if not is_created:
+            await invalidate_cache("get_song_by_id", model.id)
+            await invalidate_cache("get_song_on_map_by_id", model.id)
+            func_list = [
+                "get_songs_by_education_genre",
+                "filter_song_geotags",
+                "filter_songs",
+            ]
+        func_list = [
+            "get_songs_by_education_genre",
+            "filter_song_geotags",
+            "filter_songs",
+        ]
+        await invalidate_cache_partial(func_list)
         return await super().after_model_change(data, model, is_created, request)
 
     async def after_model_delete(self, model: Any, request: Request) -> None:
-        await invalidate_cache_partial("get_songs_by_education_genre")
-        await invalidate_cache_partial("filter_song_geotags")
-        await invalidate_cache_partial("filter_songs")
+        func_list = [
+            "get_songs_by_education_genre",
+            "filter_song_geotags",
+            "filter_songs",
+        ]
+        await invalidate_cache_partial(func_list)
         return await super().after_model_delete(model, request)
