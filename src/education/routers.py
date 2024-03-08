@@ -6,7 +6,6 @@ from fastapi_pagination import Page, paginate
 from fastapi_pagination.utils import disable_installed_extensions_check
 from fastapi_cache.decorator import cache
 
-from src.database.database import get_async_session
 from src.database.redis import my_key_builder
 from src.database.database import get_async_session
 from src.exceptions import NO_DATA_FOUND
@@ -86,13 +85,14 @@ async def get_category(id: int, session: AsyncSession = Depends(get_async_sessio
 
 
 @education_router.get("/genre/{id}", response_model=EducationGenreSchema)
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_genre_info(id: int, session: AsyncSession = Depends(get_async_session)):
     """Accepts the genre `ID` and returns detailed **information about it**."""
     try:
         record = await session.get(EducationPageSongGenre, id)
         if not record:
             raise NoResultFound
-        return record
+        return EducationGenreSchema.model_validate(record)
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
     except Exception as e:
@@ -102,6 +102,7 @@ async def get_genre_info(id: int, session: AsyncSession = Depends(get_async_sess
 
 
 @education_router.get("/genre/{id}/songs", response_model=Page[SongsSchema])
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_songs_by_education_genre(
     id: int, session: AsyncSession = Depends(get_async_session)
 ):

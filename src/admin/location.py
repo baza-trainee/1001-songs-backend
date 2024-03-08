@@ -1,6 +1,9 @@
+from typing import Any
+from fastapi import Request
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
+from src.database.redis import invalidate_cache_partial
 from src.location.models import City, Country, Region
 
 
@@ -100,3 +103,13 @@ class CityAdmin(BaseAdmin, model=City):
     column_searchable_list = [
         City.name,
     ]
+
+    async def after_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        await invalidate_cache_partial("filter_song_geotags")
+        return await super().after_model_change(data, model, is_created, request)
+
+    async def after_model_delete(self, model: Any, request: Request) -> None:
+        await invalidate_cache_partial("filter_song_geotags")
+        return await super().after_model_delete(model, request)

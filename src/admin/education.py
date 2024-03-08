@@ -275,10 +275,10 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
         await invalidate_cache("get_category", model.main_category_id)
-        # await invalidate_cache("get_genre_info", model.id)
+        await invalidate_cache("get_genre_info", model.id)
         return await super().after_model_change(data, model, is_created, request)
 
     async def after_model_delete(self, model: Any, request: Request) -> None:
         await invalidate_cache("get_category", model.main_category_id)
-        # await invalidate_cache("get_genre_info", model.id)
+        await invalidate_cache("get_genre_info", model.id)
         return await super().after_model_delete(model, request)

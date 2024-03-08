@@ -1,3 +1,5 @@
+from typing import Any
+from fastapi import Request
 from markupsafe import Markup
 from wtforms import TextAreaField
 from wtforms.validators import DataRequired
@@ -11,6 +13,7 @@ from src.admin.commons.formatters import (
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
 from src.admin.commons.validators import MediaValidator, PastDateValidator
+from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.our_team.models import OurTeam
 from src.song.models import Genre, Song, Fund
 
@@ -52,6 +55,10 @@ class GenreAdmin(BaseAdmin, model=Genre):
     form_args = {
         "genre_name": {"validators": [DataRequired()]},
     }
+
+    async def after_model_delete(self, model: Any, request: Request) -> None:
+        await invalidate_cache_partial("filter_songs")
+        return await super().after_model_delete(model, request)
 
 
 class FundAdmin(BaseAdmin, model=Fund):
@@ -244,3 +251,17 @@ class SongAdmin(BaseAdmin, model=Song):
             "order_by": "name",
         },
     }
+
+    async def after_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        await invalidate_cache_partial("get_songs_by_education_genre")
+        await invalidate_cache_partial("filter_song_geotags")
+        await invalidate_cache_partial("filter_songs")
+        return await super().after_model_change(data, model, is_created, request)
+
+    async def after_model_delete(self, model: Any, request: Request) -> None:
+        await invalidate_cache_partial("get_songs_by_education_genre")
+        await invalidate_cache_partial("filter_song_geotags")
+        await invalidate_cache_partial("filter_songs")
+        return await super().after_model_delete(model, request)
