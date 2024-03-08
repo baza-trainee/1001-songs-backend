@@ -12,6 +12,7 @@ from src.admin.commons.formatters import (
 )
 from src.admin.commons.utils import MediaInputWidget
 from src.admin.commons.validators import MediaValidator
+from src.config import IMAGE_TYPES, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache
 from src.education.models import (
     EducationPage,
@@ -138,8 +139,14 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
             },
         },
         "media": {
-            "validators": [MediaValidator(is_required=True)],
             "widget": MediaInputWidget(is_required=True),
+            "validators": [
+                MediaValidator(
+                    media_types=IMAGE_TYPES,
+                    max_size=MAX_IMAGE_SIZE_MB,
+                    is_required=True,
+                )
+            ],
         },
     }
 
@@ -184,8 +191,14 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
             "validators": [DataRequired()],
         },
         "media": {
-            "validators": [MediaValidator()],
             "widget": MediaInputWidget(is_required=True),
+            "validators": [
+                MediaValidator(
+                    media_types=IMAGE_TYPES,
+                    max_size=MAX_IMAGE_SIZE_MB,
+                    is_required=True,
+                )
+            ],
         },
     }
     form_ajax_refs = {
@@ -258,8 +271,10 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
         },
         **{
             field: {
-                "validators": [MediaValidator()],
                 "widget": MediaInputWidget(),
+                "validators": [
+                    MediaValidator(media_types=IMAGE_TYPES, max_size=MAX_IMAGE_SIZE_MB)
+                ],
             }
             for field in EDUCATION_PAGE_PHOTO_FIELDS
         },

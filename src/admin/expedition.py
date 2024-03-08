@@ -13,6 +13,7 @@ from src.admin.commons.formatters import (
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
 from src.admin.commons.validators import MediaValidator
+from src.config import IMAGE_TYPES, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.expedition.models import Expedition
 from src.our_team.models import OurTeam
@@ -103,11 +104,23 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         "expedition_date": {"validators": [DataRequired()]},
         "map_photo": {
             "widget": MediaInputWidget(is_required=True),
-            "validators": [MediaValidator(is_required=True)],
+            "validators": [
+                MediaValidator(
+                    media_types=IMAGE_TYPES,
+                    max_size=MAX_IMAGE_SIZE_MB,
+                    is_required=True,
+                )
+            ],
         },
         "preview_photo": {
             "widget": MediaInputWidget(is_required=True),
-            "validators": [MediaValidator(is_required=True)],
+            "validators": [
+                MediaValidator(
+                    media_types=IMAGE_TYPES,
+                    max_size=MAX_IMAGE_SIZE_MB,
+                    is_required=True,
+                )
+            ],
         },
         **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
     }

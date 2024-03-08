@@ -1,6 +1,11 @@
 .PHONY: prod start build run down clean drop_db prune auto_backup stop_backup backup restore frontend_build frontend_export
 
 BACKUP_COMMAND := "0 0 * * * cd \"$(PWD)\" && python3 scripts/backup.py"
+DB_CONTAINER := postgres_songs
+REDIS_CONTAINER := redis_songs
+DB_VOLUME := $$(basename "$$(pwd)")_postgres_data
+REDIS_VOLUME := $$(basename "$$(pwd)")_backend_data
+APP_VOLUME := $$(basename "$$(pwd)")_redis_data
 
 prod: down build
 
@@ -8,15 +13,15 @@ down:
 	docker compose down
 
 build:
-	docker compose up -d --build
+	docker compose up -d --build --scale postgres_tests=0 --scale postgres=0
 	
 run: down
 	docker compose up postgres redis -d
 	@while true; do \
 		sleep 1; \
-		result_postgres=$$(docker inspect -f '{{json .State.Health.Status}}' postgres_songs); \
-		result_redis=$$(docker inspect -f '{{json .State.Health.Status}}' redis_songs); \
-		if [ "$$result_postgres" = "\"healthy\"" ] && [ "$$result_redis" = "\"healthy\"" ]; then \
+		result_db=$$(docker inspect -f '{{json .State.Health.Status}}' $(DB_CONTAINER)); \
+		result_redis=$$(docker inspect -f '{{json .State.Health.Status}}' $(REDIS_CONTAINER)); \
+		if [ "$$result_db" = "\"healthy\"" ] && [ "$$result_redis" = "\"healthy\"" ]; then \
 			echo "Services are healthy"; \
 			break; \
 		fi; \
@@ -28,7 +33,7 @@ start:
 	uvicorn src.main:app --reload
 
 open-redis:
-	docker exec -it redis_songs redis-cli
+	docker exec -it $(REDIS_CONTAINER) redis-cli
 
 clean:
 	sudo find . | grep -E "(__pycache__|\.pyc|\.pyo$$)" | xargs sudo rm -rf
@@ -54,31 +59,18 @@ backup:
 restore:
 	python3 scripts/restore.py
 
-frontend_build:
-	if [ -d docs.tar.xz ]; then \
-		sudo rm -rf docs.tar.xz; \
-	fi
-	tar -cJvf docs.tar.xz docs
-
-frontend_export:
-	if [ -d /var/www/1000and1songs.com/docs ]; then \
-		sudo rm -rf /var/www/1000and1songs.com/docs; \
-	fi
-	sudo mkdir -p /var/www/1000and1songs.com/
-	sudo tar -xJvf docs.tar.xz -C /var/www/1000and1songs.com/
-
 drop_db: down 
-	if docker volume ls -q | grep -q $$(basename "$$(pwd)")_postgres_data; then \
-		docker volume rm $$(basename "$$(pwd)")_postgres_data; \
-		echo "successfully drop_db command";\
+	if docker volume ls -q | grep -q $(DB_VOLUME); then \
+		docker volume rm $(DB_VOLUME); \
+		echo "successfully drop_db 1";\
 	fi
-	if docker volume ls -q | grep -q $$(basename "$$(pwd)")_redis_data; then \
-		docker volume rm $$(basename "$$(pwd)")_redis_data; \
-		echo "successfully drop_db command";\
+	if docker volume ls -q | grep -q $(REDIS_VOLUME); then \
+		docker volume rm $(REDIS_VOLUME); \
+		echo "successfully drop_db 2";\
 	fi
-	if docker volume ls -q | grep -q $$(basename "$$(pwd)")_backend_data; then \
-		docker volume rm $$(basename "$$(pwd)")_backend_data; \
-		echo "successfully drop_db command";\
+	if docker volume ls -q | grep -q $(APP_VOLUME); then \
+		docker volume rm $(APP_VOLUME); \
+		echo "successfully drop_db 3";\
 	fi
 
 prune: down

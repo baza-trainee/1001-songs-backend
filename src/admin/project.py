@@ -6,6 +6,7 @@ from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import MediaFormatter, format_quill, ArrayFormatter
 from src.admin.commons.utils import MediaInputWidget
 from src.admin.commons.validators import MediaValidator
+from src.config import MAX_IMAGE_SIZE_MB, IMAGE_TYPES
 from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.our_project.models import OurProject
 
@@ -81,7 +82,13 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
         "project_date": {"validators": [DataRequired()]},
         "preview_photo": {
             "widget": MediaInputWidget(is_required=True),
-            "validators": [MediaValidator(is_required=True)],
+            "validators": [
+                MediaValidator(
+                    media_types=IMAGE_TYPES,
+                    max_size=MAX_IMAGE_SIZE_MB,
+                    is_required=True,
+                )
+            ],
         },
     }
     form_ajax_refs = {

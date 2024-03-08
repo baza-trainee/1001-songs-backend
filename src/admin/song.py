@@ -13,6 +13,7 @@ from src.admin.commons.formatters import (
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
 from src.admin.commons.validators import MediaValidator, PastDateValidator
+from src.config import AUDIO_TYPES, MAX_AUDIO_SIZE_MB, MAX_IMAGE_SIZE_MB, IMAGE_TYPES
 from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.our_team.models import OurTeam
 from src.song.models import Genre, Song, Fund
@@ -222,7 +223,7 @@ class SongAdmin(BaseAdmin, model=Song):
             field: {
                 "widget": MediaInputWidget(),
                 "validators": [
-                    MediaValidator(),
+                    MediaValidator(media_types=IMAGE_TYPES, max_size=MAX_IMAGE_SIZE_MB),
                 ],
             }
             for field in PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS + MAP_FIELDS
@@ -231,7 +232,7 @@ class SongAdmin(BaseAdmin, model=Song):
             field: {
                 "widget": MediaInputWidget(file_type="audio"),
                 "validators": [
-                    MediaValidator(file_type="audio"),
+                    MediaValidator(media_types=AUDIO_TYPES, max_size=MAX_AUDIO_SIZE_MB),
                 ],
             }
             for field in SONG_FIELDS

@@ -1,10 +1,12 @@
 from typing import Any
 
 from fastapi import Request
+
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.utils import MediaInputWidget
 from src.admin.commons.validators import MediaValidator
+from src.config import EXTENDED_IMAGE_TYPE, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache
 from src.partners.models import Partners
 
@@ -33,7 +35,11 @@ class PartnersAdmin(BaseAdmin, model=Partners):
         "photo": {
             "widget": MediaInputWidget(is_required=True),
             "validators": [
-                MediaValidator(is_required=True),
+                MediaValidator(
+                    media_types=EXTENDED_IMAGE_TYPE,
+                    max_size=MAX_IMAGE_SIZE_MB,
+                    is_required=True,
+                ),
             ],
         },
     }

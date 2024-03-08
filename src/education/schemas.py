@@ -42,7 +42,7 @@ class SubCategoryBaseSchema(BaseCycleSchema):
 
 
 class EducationGenreSchema(EducationGenreBaseSchema):
-    media: Optional[List[AnyHttpUrl]] = Field(None, max_items=5)
+    media: Optional[List[AnyHttpUrl]] = Field(None, max_length=5)
     description: Optional[str] = Field(None, max_length=DESCRIPTION_LEN)
     main_category: EducationGenreBaseSchema
 
@@ -89,7 +89,7 @@ class SongsSchema(BaseModel):
     id: int = Field(..., ge=1)
     title: str = Field(..., max_length=TITLE_LEN)
     stereo_audio: Optional[AnyHttpUrl] = Field(None)
-    photos: Optional[List[AnyHttpUrl]] = Field([], max_items=5)
+    photos: Optional[List[AnyHttpUrl]] = Field([], max_length=5)
     recording_location: Optional[str] = Field(None, max_length=100)
     genre: str
 
@@ -138,7 +138,7 @@ class OneSongSchema(BaseModel):
     comment_map: Optional[str] = Field(None)
     map_photo: Optional[AnyHttpUrl] = Field(None)
     photos: Optional[List[AnyHttpUrl]] = Field(
-        None, max_items=5, validation_alias="ethnographic_photos"
+        None, max_length=5, validation_alias="ethnographic_photos"
     )
 
     @field_validator(
