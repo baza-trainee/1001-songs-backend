@@ -5,7 +5,6 @@ from pydantic import (
     AnyHttpUrl,
     BaseModel,
     Field,
-    PastDate,
     ValidationInfo,
     field_validator,
 )
@@ -139,7 +138,7 @@ class SongMapPageSchema(BaseModel):
     ethnographic_district: Optional[str]
     collectors: Optional[List[str]] = Field(None)
     performers: Optional[str] = Field(None)
-    recording_date: PastDate
+    recording_date: date
     photos: Optional[List[AnyHttpUrl]] = Field(None)
     stereo_audio: Optional[str] = Field(None)
     multichannels: Optional[List[str]] = Field(None)
