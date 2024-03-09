@@ -173,6 +173,7 @@ class SongAdmin(BaseAdmin, model=Song):
     ]
     column_sortable_list = [
         Song.recording_date,
+        Song.is_active,
     ]
     column_default_sort = ("recording_date", True)
     column_formatters = {
