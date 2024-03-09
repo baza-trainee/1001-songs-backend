@@ -100,7 +100,6 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.song_description: "Опис",
         Song.collectors: "Збирачі",
         Song.fund: "Фонд",
-        Song.is_active: "Активна",
         Song.recording_date: "Дата",
         Song.recording_location: "Місце запису",
         Song.map_photo: "Карта",
@@ -134,7 +133,6 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.fund,
         Song.song_text,
         Song.song_description,
-        Song.is_active,
     ]
     column_details_list = form_columns = [
         Song.title,
@@ -165,7 +163,6 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.multichannel_audio4,
         Song.multichannel_audio5,
         Song.multichannel_audio6,
-        Song.is_active,
     ]
     column_searchable_list = [
         Song.title,
