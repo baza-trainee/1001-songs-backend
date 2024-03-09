@@ -1,7 +1,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, HTTPException, status, Query
-from sqlalchemy import distinct, func, select
+from sqlalchemy import distinct, func, select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm.exc import NoResultFound
 from fastapi_pagination import Page
@@ -65,6 +65,7 @@ async def get_countries(
             .join(Region)
             .join(City)
             .join(Song)
+            .filter(Song.is_active)
             .group_by(Country.id)
             .order_by(Country.name)
         )
@@ -133,6 +134,7 @@ async def get_regions(
             )
             .join(City, Region.id == City.region_id)
             .join(Song)
+            .filter(Song.is_active)
             .group_by(Region.id)
             .order_by(Region.name)
         )
@@ -203,6 +205,7 @@ async def get_cities(
                 func.count(Song.id).label("count"),
             )
             .join(Song, City.id == Song.city_id)
+            .filter(Song.is_active)
             .group_by(City.id)
             .order_by(City.name)
         )
@@ -272,6 +275,7 @@ async def get_genres(
             .join(Region, City.region_id == Region.id)
             .join(Country, City.country_id == Country.id)
             .join(Fund, Song.fund_id == Fund.id)
+            .filter(Song.is_active)
             .group_by(Genre.id)
             .order_by(Genre.id)
         )
@@ -337,6 +341,7 @@ async def get_funds(
             .join(City, Song.city_id == City.id)
             .join(Region, City.region_id == Region.id)
             .join(Country, City.country_id == Country.id)
+            .filter(Song.is_active)
             .group_by(Fund.id)
             .order_by(Fund.id)
         )
@@ -403,7 +408,14 @@ async def filter_songs(
     - If an internal server error occurs during processing, a 500 Internal Server Error status code will be returned.
     """
     try:
-        query = select(Song).join(City).join(Region).join(Country).order_by(Song.id)
+        query = (
+            select(Song)
+            .join(City)
+            .join(Region)
+            .join(Country)
+            .filter(Song.is_active)
+            .order_by(desc(Song.id))
+        )
 
         if country_id:
             query = query.filter(Country.id.in_(country_id))
@@ -480,6 +492,7 @@ async def filter_song_geotags(
             .join(Song)
             .join(Region)
             .join(Country)
+            .filter(Song.is_active)
             .group_by(City.id, Region.name)
             .order_by(City.id)
         )
@@ -531,7 +544,7 @@ async def get_song_on_map_by_id(
     """
     try:
         record = await session.get(Song, id)
-        if not record:
+        if not record or not record.is_active:
             raise NoResultFound
         return record
     except NoResultFound:
