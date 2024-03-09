@@ -1,13 +1,11 @@
 from sqlalchemy import (
     ARRAY,
+    Boolean,
     Column,
     String,
     Date,
-    DateTime,
-    Text,
     ForeignKey,
     Integer,
-    func,
 )
 from sqlalchemy.orm import relationship
 from fastapi_storages.integrations.sqlalchemy import FileType
@@ -30,7 +28,7 @@ class Song(Base):
     performers = Column(String(200))
     ethnographic_district = Column(String(100))
     collectors: list[str] = Column(ARRAY(String(100)), nullable=True)
-    archive = Column(String(255))
+    is_active: bool = Column(Boolean, default=True, nullable=False)
     recording_location = Column(String(100))
     comment_map: str = Column(String(500))
     video_url: str = Column(String(1000))
