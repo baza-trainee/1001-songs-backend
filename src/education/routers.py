@@ -123,7 +123,9 @@ async def get_songs_by_education_genre(
                 "genre": genre.title,
             }
             for song in genre.songs
+            if song.is_active
         ]
+        response = sorted(response, key=lambda x: x["id"], reverse=True)
         disable_installed_extensions_check()
         return paginate(response)
     except NoResultFound:
@@ -141,7 +143,7 @@ async def get_song_by_id(id: int, session: AsyncSession = Depends(get_async_sess
     """
     try:
         record = await session.get(Song, id)
-        if not record:
+        if not record or not record.is_active:
             raise NoResultFound
         return record
     except NoResultFound:
