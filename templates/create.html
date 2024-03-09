@@ -17,7 +17,7 @@
             {{ field.label(class_="form-label col-sm-2 col-form-label") }}
             {% endif %}
             <div class="col-sm-10">
-              {% if field.errors %}
+              {% if field.errors and field.name not in form.quill_list %}
               {{ field(class_="form-control is-invalid") }}
               {% else %}
               {% if field.name in form.quill_list %}

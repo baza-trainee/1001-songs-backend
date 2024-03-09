@@ -46,15 +46,14 @@ class QuillValidator:
 
     def __call__(self, form, field):
         def raise_required():
-            raise ValidationError("field is required")
+            raise ValidationError("This field is required.")
 
         if field.data:
             is_clear = False
             soup = BeautifulSoup(field.data, "lxml")
-            if not soup.get_text():
-                raise_required()
 
             img_tags = soup.find_all("img")
+
             if img_tags:
                 for tag in img_tags:
                     pattern_base64 = re.compile(r"data:image/[^;]+;base64")
@@ -75,6 +74,8 @@ class QuillValidator:
                         )
                         tag["src"] = image_url
             else:
+                if field.flags.required and not soup.get_text():
+                    raise_required()
                 is_clear = True
 
             span_tags = soup.find_all("span")
@@ -103,7 +104,7 @@ class QuillValidator:
                                 match.group(0) if match else img_tag["src"]
                             )  # FOR DEBUG
                             delete_photo(result)
-        else:
+        elif field.flags.required:
             raise_required()
 
 

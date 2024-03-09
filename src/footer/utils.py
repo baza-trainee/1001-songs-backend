@@ -10,7 +10,9 @@ async def create_footer(footer_data: dict, session: AsyncSession):
     try:
         fields = ["privacy_policy", "reporting", "rules_and_terms"]
         for field in fields:
-            footer_data[field] = await write_filetype_field(footer_data[field])
+            footer_data[field] = await write_filetype_field(
+                footer_data[field], is_file=True
+            )
         instance = Footer(**footer_data)
         session.add(instance)
         print(AFTER_FOOTER_CREATE)

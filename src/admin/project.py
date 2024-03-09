@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import MediaFormatter, format_quill, ArrayFormatter
 from src.admin.commons.utils import MediaInputWidget
-from src.admin.commons.validators import MediaValidator
+from src.admin.commons.validators import MediaValidator, PastDateValidator
 from src.config import MAX_IMAGE_SIZE_MB, IMAGE_TYPES
 from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.our_project.models import OurProject
@@ -79,7 +79,7 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
         "short_description": {"validators": [DataRequired()]},
         "location": {"validators": [DataRequired()]},
         "category": {"validators": [DataRequired()]},
-        "project_date": {"validators": [DataRequired()]},
+        "project_date": {"validators": [DataRequired(), PastDateValidator()]},
         "preview_photo": {
             "widget": MediaInputWidget(is_required=True),
             "validators": [

@@ -66,8 +66,9 @@ div[class^="ql-editor"] p img,
     margin-right: auto;
     text-align: center;
 }
-
-
+.ql-container.ql-snow {
+    border: none !important;
+}
 .ql-snow .ql-editor img,
 iframe.ql-video,
 .quill-column img {
@@ -222,10 +223,22 @@ input[type="password"]::-webkit-reveal {
     border-bottom-right-radius: var(--tblr-border-radius)
 }
 .form-control:not(:last-child) {
-    border-right: var(--tblr-border-width) solid var(--tblr-border-color) !important;
+    border-right: var(--tblr-border-width) solid var(--tblr-border-color) !important
 }
-.form-control.is-invalid {
-    border-right: 1px solid var(--tblr-danger) !important
+.form-control.is-invalid,.was-validated .form-control:invalid,
+.ql-editor.ql-blank.is-invalid {
+    border-color: var(--tblr-danger);
+    padding-right: calc(1.4285714286em + .875rem);
+    background-image: none;
+    border: 1px solid var(--tblr-danger) !important;
+    background-repeat: no-repeat;
+    background-position: right calc(.3571428572em + .21875rem) center;
+    background-size: calc(.7142857143em + .4375rem) calc(.7142857143em + .4375rem)
+}
+.ql-editor.ql-blank.is-invalid:focus,
+.form-control.is-invalid:focus,.was-validated .form-control:invalid:focus {
+    border-color: var(--tblr-danger);
+    box-shadow: 0 0 0 .25rem rgba(var(--tblr-danger-rgb),.25)
 }
 .invalid-feedback {
     display: block;
