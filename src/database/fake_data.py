@@ -1616,7 +1616,7 @@ for i in range(10):
     editors = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
     photographers = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
     recording = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
-    city_id = random.randint(1, 40)
+    city_id = random.randint(1, 39)
 
     fake_project = {
         "title": title,
@@ -1641,7 +1641,7 @@ for i in range(10):
     expedition_date = datetime.datetime.now().date() - datetime.timedelta(days=i + 1)
     content = f"<p>Опис експедиції &#39;{title}&#39;.</p>"
     category_id = random.randint(1, 6)
-    city_id = random.randint(1, 40)
+    city_id = random.randint(1, 39)
     authors = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
     editors = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))
     photographers = random.sample(PEOPLE, random.randint(1, len(PEOPLE)))

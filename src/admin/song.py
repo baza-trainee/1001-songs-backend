@@ -256,14 +256,6 @@ class SongAdmin(BaseAdmin, model=Song):
     async def after_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
-        if not is_created:
-            await invalidate_cache("get_song_by_id", model.id)
-            await invalidate_cache("get_song_on_map_by_id", model.id)
-            func_list = [
-                "get_songs_by_education_genre",
-                "filter_song_geotags",
-                "filter_songs",
-            ]
         func_list = [
             "get_songs_by_education_genre",
             "filter_song_geotags",

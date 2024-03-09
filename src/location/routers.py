@@ -523,7 +523,6 @@ async def filter_song_geotags(
 
 
 @map_router.get("/filter/songs/{id}", response_model=SongMapPageSchema)
-@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_song_on_map_by_id(
     id: int, session: AsyncSession = Depends(get_async_session)
 ):
@@ -534,7 +533,7 @@ async def get_song_on_map_by_id(
         record = await session.get(Song, id)
         if not record:
             raise NoResultFound
-        return SongMapPageSchema.model_validate(record, from_attributes=True)
+        return record
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
     except Exception as e:
