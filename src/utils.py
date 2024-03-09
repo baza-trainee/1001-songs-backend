@@ -1,6 +1,7 @@
 import asyncio
 from io import BytesIO
 import os
+from PIL import Image
 from uuid import uuid4
 
 import aiofiles
@@ -117,10 +118,14 @@ def generate_file_name(filepath: str = None, image_extension: str = None):
     return name + image_extension
 
 
-async def write_filetype_field(file_path: str) -> UploadFile:
+async def write_filetype_field(file_path: str, is_file=False) -> UploadFile:
+    file_name = generate_file_name(file_path)
+    # if is_file:
     async with aiofiles.open(file_path, "rb") as buffer:
-        file_name = generate_file_name(file_path)
-        return UploadFile(file=BytesIO(await buffer.read()), filename=file_name)
+        file_bytes = await buffer.read()
+    # else:
+    #     file_bytes = Image.open(file_path).tobytes()
+    return UploadFile(file=BytesIO(file_bytes), filename=file_name)
 
 
 def delete_photo(path: str) -> None:

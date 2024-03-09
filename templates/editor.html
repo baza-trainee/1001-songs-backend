@@ -1,7 +1,6 @@
 <link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
 <div class="form-group mb-3">
-    <input {% if not null %}required{% endif %} type="text" class="form-control" name="{{ field.name }}" {% if disabled
-        %}disabled{% endif %} value="{{ field.object_data }}" hidden>
+    <input type="text" class="form-control" name="{{ field.name }}" value="{{ field.data }}" hidden>
     <div id="editor-{{ field.name }}">
     </div>
 </div>
@@ -31,11 +30,15 @@
         },
         theme: 'snow'
     });
-    {% if field.object_data %}
-    quill{{ field.name }}.setHTML('{{ field.object_data|safe }}');
+    {% if field.data %}
+    quill{{ field.name }}.setHTML('{{ field.data|safe }}');
     {% endif %}
 
     quill{{ field.name }}.on('text-change', function (delta, oldDelta, source) {
         $('input[name={{ field.name }}]').val(quill{{ field.name }}.getHTML())
     });
+    
+    {% if field.errors %}
+    $('#editor-{{ field.name }} .ql-editor.ql-blank').addClass('is-invalid');
+    {% endif %}
 </script>

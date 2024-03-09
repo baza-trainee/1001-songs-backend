@@ -177,6 +177,7 @@ FAKE_CITY = [
         "longitude": 26.98664264,
         "region_id": 17,
         "country_id": 1,
+        "administrative_code": "UA56080070060063641",
     },
     {
         "name": "Панасівка",
@@ -184,6 +185,7 @@ FAKE_CITY = [
         "longitude": 33.91580207,
         "region_id": 16,
         "country_id": 1,
+        "administrative_code": "UA53060070130055115",
     },
     {
         "name": "Переяслав",
@@ -191,6 +193,7 @@ FAKE_CITY = [
         "longitude": 31.45105560,
         "region_id": 1,
         "country_id": 1,
+        "administrative_code": "UA32040110010043320",
     },
     {
         "name": "Сарни",
@@ -198,6 +201,7 @@ FAKE_CITY = [
         "longitude": 26.60190844,
         "region_id": 17,
         "country_id": 1,
+        "administrative_code": "UA56080170010061049",
     },
     {
         "name": "Вичівка",
@@ -205,6 +209,7 @@ FAKE_CITY = [
         "longitude": 26.30865234,
         "region_id": 17,
         "country_id": 1,
+        "administrative_code": "UA56020070060088177",
     },
     {
         "name": "Долинівка",
@@ -212,6 +217,7 @@ FAKE_CITY = [
         "longitude": 29.9164294,
         "region_id": 10,
         "country_id": 1,
+        "administrative_code": "UA35020050060090117",
     },
     {
         "name": "Крячківка",
@@ -219,6 +225,7 @@ FAKE_CITY = [
         "longitude": 32.30602915,
         "region_id": 16,
         "country_id": 1,
+        "administrative_code": "UA56080170010061049",
     },
     {
         "name": "Любиковичі",
@@ -226,6 +233,7 @@ FAKE_CITY = [
         "longitude": 26.6095407,
         "region_id": 17,
         "country_id": 1,
+        "administrative_code": "UA56080170180045593",
     },
     {
         "name": "Ромни",
@@ -233,6 +241,7 @@ FAKE_CITY = [
         "longitude": 33.48055516,
         "region_id": 18,
         "country_id": 1,
+        "administrative_code": "UA59060110010062596",
     },
     {
         "name": "Переброди",
@@ -240,6 +249,7 @@ FAKE_CITY = [
         "longitude": 26.97966876,
         "region_id": 17,
         "country_id": 1,
+        "administrative_code": "UA56080110060087480",
     },
     {
         "name": "Козелець",
@@ -247,6 +257,7 @@ FAKE_CITY = [
         "longitude": 31.11684116,
         "region_id": 25,
         "country_id": 1,
+        "administrative_code": "UA74100190010032782",
     },
     {
         "name": "Полтава",
@@ -254,6 +265,7 @@ FAKE_CITY = [
         "longitude": 34.5541248,
         "region_id": 16,
         "country_id": 1,
+        "administrative_code": "UA53080370010073240",
     },
     {
         "name": "Линове",
@@ -261,6 +273,7 @@ FAKE_CITY = [
         "longitude": 34.06247588,
         "region_id": 18,
         "country_id": 1,
+        "administrative_code": "UA59020110160044047",
     },
     {
         "name": "Добровода",
@@ -268,6 +281,7 @@ FAKE_CITY = [
         "longitude": 23.38293413,
         "region_id": 44,
         "country_id": 3,
+        "administrative_code": "PL1",
     },
     {
         "name": "Спасове",
@@ -275,6 +289,7 @@ FAKE_CITY = [
         "longitude": 33.03531325,
         "region_id": 10,
         "country_id": 1,
+        "administrative_code": "UA35040230250060270",
     },
     {
         "name": "Київ",
@@ -282,6 +297,7 @@ FAKE_CITY = [
         "longitude": 30.51655420,
         "region_id": 1,
         "country_id": 1,
+        "administrative_code": "UA80000000000093317",
     },
     {
         "name": "Веприк",
@@ -289,6 +305,7 @@ FAKE_CITY = [
         "longitude": 34.17579265,
         "region_id": 16,
         "country_id": 1,
+        "administrative_code": "UA53060050070098808",
     },
     {
         "name": "Даше",
@@ -296,6 +313,7 @@ FAKE_CITY = [
         "longitude": 23.2481166,
         "region_id": 44,
         "country_id": 3,
+        "administrative_code": "PL2",
     },
     {
         "name": "Барахти",
@@ -303,6 +321,7 @@ FAKE_CITY = [
         "longitude": 30.370125003105485,
         "region_id": 1,
         "country_id": 1,
+        "administrative_code": "UA32120030020042673",
     },
     {
         "name": "Городище",
@@ -310,13 +329,7 @@ FAKE_CITY = [
         "longitude": 26.7003323,
         "region_id": 17,
         "country_id": 1,
-    },
-    {
-        "name": "Панасівка",
-        "latitude": 50.09495499592963,
-        "longitude": 33.98891103,
-        "region_id": 16,
-        "country_id": 1,
+        "administrative_code": "UA56080050040066786",
     },
     {
         "name": "Манухівка",
@@ -324,6 +337,7 @@ FAKE_CITY = [
         "longitude": 34.16242288,
         "region_id": 18,
         "country_id": 1,
+        "administrative_code": "UA59020110180033309",
     },
     {
         "name": "Бігунь",
@@ -331,6 +345,7 @@ FAKE_CITY = [
         "longitude": 28.27653221,
         "region_id": 6,
         "country_id": 1,
+        "administrative_code": "UA18060210030093275",
     },
     {
         "name": "Демидів",
@@ -338,6 +353,7 @@ FAKE_CITY = [
         "longitude": 30.33105204,
         "region_id": 1,
         "country_id": 1,
+        "administrative_code": "UA32100030090077939",
     },
     {
         "name": "Прикладники",
@@ -345,6 +361,7 @@ FAKE_CITY = [
         "longitude": 25.8474856,
         "region_id": 17,
         "country_id": 1,
+        "administrative_code": "UA56020110170060839",
     },
     {
         "name": "Ромейки",
@@ -352,6 +369,7 @@ FAKE_CITY = [
         "longitude": 26.2162949,
         "region_id": 17,
         "country_id": 1,
+        "administrative_code": "UA56020130070031331",
     },
     {
         "name": "Лука",
@@ -359,6 +377,7 @@ FAKE_CITY = [
         "longitude": 33.2887714,
         "region_id": 16,
         "country_id": 1,
+        "administrative_code": "UA53060190210077924",
     },
     {
         "name": "Хитці",
@@ -366,6 +385,7 @@ FAKE_CITY = [
         "longitude": 33.291936457207356,
         "region_id": 16,
         "country_id": 1,
+        "administrative_code": "UA53060290190026080",
     },
     {
         "name": "Кролевець",
@@ -373,6 +393,7 @@ FAKE_CITY = [
         "longitude": 33.38774983,
         "region_id": 18,
         "country_id": 1,
+        "administrative_code": "UA59020090010081204",
     },
     {
         "name": "Оксанина",
@@ -380,6 +401,7 @@ FAKE_CITY = [
         "longitude": 30.54379355,
         "region_id": 23,
         "country_id": 1,
+        "administrative_code": "UA71060010090090232",
     },
     {
         "name": "Карильське",
@@ -387,6 +409,7 @@ FAKE_CITY = [
         "longitude": 33.00563454,
         "region_id": 25,
         "country_id": 1,
+        "administrative_code": "UA74060010170082977",
     },
     {
         "name": "Хмелівка",
@@ -394,6 +417,7 @@ FAKE_CITY = [
         "longitude": 27.69049449469027,
         "region_id": 6,
         "country_id": 1,
+        "administrative_code": "UA18060190520075539",
     },
     {
         "name": "Ясенове",
@@ -401,6 +425,7 @@ FAKE_CITY = [
         "longitude": 34.72381832,
         "region_id": 18,
         "country_id": 1,
+        "administrative_code": "UA59040150320040149",
     },
     {
         "name": "Умань",
@@ -408,6 +433,7 @@ FAKE_CITY = [
         "longitude": 30.22328526,
         "region_id": 23,
         "country_id": 1,
+        "administrative_code": "UA71060210010010251",
     },
     {
         "name": "Велика Писарівка",
@@ -415,6 +441,7 @@ FAKE_CITY = [
         "longitude": 35.48127851,
         "region_id": 18,
         "country_id": 1,
+        "administrative_code": "UA59040030010059554",
     },
     {
         "name": "Оране",
@@ -422,6 +449,7 @@ FAKE_CITY = [
         "longitude": 30.12337693,
         "region_id": 1,
         "country_id": 1,
+        "administrative_code": "UA32100050430043268",
     },
     {
         "name": "Веселий Поділ",
@@ -429,6 +457,7 @@ FAKE_CITY = [
         "longitude": 33.259659505,
         "region_id": 16,
         "country_id": 1,
+        "administrative_code": "UA53020230140055051",
     },
     {
         "name": "Поворськ",
@@ -436,6 +465,7 @@ FAKE_CITY = [
         "longitude": 25.1289613,
         "region_id": 3,
         "country_id": 1,
+        "administrative_code": "UA07060290010071519",
     },
     {
         "name": "Бутове",
@@ -443,6 +473,7 @@ FAKE_CITY = [
         "longitude": 26.3776508,
         "region_id": 17,
         "country_id": 1,
+        "administrative_code": "UA56020070050079075",
     },
     {
         "name": "Ветли",
@@ -450,6 +481,7 @@ FAKE_CITY = [
         "longitude": 25.10697595,
         "region_id": 3,
         "country_id": 1,
+        "administrative_code": "UA07040030080096945",
     },
 ]
 FAKE_GENRE = [
@@ -512,6 +544,7 @@ FAKE_SONG = [
         "archive": "Проблемна науково дослідна лабораторія етномузикології НМАУ",
         "recording_location": "Барахти",
         "comment_map": "",
+        "map_photo": "static/song/map.png",
         "photo1": "static/song/photo1.png",
         "photo2": "static/song/photo2.png",
         "photo3": "static/song/photo3.png",
@@ -540,6 +573,7 @@ FAKE_SONG = [
         "archive": "ЛЕК",
         "recording_location": "Київ",
         "comment_map": "",
+        "map_photo": "static/song/map.png",
         "video_url": "https://youtu.be/U01Pzqe9k_o",
         "photo1": "static/song/photo1.png",
         "photo2": "static/song/photo2.png",
@@ -567,6 +601,7 @@ FAKE_SONG = [
         "collectors": random.sample(PEOPLE, random.randint(1, len(PEOPLE))),
         "archive": "ЛЕК",
         "recording_location": "",
+        "map_photo": "static/song/map.png",
         "comment_map": "",
         "video_url": "https://youtu.be/U01Pzqe9k_o",
         "photo1": "static/song/photo1.png",
@@ -596,6 +631,7 @@ FAKE_SONG = [
         "archive": "ЛЕК",
         "recording_location": "",
         "comment_map": "",
+        "map_photo": "static/song/map.png",
         "video_url": "https://youtu.be/U01Pzqe9k_o",
         "photo1": "static/song/photo1.png",
         "photo2": "static/song/photo2.png",
@@ -625,6 +661,7 @@ FAKE_SONG = [
         "recording_location": "Крячківка",
         "comment_map": "Щедрівки дитячого репертуару",
         "video_url": "https://youtu.be/U01Pzqe9k_o",
+        "map_photo": "static/song/map.png",
         "photo1": "static/song/photo1.png",
         "photo2": "static/song/photo2.png",
         "photo3": "static/song/photo3.png",

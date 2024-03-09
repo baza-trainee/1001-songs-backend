@@ -12,7 +12,7 @@ from src.admin.commons.formatters import (
     ArrayFormatter,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
-from src.admin.commons.validators import MediaValidator
+from src.admin.commons.validators import MediaValidator, PastDateValidator
 from src.config import IMAGE_TYPES, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.expedition.models import Expedition
@@ -101,7 +101,7 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
     form_args = {
         "category": {"validators": [DataRequired()]},
         "location": {"validators": [DataRequired()]},
-        "expedition_date": {"validators": [DataRequired()]},
+        "expedition_date": {"validators": [DataRequired(), PastDateValidator()]},
         "map_photo": {
             "widget": MediaInputWidget(is_required=True),
             "validators": [

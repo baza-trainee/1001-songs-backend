@@ -1,3 +1,4 @@
+from asyncio import sleep
 from random import choice
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -61,7 +62,7 @@ async def create_song_and_genre(
         for song in songs_list:
             for field in fields:
                 if field in song and song[field]:
-                    song[field] = await write_filetype_field(song[field])
+                    song[field] = await write_filetype_field(song[field], is_file=True)
             instance = Song(**song)
             instance.genres.append(choice(genre_instances))
             song_instances.append(instance)

@@ -11,7 +11,7 @@ from src.admin.commons.formatters import (
     ArrayFormatter,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
-from src.admin.commons.validators import MediaValidator
+from src.admin.commons.validators import MediaValidator, PastDateValidator
 from src.config import IMAGE_TYPES, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.news.models import News
@@ -89,6 +89,7 @@ class NewsAdmin(BaseAdmin, model=News):
         **{field: CustomSelect2TagsField for field in MODEL_TEAM_FIELDS},
     }
     form_args = {
+        "created_at": {"validators": [DataRequired(), PastDateValidator()]},
         "location": {"validators": [DataRequired()]},
         "category": {"validators": [DataRequired()]},
         **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
