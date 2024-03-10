@@ -12,7 +12,7 @@ from src.config import DAY, HOUR
 from src.database.database import get_async_session
 from src.database.redis import my_key_builder
 from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
-from src.location.exceptions import NO_REGION_FOUND
+from .exceptions import NO_NEWS_FOUND
 from .service import get_records
 from .models import NewsCategory, News
 from .schemas import NewsSchema, NewCategorySchema, NewsSchemaList
@@ -53,7 +53,7 @@ async def get_news(
     except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=NO_REGION_FOUND,
+            detail=NO_NEWS_FOUND,
         )
     except Exception as exc:
         raise HTTPException(

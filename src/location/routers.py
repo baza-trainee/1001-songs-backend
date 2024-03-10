@@ -14,6 +14,7 @@ from src.database.database import get_async_session
 from src.exceptions import NO_DATA_FOUND
 from src.song.models import Fund, Song, Genre
 from .exceptions import (
+    NO_COUNTRY_FOUND,
     NO_FUND_FOUND,
     NO_GENRES_FOUND,
     NO_REGION_FOUND,
@@ -38,6 +39,7 @@ map_router = APIRouter(prefix="/map", tags=["Map"])
 
 
 @location_router.get("/location/countries", response_model=List[CountrySchema])
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_countries(
     city_id: List[int] = Query(None),
     region_id: List[int] = Query(None),
@@ -58,6 +60,16 @@ async def get_countries(
     - **song_count** (int): The number of songs available in the country that meet the specified criteria.
     """
     try:
+        filters = [Song.is_active]
+        if city_id:
+            filters.append(City.id.in_(city_id))
+        if region_id:
+            filters.append(City.region_id.in_(region_id))
+        if fund_id:
+            filters.append(Song.fund_id.in_(fund_id))
+        if genre_id:
+            filters.append(Genre.id.in_(genre_id))
+
         query = (
             select(
                 Country.id, Country.name, func.count(distinct(Song.id)).label("count")
@@ -65,20 +77,11 @@ async def get_countries(
             .join(Region)
             .join(City)
             .join(Song)
-            .filter(Song.is_active)
+            .join(Song.genres)
+            .filter(*filters)
             .group_by(Country.id)
             .order_by(Country.name)
         )
-
-        if city_id:
-            query = query.filter(City.id.in_(city_id))
-        if region_id:
-            query = query.filter(City.region_id.in_(region_id))
-        if fund_id:
-            query = query.filter(Song.fund_id.in_(fund_id))
-        if genre_id:
-            query = query.join(Song.genres).filter(Genre.id.in_(genre_id))
-
         records = await session.execute(query)
         result = records.all()
         if not result:
@@ -94,7 +97,7 @@ async def get_countries(
     except NoResultFound:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=NO_REGION_FOUND,
+            detail=NO_COUNTRY_FOUND,
         )
     except Exception as e:
         raise HTTPException(
@@ -103,6 +106,7 @@ async def get_countries(
 
 
 @location_router.get("/location/regions", response_model=List[RegionSchema])
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_regions(
     country_id: List[int] = Query(None),
     city_id: List[int] = Query(None),
@@ -125,6 +129,16 @@ async def get_regions(
     - **song_count** (int): The number of songs available in the region that meet the specified criteria.
     """
     try:
+        filters = [Song.is_active]
+        if country_id:
+            filters.append(Region.country_id.in_(country_id))
+        if city_id:
+            filters.append(City.id.in_(city_id))
+        if genre_id:
+            filters.append(Genre.id.in_(genre_id))
+        if fund_id:
+            filters.append(Song.fund_id.in_(fund_id))
+
         query = (
             select(
                 Region.id,
@@ -134,19 +148,11 @@ async def get_regions(
             )
             .join(City, Region.id == City.region_id)
             .join(Song)
-            .filter(Song.is_active)
+            .join(Song.genres)
+            .filter(*filters)
             .group_by(Region.id)
             .order_by(Region.name)
         )
-
-        if country_id:
-            query = query.filter(Region.country_id.in_(country_id))
-        if city_id:
-            query = query.filter(City.id.in_(city_id))
-        if genre_id:
-            query = query.join(Song.genres).filter(Genre.id.in_(genre_id))
-        if fund_id:
-            query = query.filter(Song.fund_id.in_(fund_id))
 
         records = await session.execute(query)
         result: List[Region] = records.all()
@@ -173,6 +179,7 @@ async def get_regions(
 
 
 @location_router.get("/location/cities", response_model=List[CitySchema])
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_cities(
     country_id: List[int] = Query(None),
     region_id: List[int] = Query(None),
@@ -196,6 +203,16 @@ async def get_cities(
     - **region_id** (int): The ID of the region to which the city belongs.
     """
     try:
+        filters = [Song.is_active]
+        if country_id:
+            filters.append(City.country_id.in_(country_id))
+        if region_id:
+            filters.append(City.region_id.in_(region_id))
+        if genre_id:
+            filters.append(Genre.id.in_(genre_id))
+        if fund_id:
+            filters.append(Song.fund_id.in_(fund_id))
+
         query = (
             select(
                 City.id,
@@ -205,19 +222,12 @@ async def get_cities(
                 func.count(Song.id).label("count"),
             )
             .join(Song, City.id == Song.city_id)
-            .filter(Song.is_active)
+            .join(Song.genres)
+            .filter(*filters)
             .group_by(City.id)
             .order_by(City.name)
         )
 
-        if region_id:
-            query = query.filter(City.region_id.in_(region_id))
-        if country_id:
-            query = query.filter(City.country_id.in_(country_id))
-        if genre_id:
-            query = query.filter(Song.genres.any(Genre.id.in_(genre_id)))
-        if fund_id:
-            query = query.filter(Song.fund_id.in_(fund_id))
         records = await session.execute(query)
         result = records.all()
         if not result:
@@ -244,6 +254,7 @@ async def get_cities(
 
 
 @location_router.get("/song/genres", response_model=List[GenreFilterSchema])
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_genres(
     country_id: List[int] = Query(None),
     region_id: List[int] = Query(None),
@@ -268,6 +279,16 @@ async def get_genres(
 
     """
     try:
+        filters = [Song.is_active]
+        if country_id:
+            filters.append(Country.id.in_(country_id))
+        if region_id:
+            filters.append(Region.id.in_(region_id))
+        if city_id:
+            filters.append(City.id.in_(city_id))
+        if fund_id:
+            filters.append(Song.fund_id.in_(fund_id))
+
         query = (
             select(Genre.id, Genre.genre_name, func.count(Song.id).label("count"))
             .join(Song.genres)
@@ -275,19 +296,10 @@ async def get_genres(
             .join(Region, City.region_id == Region.id)
             .join(Country, City.country_id == Country.id)
             .join(Fund, Song.fund_id == Fund.id)
-            .filter(Song.is_active)
+            .filter(*filters)
             .group_by(Genre.id)
             .order_by(Genre.id)
         )
-
-        if country_id:
-            query = query.filter(Country.id.in_(country_id))
-        if region_id:
-            query = query.filter(Region.id.in_(region_id))
-        if city_id:
-            query = query.filter(City.id.in_(city_id))
-        if fund_id:
-            query = query.filter(Song.fund_id.in_(fund_id))
 
         records = await session.execute(query)
         result = records.all()
@@ -313,6 +325,7 @@ async def get_genres(
 
 
 @location_router.get("/song/funds", response_model=List[FundFilterSchema])
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def get_funds(
     country_id: List[int] = Query(None),
     region_id: List[int] = Query(None),
@@ -335,25 +348,27 @@ async def get_funds(
         - **song_count** (int): The number of songs supported by the fund within the specified criteria.
     """
     try:
+        filters = [Song.is_active]
+        if country_id:
+            filters.append(Country.id.in_(country_id))
+        if region_id:
+            filters.append(Region.id.in_(region_id))
+        if city_id:
+            filters.append(City.id.in_(city_id))
+        if genre_id:
+            filters.append(Genre.id.in_(genre_id))
+
         query = (
             select(Fund.id, Fund.title, func.count(Song.id).label("count"))
             .join(Song, Fund.id == Song.fund_id)
             .join(City, Song.city_id == City.id)
             .join(Region, City.region_id == Region.id)
             .join(Country, City.country_id == Country.id)
-            .filter(Song.is_active)
+            .join(Song.genres)
+            .filter(*filters)
             .group_by(Fund.id)
             .order_by(Fund.id)
         )
-
-        if country_id:
-            query = query.filter(Country.id.in_(country_id))
-        if region_id:
-            query = query.filter(Region.id.in_(region_id))
-        if city_id:
-            query = query.filter(City.id.in_(city_id))
-        if genre_id:
-            query = query.join(Song.genres).filter(Genre.id.in_(genre_id))
 
         records = await session.execute(query)
         result = records.all()

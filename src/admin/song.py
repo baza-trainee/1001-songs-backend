@@ -256,23 +256,23 @@ class SongAdmin(BaseAdmin, model=Song):
             "order_by": "name",
         },
     }
+    invalidate_func_list = [
+        "get_songs_by_education_genre",
+        "filter_song_geotags",
+        "filter_songs",
+        "get_countries",
+        "get_regions",
+        "get_cities",
+        "get_genres",
+        "get_funds",
+    ]
 
     async def after_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
-        func_list = [
-            "get_songs_by_education_genre",
-            "filter_song_geotags",
-            "filter_songs",
-        ]
-        await invalidate_cache_partial(func_list)
+        await invalidate_cache_partial(self.invalidate_func_list)
         return await super().after_model_change(data, model, is_created, request)
 
     async def after_model_delete(self, model: Any, request: Request) -> None:
-        func_list = [
-            "get_songs_by_education_genre",
-            "filter_song_geotags",
-            "filter_songs",
-        ]
-        await invalidate_cache_partial(func_list)
+        await invalidate_cache_partial(self.invalidate_func_list)
         return await super().after_model_delete(model, request)
