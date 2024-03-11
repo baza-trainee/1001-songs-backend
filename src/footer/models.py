@@ -11,9 +11,9 @@ class Footer(Base):
     __tablename__ = "footer"
 
     id: int = Column(Integer, primary_key=True)
-    reporting: str = Column(FileType(storage=storage))
-    privacy_policy: str = Column(FileType(storage=storage))
-    rules_and_terms: str = Column(FileType(storage=storage))
-    email: str = Column(String(length=100))
+    reporting: str = Column(FileType(storage=storage), nullable=False)
+    privacy_policy: str = Column(FileType(storage=storage), nullable=False)
+    rules_and_terms: str = Column(FileType(storage=storage), nullable=False)
+    email: str = Column(String(length=35), nullable=False)
     facebook_url: str = Column(String(length=500))
     youtube_url: str = Column(String(length=500))

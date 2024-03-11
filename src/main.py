@@ -8,6 +8,7 @@ from fastapi_pagination import add_pagination
 from sqladmin import Admin
 
 from src.config import (
+    settings,
     ALLOW_HEADERS,
     ALLOW_METHODS,
     EXPOSE_HEADERS,
@@ -43,10 +44,11 @@ admin = Admin(
     app,
     engine,
     authentication_backend=authentication_backend,
-    title="1001-ADMIN",
+    logo_url="/static/interface/logo.svg",
     debug=True,
     session_maker=async_session_maker,
 )
+admin.site_url = settings.SITE_URL
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
 api_routers = [
