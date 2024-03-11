@@ -26,7 +26,7 @@ class BaseAdmin(ModelView, metaclass=ModelViewMeta):
     can_create = True
     can_delete = True
     can_edit = True
-    can_view_details = True
+    can_view_details = False
     can_export = False
 
     save_and_another = False

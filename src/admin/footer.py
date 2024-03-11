@@ -1,8 +1,7 @@
 from typing import Any
 
 from fastapi import Request
-from wtforms.fields import EmailField
-from wtforms.validators import URL
+from wtforms.fields import EmailField, URLField
 
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import MediaFormatter
@@ -23,41 +22,36 @@ class FooterAdmin(BaseAdmin, model=Footer):
 
     column_labels = {
         Footer.reporting: "Звітність",
-        Footer.privacy_policy: "Політика конфіденційності",
-        Footer.rules_and_terms: "Правила користування сайтом",
-        Footer.email: "Пошта",
-        Footer.facebook_url: "Фейбук",
-        Footer.youtube_url: "Ютуб",
+        Footer.privacy_policy: "Політика приватності",
+        Footer.rules_and_terms: "Правила та умови використання",
+        Footer.email: "Email",
+        Footer.facebook_url: "Facebook",
+        Footer.youtube_url: "Youtube",
     }
-    column_exclude_list = column_details_exclude_list = [
+    column_exclude_list = [
         Footer.id,
     ]
     column_formatters = {
-        Footer.reporting: MediaFormatter(file_type="document"),
-        Footer.privacy_policy: MediaFormatter(file_type="document"),
-        Footer.rules_and_terms: MediaFormatter(file_type="document"),
+        field: MediaFormatter(file_type="document") for field in DOCUMENT_FIELDS
     }
     form_files_list = DOCUMENT_FIELDS
     form_overrides = {
         "email": EmailField,
+        "facebook_url": URLField,
+        "youtube_url": URLField,
     }
     form_args = {
-        "facebook_url": {
-            "validators": [URL()],
-        },
-        **{
-            field: {
-                "widget": MediaInputWidget(file_type="document", is_required=True),
-                "validators": [
-                    MediaValidator(
-                        media_types=DOCUMENT_TYPES,
-                        max_size=MAX_DOCUMENT_SIZE_MB,
-                        is_required=True,
-                    )
-                ],
-            }
-            for field in DOCUMENT_FIELDS
-        },
+        field: {
+            "widget": MediaInputWidget(file_type="document", is_required=True),
+            "validators": [
+                MediaValidator(
+                    media_types=DOCUMENT_TYPES,
+                    max_size=MAX_DOCUMENT_SIZE_MB,
+                    is_required=True,
+                )
+            ],
+        }
+        for field in DOCUMENT_FIELDS
     }
 
     async def after_model_change(
