@@ -117,3 +117,22 @@ class PastDateValidator(object):
     def __call__(self, form, field):
         if field.data > datetime.today().date():
             raise ValidationError(self.message)
+
+
+class IntegerLengthValidator(object):
+    def __init__(self, min_len: int = 0, max_len: int = None):
+        self.min_len = min_len
+        self.max_len = max_len
+
+    def __call__(self, form, field):
+        if field.data:
+            data_len = len(str(field.data))
+            if not self.min_len <= data_len <= self.max_len:
+                message = "Field must have "
+                message += (
+                    f"minimum {self.min_len} and maximum {self.max_len}"
+                    if self.min_len != self.max_len
+                    else f"{self.max_len}"
+                )
+                message += f" digits. You entered {data_len} digits."
+                raise ValidationError(message)

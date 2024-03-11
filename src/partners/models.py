@@ -12,7 +12,7 @@ class Partners(Base):
     __tablename__ = "partners"
 
     id: int = Column(Integer, primary_key=True)
-    photo: str = Column(FileType(storage=storage))
+    photo: str = Column(FileType(storage=storage), nullable=False)
     link: str = Column(String(500))
 
     def __repr__(self) -> str:

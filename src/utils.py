@@ -1,8 +1,6 @@
 import asyncio
 from io import BytesIO
 import os
-import shutil
-from PIL import Image
 from uuid import uuid4
 
 import aiofiles
