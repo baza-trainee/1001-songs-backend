@@ -1,5 +1,9 @@
 from typing import Any
+
 from fastapi import Request
+from wtforms.fields import EmailField
+from wtforms.validators import URL
+
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.utils import MediaInputWidget
@@ -34,18 +38,26 @@ class FooterAdmin(BaseAdmin, model=Footer):
         Footer.rules_and_terms: MediaFormatter(file_type="document"),
     }
     form_files_list = DOCUMENT_FIELDS
+    form_overrides = {
+        "email": EmailField,
+    }
     form_args = {
-        field: {
-            "widget": MediaInputWidget(file_type="document", is_required=True),
-            "validators": [
-                MediaValidator(
-                    media_types=DOCUMENT_TYPES,
-                    max_size=MAX_DOCUMENT_SIZE_MB,
-                    is_required=True,
-                )
-            ],
-        }
-        for field in DOCUMENT_FIELDS
+        "facebook_url": {
+            "validators": [URL()],
+        },
+        **{
+            field: {
+                "widget": MediaInputWidget(file_type="document", is_required=True),
+                "validators": [
+                    MediaValidator(
+                        media_types=DOCUMENT_TYPES,
+                        max_size=MAX_DOCUMENT_SIZE_MB,
+                        is_required=True,
+                    )
+                ],
+            }
+            for field in DOCUMENT_FIELDS
+        },
     }
 
     async def after_model_change(

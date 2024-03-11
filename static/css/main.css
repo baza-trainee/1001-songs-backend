@@ -34,7 +34,7 @@ div[class^="ql-editor"] {
 }
 
 div[class^="ql-editor"] p {
-    margin: 0 0 10px 0;
+    margin: 0 0 12px 0;
 }
 
 div[class^="ql-editor"]:focus {
@@ -69,7 +69,10 @@ div[class^="ql-editor"] p img,
 .ql-container.ql-snow {
     border: none !important;
 }
-.ql-snow .ql-editor img,
+.ql-container.ql-snow p img {
+    height: 200px;
+    display: inline;
+}
 iframe.ql-video,
 .quill-column img {
     height: 200px;
@@ -247,4 +250,34 @@ input[type="password"]::-webkit-reveal {
 .form-check-input[type=checkbox] {
     border-radius: var(--tblr-border-radius);
     border: 1px solid rgba(32, 107, 196, 0.3);
+}
+.navbar-brand.navbar-brand-autodark {
+    padding: 5px 0px 5px 0 !important;
+}
+.navbar-brand-image {
+    width: 50px;
+    height: auto;
+}
+.nav-link.ps-lg-3.keychainify-checked {
+    padding: 8px 10px 8px 32px !important;
+}
+.nav-link.keychainify-checked {
+    padding: 5px 10px !important;
+}
+a.btn.btn-secondary.btn-icon.keychainify-checked {
+    position: fixed;
+    bottom: 14px;
+    height: 30px;
+    width: 225px;
+}
+a.btn.btn-secondary.btn-icon.keychainify-checked::before {
+    content: "";
+    top: 100%;
+    position: absolute;
+    width: 100%;
+    height: 15px;
+    background-color: #1d273b;
+}
+.navbar.navbar-expand-sm {
+    margin-bottom: 44px;
 }
