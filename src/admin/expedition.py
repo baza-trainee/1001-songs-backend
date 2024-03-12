@@ -1,6 +1,7 @@
 from typing import Any
 
 from fastapi import Request
+from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
@@ -20,7 +21,7 @@ from src.admin.commons.validators import (
 )
 from src.config import IMAGE_TYPES, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache, invalidate_cache_partial
-from src.expedition.models import Expedition
+from src.expedition.models import Expedition, ExpeditionInfo
 from src.our_team.models import OurTeam
 
 PREVIEW_PHOTO_RES = (300, 180)
@@ -30,6 +31,7 @@ MODEL_TEAM_FIELDS = ["authors", "editors", "photographers", "recording"]
 
 
 class ExpeditionAdmin(BaseAdmin, model=Expedition):
+    category = "Експедиії"
     name_plural = "Експедиції"
     icon = "fa-solid fa-route"
 
@@ -165,3 +167,46 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         await invalidate_cache_partial(["get_expeditions_list_by_category"])
         await invalidate_cache("get_expedition", model.id)
         return await super().after_model_delete(model, request)
+
+
+class ExpeditionInfoAdmin(BaseAdmin, model=ExpeditionInfo):
+    category = "Експедиії"
+    name_plural = "Інформація"
+    icon = "fa-solid fa-user-graduate"
+
+    can_create = False
+    can_delete = False
+
+    column_labels = {
+        ExpeditionInfo.title: "Заголовок",
+        ExpeditionInfo.description: "Опис",
+    }
+    column_list = column_details_list = form_columns = [
+        ExpeditionInfo.title,
+        ExpeditionInfo.description,
+    ]
+    column_formatters = {
+        ExpeditionInfo.description: TextFormatter(text_align="left", min_width=300)
+    }
+    form_overrides = {
+        "description": TextAreaField,
+    }
+    form_args = {
+        "description": {
+            "render_kw": {
+                "class": "form-control",
+                "rows": 7,
+                "maxlength": ExpeditionInfo.description.type.length,
+            },
+            "validators": [DataRequired()],
+        },
+        "title": {
+            "validators": [DataRequired()],
+        },
+    }
+
+    async def after_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        await invalidate_cache("get_all_categories")
+        return await super().after_model_change(data, model, is_created, request)
