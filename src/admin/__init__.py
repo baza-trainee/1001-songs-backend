@@ -11,7 +11,7 @@ from .about import AboutAdmin
 from .location import CountryAdmin, RegionAdmin, CityAdmin
 from .song import SongAdmin, GenreAdmin, FundAdmin
 from .news import NewsAdmin
-from .expedition import ExpeditionAdmin
+from .expedition import ExpeditionAdmin, ExpeditionInfoAdmin
 from .project import OurProjectAdmin
 from .pass_change import ChangePasswordAdmin, PasswordRecoveryAdmin
 from .partners import PartnersAdmin
@@ -39,4 +39,5 @@ __all__ = [
     PartnersAdmin,
     OurProjectAdmin,
     CustomAjaxAdmin,
+    ExpeditionInfoAdmin,
 ]

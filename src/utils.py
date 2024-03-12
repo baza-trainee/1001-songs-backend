@@ -26,7 +26,11 @@ from src.education.utils import (
     create_education,
 )
 from src.location.utils import create_city, create_countries, create_regions
-from src.expedition.utils import create_expedition_categories, create_expeditions
+from src.expedition.utils import (
+    create_expedition_categories,
+    create_expedition_info,
+    create_expeditions,
+)
 from src.song.utils import create_song_and_genre, create_funds
 from src.our_project.utils import create_projects
 from src.database.fake_data import (
@@ -50,6 +54,7 @@ from src.database.fake_data import (
     FAKE_EXPEDITIONS,
     FAKE_FUNDS,
     PARTNERS,
+    EXPEDITION_ABOUT,
 )
 
 
@@ -83,6 +88,7 @@ async def lifespan(app: FastAPI):
                 await create_projects(FAKE_PROJECTS, s)
                 await create_funds(FAKE_FUNDS, s)
                 await create_partners(PARTNERS, s)
+                await create_expedition_info(EXPEDITION_ABOUT, s)
     await lock.release()
     yield
     await FastAPILimiter.close()

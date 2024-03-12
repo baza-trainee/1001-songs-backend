@@ -11,8 +11,13 @@ from fastapi_cache.decorator import cache
 from src.database.database import get_async_session
 from src.database.redis import my_key_builder
 from src.exceptions import NO_DATA_FOUND, SERVER_ERROR
-from .models import Expedition, ExpeditionCategory
-from .schemas import ExpeditionCategorySchema, ExpedListSchema, ExpeditionSchema
+from .models import Expedition, ExpeditionCategory, ExpeditionInfo
+from .schemas import (
+    ExpeditionCategorySchema,
+    ExpedListSchema,
+    ExpeditionPageSchema,
+    ExpeditionSchema,
+)
 from .exceptions import EXPED_NOT_FOUND
 from src.config import DAY, HOUR
 
@@ -20,24 +25,29 @@ from src.config import DAY, HOUR
 expedition_router = APIRouter(prefix="/expedition", tags=["Expedition"])
 
 
-@expedition_router.get("/categories", response_model=List[ExpeditionCategorySchema])
+@expedition_router.get("/categories", response_model=ExpeditionPageSchema)
 @cache(expire=DAY, key_builder=my_key_builder)
 async def get_all_categories(session: AsyncSession = Depends(get_async_session)):
     """Although the expedition categories are persistent,
     you can use this endpoint to see what identifier each
     category has in the database to later reference other endpoints in the group."""
     try:
-        query = select(ExpeditionCategory).order_by("id")
-        story = await session.execute(query)
-        response = story.scalars().all()
-        if not response:
+        info = await session.get(ExpeditionInfo, 1)
+        if not info:
             raise NoResultFound
-        return response
+        query = select(ExpeditionCategory).order_by("id")
+        response = await session.execute(query)
+        categories = response.scalars().all()
+        return {
+            "title": info.title,
+            "description": info.description,
+            "categories": [{"id": i.id, "title": i.title} for i in categories],
+        }
     except NoResultFound:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=NO_DATA_FOUND)
-    except Exception:
+    except Exception as e:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=SERVER_ERROR
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e)
         )
 
 

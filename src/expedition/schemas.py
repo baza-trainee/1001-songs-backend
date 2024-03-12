@@ -22,6 +22,12 @@ class ExpeditionCategorySchema(BaseModel):
     )
 
 
+class ExpeditionPageSchema(BaseModel):
+    title: str
+    description: str
+    categories: List[ExpeditionCategorySchema]
+
+
 class ExpedListSchema(BaseModel):
     id: Optional[int] = Field(..., ge=1)
     title: Optional[str]
