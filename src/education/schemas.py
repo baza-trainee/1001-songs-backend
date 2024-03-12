@@ -91,22 +91,28 @@ class SongsSchema(BaseModel):
     stereo_audio: Optional[AnyHttpUrl] = Field(None)
     photos: Optional[List[AnyHttpUrl]] = Field([], max_length=5)
     recording_location: Optional[str] = Field(None, max_length=100)
-    genre: str
+    genres: str
 
     @field_validator("photos", "stereo_audio", mode="before")
     @classmethod
     def add_base_url(cls, value: List[str], info: ValidationInfo) -> str:
-        if info.field_name == "photos":
-            result = []
-            for url in value:
-                if url and not url.startswith(("https://", "http://")):
-                    result.append(f"{settings.BASE_URL}/{url}")
+        match info.field_name:
+            case "photos":
+                result = []
+                for url in value:
+                    if url and not url.startswith(("https://", "http://")):
+                        result.append(f"{settings.BASE_URL}/{url}")
+                    else:
+                        result.append(url)
+                return result
+            case "stereo_audio":
+                if value and not value.startswith(("https://", "http://")):
+                    return f"{settings.BASE_URL}/{value}"
                 else:
-                    result.append(url)
-            return result
-        else:
-            if value:
-                return f"{settings.BASE_URL}/{value}"
+                    return value
+            case _:
+                if value:
+                    return f"{settings.BASE_URL}/{value}"
 
 
 class SubCategorySchema(BaseModel):
