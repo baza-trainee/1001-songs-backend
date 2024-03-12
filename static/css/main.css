@@ -57,7 +57,7 @@ div[class^="ql-editor"]:focus {
 div[class^="ql-editor"],
 .quill-column p,
 .ql-editor p {
-    margin: 0 0 10px 0;
+    margin: 0 0 15px 0;
 }
 div[class^="ql-editor"] p img,
 .quill-column p img {
@@ -72,6 +72,8 @@ div[class^="ql-editor"] p img,
 .ql-container.ql-snow p img {
     height: 200px;
     display: inline;
+    padding: 0 8px 0 2px;
+    margin: 0 4px 0 2px;
 }
 iframe.ql-video,
 .quill-column img {

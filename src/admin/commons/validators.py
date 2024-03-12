@@ -136,3 +136,21 @@ class IntegerLengthValidator(object):
                 )
                 message += f" digits. You entered {data_len} digits."
                 raise ValidationError(message)
+
+
+class ArrayStringValidator(object):
+    def __init__(self, max_array_len: int = 10, max_string_len: int = 25):
+        self.max_array_len = max_array_len
+        self.max_string_len = max_string_len
+
+    def __call__(self, form, field):
+        if field.data:
+            message = ""
+            array_len = len(field.data)
+            if array_len > self.max_array_len:
+                message += f"Field must have {self.max_array_len} items. You entered {array_len} items. "
+            for item in field.data:
+                data_len = len(item)
+                if not data_len <= self.max_string_len:
+                    message += f"Items must have maximum {self.max_string_len} characters. You entered {data_len} characters."
+                    raise ValidationError(message)

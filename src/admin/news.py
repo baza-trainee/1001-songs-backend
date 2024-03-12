@@ -3,6 +3,7 @@ from fastapi import Request
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
+from src.admin.commons.exceptions import IMG_REQ
 from src.admin.commons.formatters import (
     MediaFormatter,
     TextFormatter,
@@ -11,12 +12,18 @@ from src.admin.commons.formatters import (
     ArrayFormatter,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
-from src.admin.commons.validators import MediaValidator, PastDateValidator
+from src.admin.commons.validators import (
+    ArrayStringValidator,
+    MediaValidator,
+    PastDateValidator,
+)
 from src.config import IMAGE_TYPES, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.news.models import News
 from src.our_team.models import OurTeam
 
+PREVIEW_PHOTO_RES = (630, 320)
+CONTENT_PHOTO_RES = (1780, 1090)
 MODEL_TEAM_FIELDS = ["authors", "editors", "photographers"]
 
 
@@ -29,8 +36,8 @@ class NewsAdmin(BaseAdmin, model=News):
         News.title: "Заголовок",
         News.content: "Контент",
         News.short_description: "Короткий опис",
-        News.authors: "Автори",
-        News.editors: "Редактори",
+        News.authors: "Автор",
+        News.editors: "Редактор",
         News.photographers: "Світлини",
         News.preview_photo: "Фото прев'ю",
         News.location: "Розташування",
@@ -57,7 +64,7 @@ class NewsAdmin(BaseAdmin, model=News):
         News.created_at,
     ]
     column_default_sort = ("created_at", True)
-    form_columns = column_details_list = [
+    form_columns = [
         News.title,
         News.short_description,
         News.preview_photo,
@@ -89,7 +96,10 @@ class NewsAdmin(BaseAdmin, model=News):
         **{field: CustomSelect2TagsField for field in MODEL_TEAM_FIELDS},
     }
     form_args = {
-        "created_at": {"validators": [DataRequired(), PastDateValidator()]},
+        "authors": {"validators": [ArrayStringValidator()]},
+        "editors": {"validators": [ArrayStringValidator()]},
+        "photographers": {"validators": [ArrayStringValidator()]},
+        "created_at": {"validators": [PastDateValidator()]},
         "location": {"validators": [DataRequired()]},
         "category": {"validators": [DataRequired()]},
         **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
@@ -102,6 +112,10 @@ class NewsAdmin(BaseAdmin, model=News):
                     is_required=True,
                 )
             ],
+            "description": IMG_REQ % PREVIEW_PHOTO_RES,
+        },
+        "content": {
+            "description": IMG_REQ % CONTENT_PHOTO_RES,
         },
     }
 

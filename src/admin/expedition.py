@@ -4,6 +4,7 @@ from fastapi import Request
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
+from src.admin.commons.exceptions import IMG_REQ
 from src.admin.commons.formatters import (
     MediaFormatter,
     TextFormatter,
@@ -12,13 +13,19 @@ from src.admin.commons.formatters import (
     ArrayFormatter,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
-from src.admin.commons.validators import MediaValidator, PastDateValidator
+from src.admin.commons.validators import (
+    ArrayStringValidator,
+    MediaValidator,
+    PastDateValidator,
+)
 from src.config import IMAGE_TYPES, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.expedition.models import Expedition
 from src.our_team.models import OurTeam
 
-
+PREVIEW_PHOTO_RES = (300, 180)
+MAP_PHOTO_RES = (460, 300)
+CONTENT_PHOTO_RES = (1780, 1090)
 MODEL_TEAM_FIELDS = ["authors", "editors", "photographers", "recording"]
 
 
@@ -29,10 +36,10 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
     save_as = True
 
     column_labels = {
-        Expedition.title: "Назва",
+        Expedition.title: "Заголовок",
         Expedition.short_description: "Короткий опис",
-        Expedition.map_photo: "Фото карти",
-        Expedition.preview_photo: "Фото прев'ю",
+        Expedition.map_photo: "Карта",
+        Expedition.preview_photo: "Прев'ю",
         Expedition.expedition_date: "Дата",
         Expedition.content: "Контент",
         Expedition.category: "Категорія",
@@ -57,7 +64,7 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         Expedition.photographers,
         Expedition.recording,
     ]
-    form_columns = column_details_list = [
+    form_columns = [
         Expedition.title,
         Expedition.short_description,
         Expedition.preview_photo,
@@ -99,9 +106,13 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         **{field: CustomSelect2TagsField for field in MODEL_TEAM_FIELDS},
     }
     form_args = {
+        "authors": {"validators": [ArrayStringValidator()]},
+        "editors": {"validators": [ArrayStringValidator()]},
+        "photographers": {"validators": [ArrayStringValidator()]},
+        "recording": {"validators": [ArrayStringValidator()]},
         "category": {"validators": [DataRequired()]},
         "location": {"validators": [DataRequired()]},
-        "expedition_date": {"validators": [DataRequired(), PastDateValidator()]},
+        "expedition_date": {"validators": [PastDateValidator()]},
         "map_photo": {
             "widget": MediaInputWidget(is_required=True),
             "validators": [
@@ -111,6 +122,7 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
                     is_required=True,
                 )
             ],
+            "description": IMG_REQ % MAP_PHOTO_RES,
         },
         "preview_photo": {
             "widget": MediaInputWidget(is_required=True),
@@ -121,6 +133,10 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
                     is_required=True,
                 )
             ],
+            "description": IMG_REQ % PREVIEW_PHOTO_RES,
+        },
+        "content": {
+            "description": IMG_REQ % CONTENT_PHOTO_RES,
         },
         **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
     }
