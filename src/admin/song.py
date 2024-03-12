@@ -5,6 +5,7 @@ from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
+from src.admin.commons.exceptions import IMG_REQ
 from src.admin.commons.formatters import (
     ArrayFormatter,
     PhotoSplitFormatter,
@@ -21,6 +22,11 @@ from src.config import AUDIO_TYPES, MAX_AUDIO_SIZE_MB, MAX_IMAGE_SIZE_MB, IMAGE_
 from src.database.redis import invalidate_cache_partial
 from src.our_team.models import OurTeam
 from src.song.models import Genre, Song, Fund
+
+
+SONG_PHOTO_RES = (1230, 690)
+SONG_ETHNOGRAPHIC_PHOTO_RES = (1024, 1015)
+SONG_MAP_PHOTO_RES = (820, 485)
 
 PHOTO_FIELDS = [
     "photo1",
@@ -96,6 +102,7 @@ class SongAdmin(BaseAdmin, model=Song):
     icon = "fa-solid fa-music"
 
     save_as = True
+    can_view_details = True
 
     column_labels = {
         Song.title: "Назва",
@@ -237,18 +244,27 @@ class SongAdmin(BaseAdmin, model=Song):
         "city": {
             "validators": [DataRequired()],
         },
-        **{
-            field: {
-                "widget": MediaInputWidget(is_required=True),
-                "validators": [
-                    MediaValidator(
-                        media_types=IMAGE_TYPES,
-                        max_size=MAX_IMAGE_SIZE_MB,
-                        is_required=True,
-                    ),
-                ],
-            }
-            for field in PHOTO_FIELDS[:1] + ETHNOGRAPHIC_PHOTO_FIELDS[:1]
+        PHOTO_FIELDS[0]: {
+            "widget": MediaInputWidget(is_required=True),
+            "validators": [
+                MediaValidator(
+                    media_types=IMAGE_TYPES,
+                    max_size=MAX_IMAGE_SIZE_MB,
+                    is_required=True,
+                ),
+            ],
+            "description": IMG_REQ % SONG_PHOTO_RES,
+        },
+        ETHNOGRAPHIC_PHOTO_FIELDS[0]: {
+            "widget": MediaInputWidget(is_required=True),
+            "validators": [
+                MediaValidator(
+                    media_types=IMAGE_TYPES,
+                    max_size=MAX_IMAGE_SIZE_MB,
+                    is_required=True,
+                ),
+            ],
+            "description": IMG_REQ % SONG_ETHNOGRAPHIC_PHOTO_RES,
         },
         **{
             field: {
@@ -256,8 +272,29 @@ class SongAdmin(BaseAdmin, model=Song):
                 "validators": [
                     MediaValidator(media_types=IMAGE_TYPES, max_size=MAX_IMAGE_SIZE_MB),
                 ],
+                "description": IMG_REQ % SONG_ETHNOGRAPHIC_PHOTO_RES,
             }
-            for field in PHOTO_FIELDS[1:] + ETHNOGRAPHIC_PHOTO_FIELDS[1:] + MAP_FIELDS
+            for field in ETHNOGRAPHIC_PHOTO_FIELDS[1:]
+        },
+        **{
+            field: {
+                "widget": MediaInputWidget(),
+                "validators": [
+                    MediaValidator(media_types=IMAGE_TYPES, max_size=MAX_IMAGE_SIZE_MB),
+                ],
+                "description": IMG_REQ % SONG_PHOTO_RES,
+            }
+            for field in PHOTO_FIELDS[1:]
+        },
+        **{
+            field: {
+                "widget": MediaInputWidget(),
+                "validators": [
+                    MediaValidator(media_types=IMAGE_TYPES, max_size=MAX_IMAGE_SIZE_MB),
+                ],
+                "description": IMG_REQ % SONG_MAP_PHOTO_RES,
+            }
+            for field in MAP_FIELDS
         },
         **{
             field: {

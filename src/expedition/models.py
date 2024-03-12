@@ -24,8 +24,8 @@ class ExpeditionInfo(Base):
     __tablename__ = "expedition_info"
 
     id: int = Column(Integer, primary_key=True)
-    title: str = Column(String(length=100), nullable=False)
-    description: str = Column(String(length=500))
+    title: str = Column(String(length=70), nullable=False)
+    description: str = Column(String(length=600), nullable=False)
 
 
 class Expedition(Base):
