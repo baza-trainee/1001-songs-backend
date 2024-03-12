@@ -46,7 +46,7 @@ class SongSubcategory(Base):
 
     id: int = Column(Integer, primary_key=True)
     title: str = Column(String(70), nullable=False)
-    media = Column(FileType(storage=storage2))
+    media = Column(FileType(storage=storage2), nullable=False)
     main_category_id: int = Column(
         Integer, ForeignKey("calendar_and_ritual_categories.id")
     )

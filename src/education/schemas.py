@@ -3,11 +3,13 @@ from typing import List, Optional
 from pydantic import BaseModel, Field, AnyHttpUrl, ValidationInfo, field_validator
 
 from src.config import settings
-from .models import EducationPage
+from .models import EducationPage, EducationPageSongGenre, CalendarAndRitualCategory
 
 
 TITLE_LEN = EducationPage.title.type.length
 DESCRIPTION_LEN = EducationPage.description.type.length
+EDUCATION_GENRE_DESCRIPTION_LEN = EducationPageSongGenre.description.type.length
+CALENDAR_AND_RITUAL_CATEGORY_LEN = CalendarAndRitualCategory.description.type.length
 RECOMENDATIONS_LEN = EducationPage.recommendations.type.length
 SOURCES_LEN = EducationPage.recommended_sources.type.length
 
@@ -42,8 +44,8 @@ class SubCategoryBaseSchema(BaseCycleSchema):
 
 
 class EducationGenreSchema(EducationGenreBaseSchema):
-    media: Optional[List[AnyHttpUrl]] = Field(None, max_length=5)
-    description: Optional[str] = Field(None, max_length=DESCRIPTION_LEN)
+    media: List[AnyHttpUrl] = Field(max_length=5)
+    description: Optional[str] = Field(None, max_length=EDUCATION_GENRE_DESCRIPTION_LEN)
     main_category: EducationGenreBaseSchema
 
     @field_validator("media", mode="before")
@@ -51,10 +53,11 @@ class EducationGenreSchema(EducationGenreBaseSchema):
     def add_base_url(cls, value: List[str], info: ValidationInfo) -> str:
         result = []
         for url in value:
-            if url and not url.startswith(("https://", "http://")):
-                result.append(f"{settings.BASE_URL}/{url}")
-            else:
-                result.append(url)
+            if url:
+                if not url.startswith(("https://", "http://")):
+                    result.append(f"{settings.BASE_URL}/{url}")
+                else:
+                    result.append(url)
         return result
 
     class Config:
@@ -70,7 +73,9 @@ class EducationSchema(BaseModel):
 
 
 class CategorySchema(EducationGenreBaseSchema):
-    description: Optional[str] = Field(None, max_length=DESCRIPTION_LEN)
+    description: Optional[str] = Field(
+        None, max_length=CALENDAR_AND_RITUAL_CATEGORY_LEN
+    )
     recommended_sources: Optional[str] = Field(None, max_length=SOURCES_LEN)
     song_subcategories: List[SubCategoryBaseSchema]
 
