@@ -15,9 +15,9 @@ class EducationPage(Base):
     __tablename__ = "education_page"
 
     id: int = Column(Integer, primary_key=True)
-    title: str = Column(String(100), nullable=True)
-    description: str = Column(String(5000))
-    recommendations: str = Column(String(10000))
+    title: str = Column(String(70), nullable=False)
+    description: str = Column(String(600), nullable=False)
+    recommendations: str = Column(String(10000), nullable=False)
     recommended_sources: str = Column(String(10000), nullable=False)
 
 
@@ -25,9 +25,9 @@ class CalendarAndRitualCategory(Base):
     __tablename__ = "calendar_and_ritual_categories"
 
     id: int = Column(Integer, primary_key=True)
-    title: str = Column(String(100))
-    media = Column(FileType(storage=storage1))
-    description: str = Column(String(2000))
+    title: str = Column(String(50), nullable=False)
+    media = Column(FileType(storage=storage1), nullable=False)
+    description: str = Column(String(2000), nullable=False)
     recommended_sources: str = Column(String(10000), nullable=False)
 
     song_subcategories = relationship(
@@ -45,7 +45,7 @@ class SongSubcategory(Base):
     __tablename__ = "song_subcategories"
 
     id: int = Column(Integer, primary_key=True)
-    title: str = Column(String(100), nullable=False)
+    title: str = Column(String(70), nullable=False)
     media = Column(FileType(storage=storage2))
     main_category_id: int = Column(
         Integer, ForeignKey("calendar_and_ritual_categories.id")
@@ -66,11 +66,13 @@ class EducationPageSongGenre(Base):
     __tablename__ = "education_page_song_genres"
 
     id: int = Column(Integer, primary_key=True)
-    title: str = Column(String(100), nullable=False)
-    description: str = Column(String(2000))
-    media1: str = Column(FileType(storage=storage3))
-    media2: str = Column(FileType(storage=storage3))
-    media3: str = Column(FileType(storage=storage3))
+    title: str = Column(String(70), nullable=False)
+    description: str = Column(String(2000), nullable=False)
+    media1: str = Column(FileType(storage=storage3), nullable=False)
+    media2: str = Column(FileType(storage=storage3), nullable=False)
+    media3: str = Column(FileType(storage=storage3), nullable=False)
+    media4: str = Column(FileType(storage=storage3))
+    media5: str = Column(FileType(storage=storage3))
     main_category_id: int = Column(
         Integer, ForeignKey("calendar_and_ritual_categories.id")
     )
@@ -95,7 +97,7 @@ class EducationPageSongGenre(Base):
 
     @property
     def media(self):
-        return [self.media1, self.media2, self.media3]
+        return [self.media1, self.media2, self.media3, self.media4, self.media5]
 
     def __repr__(self) -> str:
         return f"{self.title}"

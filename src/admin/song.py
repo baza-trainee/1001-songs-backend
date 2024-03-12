@@ -12,9 +12,13 @@ from src.admin.commons.formatters import (
     TextFormatter,
 )
 from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
-from src.admin.commons.validators import MediaValidator, PastDateValidator
+from src.admin.commons.validators import (
+    ArrayStringValidator,
+    MediaValidator,
+    PastDateValidator,
+)
 from src.config import AUDIO_TYPES, MAX_AUDIO_SIZE_MB, MAX_IMAGE_SIZE_MB, IMAGE_TYPES
-from src.database.redis import invalidate_cache, invalidate_cache_partial
+from src.database.redis import invalidate_cache_partial
 from src.our_team.models import OurTeam
 from src.song.models import Genre, Song, Fund
 
@@ -22,11 +26,15 @@ PHOTO_FIELDS = [
     "photo1",
     "photo2",
     "photo3",
+    "photo4",
+    "photo5",
 ]
 ETHNOGRAPHIC_PHOTO_FIELDS = [
     "ethnographic_photo1",
     "ethnographic_photo2",
     "ethnographic_photo3",
+    "ethnographic_photo4",
+    "ethnographic_photo5",
 ]
 MAP_FIELDS = [
     "map_photo",
@@ -46,16 +54,18 @@ class GenreAdmin(BaseAdmin, model=Genre):
     category = "Пісенний розділ"
     name_plural = "Жанри"
     icon = "fa-solid fa-layer-group"
+    can_view_details = True
 
     column_labels = {
         Genre.genre_name: "Назва жанру",
     }
-    column_list = form_columns = column_details_list = [
+    column_list = form_columns = [
         Genre.genre_name,
     ]
-    form_args = {
-        "genre_name": {"validators": [DataRequired()]},
-    }
+    column_details_list = [
+        Genre.genre_name,
+        Genre.songs,
+    ]
 
     async def after_model_delete(self, model: Any, request: Request) -> None:
         await invalidate_cache_partial(["filter_songs"])
@@ -66,6 +76,7 @@ class FundAdmin(BaseAdmin, model=Fund):
     category = "Пісенний розділ"
     name_plural = "Фонди"
     icon = "fa-solid fa-layer-group"
+    can_view_details = True
 
     column_labels = {
         Fund.title: "Назва фонду",
@@ -77,9 +88,6 @@ class FundAdmin(BaseAdmin, model=Fund):
         Fund.title,
         Fund.songs,
     ]
-    form_args = {
-        "title": {"validators": [DataRequired()]},
-    }
 
 
 class SongAdmin(BaseAdmin, model=Song):
@@ -93,24 +101,27 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.title: "Назва",
         Song.song_text: "Текст",
         Song.genres: "Жанри",
-        Song.education_genres: "Жанр освітнього розділу",
+        Song.education_genres: "Жанри освітнього розділу",
         Song.performers: "Виконавці",
         Song.city: "Місто / Поселення",
         Song.ethnographic_district: "Етнографічний регіон",
-        Song.song_description: "Опис",
+        Song.song_description: "Інформація",
         Song.collectors: "Збирачі",
         Song.fund: "Фонд",
         Song.is_active: "Активна",
         Song.recording_date: "Дата",
-        Song.recording_location: "Місце запису",
         Song.map_photo: "Карта",
         Song.comment_map: "Коментар для карти",
         Song.photo1: "Фото",
         Song.photo2: "Фото",
         Song.photo3: "Фото",
+        Song.photo4: "Фото",
+        Song.photo5: "Фото",
         Song.ethnographic_photo1: "Етнографічне фото",
         Song.ethnographic_photo2: "Етнографічне фото",
         Song.ethnographic_photo3: "Етнографічне фото",
+        Song.ethnographic_photo4: "Етнографічне фото",
+        Song.ethnographic_photo5: "Етнографічне фото",
         Song.video_url: "Посилання на відео",
         Song.stereo_audio: "Пісня",
         Song.multichannel_audio1: "Канал 1",
@@ -148,16 +159,19 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.genres,
         Song.education_genres,
         Song.recording_date,
-        Song.recording_location,
         Song.video_url,
         Song.map_photo,
         Song.comment_map,
         Song.photo1,
         Song.photo2,
         Song.photo3,
+        Song.photo4,
+        Song.photo5,
         Song.ethnographic_photo1,
         Song.ethnographic_photo2,
         Song.ethnographic_photo3,
+        Song.ethnographic_photo4,
+        Song.ethnographic_photo5,
         Song.stereo_audio,
         Song.multichannel_audio1,
         Song.multichannel_audio2,
@@ -195,11 +209,11 @@ class SongAdmin(BaseAdmin, model=Song):
         "collectors": CustomSelect2TagsField,
     }
     form_args = {
-        "collectors": {"model": OurTeam},
-        "title": {"validators": [DataRequired()]},
-        "performers": {"validators": [DataRequired()]},
-        "ethnographic_district": {"validators": [DataRequired()]},
-        "recording_date": {"validators": [DataRequired(), PastDateValidator()]},
+        "collectors": {
+            "validators": [ArrayStringValidator()],
+            "model": OurTeam,
+        },
+        "recording_date": {"validators": [PastDateValidator()]},
         "song_text": {
             "render_kw": {
                 "class": "form-control",
@@ -225,12 +239,25 @@ class SongAdmin(BaseAdmin, model=Song):
         },
         **{
             field: {
+                "widget": MediaInputWidget(is_required=True),
+                "validators": [
+                    MediaValidator(
+                        media_types=IMAGE_TYPES,
+                        max_size=MAX_IMAGE_SIZE_MB,
+                        is_required=True,
+                    ),
+                ],
+            }
+            for field in PHOTO_FIELDS[:1] + ETHNOGRAPHIC_PHOTO_FIELDS[:1]
+        },
+        **{
+            field: {
                 "widget": MediaInputWidget(),
                 "validators": [
                     MediaValidator(media_types=IMAGE_TYPES, max_size=MAX_IMAGE_SIZE_MB),
                 ],
             }
-            for field in PHOTO_FIELDS + ETHNOGRAPHIC_PHOTO_FIELDS + MAP_FIELDS
+            for field in PHOTO_FIELDS[1:] + ETHNOGRAPHIC_PHOTO_FIELDS[1:] + MAP_FIELDS
         },
         **{
             field: {

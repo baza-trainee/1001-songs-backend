@@ -21,24 +21,27 @@ class Song(Base):
     __tablename__ = "song"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    title = Column(String(200))
+    title = Column(String(70), nullable=False)
     song_text = Column(String(5000))
-    song_description = Column(String(2000))
-    recording_date = Column(Date)
-    performers = Column(String(200))
-    ethnographic_district = Column(String(100))
-    collectors: list[str] = Column(ARRAY(String(100)), nullable=True)
+    song_description = Column(String(200))
+    recording_date = Column(Date, nullable=False)
+    performers = Column(String(200), nullable=False)
+    ethnographic_district = Column(String(50), nullable=False)
+    collectors: list[str] = Column(ARRAY(String(25)), nullable=False)
     is_active: bool = Column(Boolean, default=True, nullable=False)
-    recording_location = Column(String(100))
-    comment_map: str = Column(String(500))
-    video_url: str = Column(String(1000))
+    video_url: str = Column(String(500))
     map_photo: str = Column(FileType(storage=storage))
-    photo1: str = Column(FileType(storage=storage))
+    comment_map: str = Column(String(200))
+    photo1: str = Column(FileType(storage=storage), nullable=False)
     photo2: str = Column(FileType(storage=storage))
     photo3: str = Column(FileType(storage=storage))
-    ethnographic_photo1: str = Column(FileType(storage=storage))
+    photo4: str = Column(FileType(storage=storage))
+    photo5: str = Column(FileType(storage=storage))
+    ethnographic_photo1: str = Column(FileType(storage=storage), nullable=False)
     ethnographic_photo2: str = Column(FileType(storage=storage))
     ethnographic_photo3: str = Column(FileType(storage=storage))
+    ethnographic_photo4: str = Column(FileType(storage=storage))
+    ethnographic_photo5: str = Column(FileType(storage=storage))
     stereo_audio: str = Column(FileType(storage=storage))
     multichannel_audio1: str = Column(FileType(storage=storage))
     multichannel_audio2: str = Column(FileType(storage=storage))
@@ -73,6 +76,8 @@ class Song(Base):
             self.photo1,
             self.photo2,
             self.photo3,
+            self.photo4,
+            self.photo5,
         ]
 
     @property
@@ -81,6 +86,8 @@ class Song(Base):
             self.ethnographic_photo1,
             self.ethnographic_photo2,
             self.ethnographic_photo3,
+            self.ethnographic_photo4,
+            self.ethnographic_photo5,
         ]
 
     @property
@@ -102,7 +109,7 @@ class Genre(Base):
     __tablename__ = "genre"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    genre_name = Column(String(100))
+    genre_name = Column(String(50), nullable=False)
     songs = relationship(
         "Song",
         secondary="song_genre_association",
@@ -134,7 +141,7 @@ class Fund(Base):
     __tablename__ = "funds"
 
     id = Column(Integer, primary_key=True)
-    title = Column(String(100), nullable=False)
+    title = Column(String(50), nullable=False)
 
     songs = relationship("Song", back_populates="fund")
 
