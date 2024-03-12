@@ -1,7 +1,7 @@
 from typing import Any
 
 from fastapi import Request
-from wtforms import TextAreaField
+from wtforms import TextAreaField, URLField
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
@@ -214,6 +214,7 @@ class SongAdmin(BaseAdmin, model=Song):
         "song_text": TextAreaField,
         "song_description": TextAreaField,
         "collectors": CustomSelect2TagsField,
+        "video_url": URLField,
     }
     form_args = {
         "collectors": {
