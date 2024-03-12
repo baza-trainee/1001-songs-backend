@@ -3,32 +3,40 @@ from fastapi import Request
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
+from src.admin.commons.exceptions import IMG_REQ
 from src.admin.commons.formatters import MediaFormatter, format_quill, ArrayFormatter
 from src.admin.commons.utils import MediaInputWidget
-from src.admin.commons.validators import MediaValidator, PastDateValidator
+from src.admin.commons.validators import (
+    ArrayStringValidator,
+    MediaValidator,
+    PastDateValidator,
+)
 from src.config import MAX_IMAGE_SIZE_MB, IMAGE_TYPES
 from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.our_project.models import OurProject
 
+PREVIEW_PHOTO_RES = (300, 180)
+CONTENT_PHOTO_RES = (1780, 1090)
+
 
 class OurProjectAdmin(BaseAdmin, model=OurProject):
-    name_plural = "Проєкти"
+    name_plural = "Актуальні проєкти"
     icon = "fa-solid fa-hands-holding-circle"
+    category = "Про проєкт"
     save_as = True
 
     column_labels = {
-        OurProject.title: "Назва",
+        OurProject.title: "Заголовок",
         OurProject.short_description: "Короткий опис",
         OurProject.location: "Локація",
         OurProject.content: "Контент",
         OurProject.project_date: "Дата",
-        OurProject.preview_photo: "Фото прев'ю",
-        OurProject.authors: "Автори",
-        OurProject.editors: "Редактори",
+        OurProject.preview_photo: "Прев'ю",
+        OurProject.authors: "Автор",
+        OurProject.editors: "Редактор",
         OurProject.photographers: "Світлини",
-        OurProject.recording: "Запис",
     }
-    form_columns = column_details_list = [
+    form_columns = [
         OurProject.title,
         OurProject.short_description,
         OurProject.preview_photo,
@@ -37,7 +45,6 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
         OurProject.authors,
         OurProject.editors,
         OurProject.photographers,
-        OurProject.recording,
         OurProject.content,
     ]
     column_list = [
@@ -50,7 +57,6 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
         OurProject.authors,
         OurProject.editors,
         OurProject.photographers,
-        OurProject.recording,
     ]
 
     column_formatters = {
@@ -58,7 +64,6 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
         OurProject.authors: ArrayFormatter(),
         OurProject.editors: ArrayFormatter(),
         OurProject.photographers: ArrayFormatter(),
-        OurProject.recording: ArrayFormatter(),
         OurProject.preview_photo: MediaFormatter(),
     }
     form_quill_list = [
@@ -69,17 +74,18 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
     ]
     column_searchable_list = [
         OurProject.title,
+        OurProject.short_description,
     ]
     column_sortable_list = [
         OurProject.project_date,
     ]
     column_default_sort = ("project_date", True)
     form_args = {
-        "title": {"validators": [DataRequired()]},
-        "short_description": {"validators": [DataRequired()]},
         "location": {"validators": [DataRequired()]},
-        "category": {"validators": [DataRequired()]},
-        "project_date": {"validators": [DataRequired(), PastDateValidator()]},
+        "authors": {"validators": [ArrayStringValidator()]},
+        "editors": {"validators": [ArrayStringValidator()]},
+        "photographers": {"validators": [ArrayStringValidator()]},
+        "project_date": {"validators": [PastDateValidator()]},
         "preview_photo": {
             "widget": MediaInputWidget(is_required=True),
             "validators": [
@@ -89,6 +95,10 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
                     is_required=True,
                 )
             ],
+            "description": IMG_REQ % PREVIEW_PHOTO_RES,
+        },
+        "content": {
+            "description": IMG_REQ % CONTENT_PHOTO_RES,
         },
     }
     form_ajax_refs = {

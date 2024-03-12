@@ -24,11 +24,11 @@ class Expedition(Base):
     __tablename__ = "expedition"
 
     id: int = Column(Integer, primary_key=True)
-    title: str = Column(String(250), nullable=False, index=True)
-    short_description: str = Column(String(120), nullable=False, index=True)
-    map_photo: str = Column(FileType(storage=storage))
-    preview_photo: str = Column(FileType(storage=storage))
-    expedition_date = Column(Date)
+    title: str = Column(String(70), nullable=False, index=True)
+    short_description: str = Column(String(200), nullable=False, index=True)
+    map_photo: str = Column(FileType(storage=storage), nullable=False)
+    preview_photo: str = Column(FileType(storage=storage), nullable=False)
+    expedition_date = Column(Date, nullable=False)
     content: str = Column(String(10000), nullable=False)
     category_id = Column(Integer, ForeignKey("expedition_category.id"))
     category = relationship(
@@ -38,10 +38,10 @@ class Expedition(Base):
     city_id = Column(Integer, ForeignKey("cities.id"))
     location = relationship("City", back_populates="expeditions", lazy="selectin")
 
-    authors: list[str] = Column(ARRAY(String(100)), nullable=True)
-    editors: list[str] = Column(ARRAY(String(100)), nullable=True)
-    photographers: list[str] = Column(ARRAY(String(100)), nullable=True)
-    recording: list[str] = Column(ARRAY(String(100)), nullable=True)
+    authors: list[str] = Column(ARRAY(String(100)), nullable=False)
+    editors: list[str] = Column(ARRAY(String(100)))
+    photographers: list[str] = Column(ARRAY(String(100)))
+    recording: list[str] = Column(ARRAY(String(100)))
 
     def __repr__(self) -> str:
         return f"{self.title}"

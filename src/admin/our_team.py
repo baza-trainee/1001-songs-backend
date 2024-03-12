@@ -3,12 +3,15 @@ from fastapi import Request
 from wtforms import TextAreaField
 
 from src.admin.commons.base import BaseAdmin
+from src.admin.commons.exceptions import IMG_REQ
 from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.utils import MediaInputWidget
 from src.admin.commons.validators import MediaValidator
 from src.config import IMAGE_TYPES, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache
 from src.our_team.models import OurTeam
+
+PHOTO_RES = (410, 560)
 
 
 class OurTeamAdmin(BaseAdmin, model=OurTeam):
@@ -51,6 +54,7 @@ class OurTeamAdmin(BaseAdmin, model=OurTeam):
                     is_required=True,
                 ),
             ],
+            "description": IMG_REQ % PHOTO_RES,
         },
     }
 

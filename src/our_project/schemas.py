@@ -13,8 +13,6 @@ DESCRIPTION_LEN = OurProject.short_description.type.length
 AUTHORS_LEN = OurProject.authors.type.item_type.length
 EDITORS_LEN = OurProject.editors.type.item_type.length
 PHOTOGRAPHERS_LEN = OurProject.photographers.type.item_type.length
-RECORDING_LEN = OurProject.recording.type.item_type.length
-RECORDING_LEN = OurProject.recording.type.item_type.length
 
 
 class ProjectSliderSchema(BaseModel):
@@ -42,7 +40,6 @@ class ProjectSchema(BaseModel):
     authors: Optional[List[str]] = Field(None, max_length=AUTHORS_LEN)
     editors: Optional[List[str]] = Field(None, max_length=EDITORS_LEN)
     photographers: Optional[List[str]] = Field(None, max_length=PHOTOGRAPHERS_LEN)
-    recording: Optional[List[str]] = Field(None, max_length=RECORDING_LEN)
 
     @field_validator("location", mode="before")
     @classmethod

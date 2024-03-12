@@ -12,9 +12,9 @@ class OurTeam(Base):
     __tablename__ = "our_team"
 
     id: int = Column(Integer, primary_key=True)
-    full_name: str = Column(String(100), nullable=False)
-    photo: str = Column(FileType(storage=storage))
-    description: str = Column(String(500))
+    full_name: str = Column(String(50), nullable=False)
+    photo: str = Column(FileType(storage=storage), nullable=False)
+    description: str = Column(String(300), nullable=False)
 
     def __repr__(self) -> str:
         return f"{self.full_name}"
