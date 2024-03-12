@@ -120,7 +120,7 @@ async def get_songs_by_education_genre(
                 ],
                 "stereo_audio": song.stereo_audio,
                 "recording_location": f"{song.city.name}, {song.city.region.name}, {song.city.country.name}",
-                "genre": genre.title,
+                "genres": genre.title,
             }
             for song in genre.songs
             if song.is_active
