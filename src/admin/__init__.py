@@ -30,8 +30,9 @@ __all__ = [
     EducationPageSongGenreAdmin,
     AboutAdmin,
     OurTeamAdmin,
-    NewsAdmin,
+    ExpeditionInfoAdmin,
     ExpeditionAdmin,
+    NewsAdmin,
     FooterAdmin,
     PaymentAdmin,
     ChangePasswordAdmin,
@@ -39,5 +40,4 @@ __all__ = [
     PartnersAdmin,
     OurProjectAdmin,
     CustomAjaxAdmin,
-    ExpeditionInfoAdmin,
 ]

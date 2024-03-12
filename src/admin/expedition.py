@@ -31,7 +31,7 @@ MODEL_TEAM_FIELDS = ["authors", "editors", "photographers", "recording"]
 
 
 class ExpeditionAdmin(BaseAdmin, model=Expedition):
-    category = "Експедиії"
+    category = "Експедиції"
     name_plural = "Експедиції"
     icon = "fa-solid fa-route"
 
@@ -170,7 +170,7 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
 
 
 class ExpeditionInfoAdmin(BaseAdmin, model=ExpeditionInfo):
-    category = "Експедиії"
+    category = "Експедиції"
     name_plural = "Інформація"
     icon = "fa-solid fa-user-graduate"
 
@@ -181,7 +181,7 @@ class ExpeditionInfoAdmin(BaseAdmin, model=ExpeditionInfo):
         ExpeditionInfo.title: "Заголовок",
         ExpeditionInfo.description: "Опис",
     }
-    column_list = column_details_list = form_columns = [
+    column_list = form_columns = [
         ExpeditionInfo.title,
         ExpeditionInfo.description,
     ]
@@ -198,10 +198,6 @@ class ExpeditionInfoAdmin(BaseAdmin, model=ExpeditionInfo):
                 "rows": 7,
                 "maxlength": ExpeditionInfo.description.type.length,
             },
-            "validators": [DataRequired()],
-        },
-        "title": {
-            "validators": [DataRequired()],
         },
     }
 

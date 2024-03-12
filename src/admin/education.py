@@ -22,6 +22,7 @@ from src.education.models import (
     EducationPageSongGenre,
 )
 
+RECOMMENDATIONS_PHOTO_RES = (1780, 1090)
 CATEGORY_MEDIA_RES = (820, 560)
 EDUCATION_PAGE_PHOTO_FIELDS = [
     "media1",
@@ -34,7 +35,7 @@ EDUCATION_PAGE_PHOTO_FIELDS = [
 
 class EducationAdmin(BaseAdmin, model=EducationPage):
     category = "Освітний розділ"
-    name_plural = "Освітний розділ"
+    name_plural = "Інформація"
     icon = "fa-solid fa-user-graduate"
 
     can_create = False
@@ -67,6 +68,9 @@ class EducationAdmin(BaseAdmin, model=EducationPage):
                 "rows": 7,
                 "maxlength": EducationPage.description.type.length,
             },
+        },
+        "recommendations": {
+            "description": IMG_REQ % RECOMMENDATIONS_PHOTO_RES,
         },
         "recommended_sources": {"validators": [QuillValidator(max_text_len=600)]},
     }
