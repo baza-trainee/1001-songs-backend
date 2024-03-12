@@ -8,7 +8,7 @@ class Country(Base):
     __tablename__ = "countries"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
+    name = Column(String(50), nullable=False)
 
     regions = relationship("Region", back_populates="country")
     cities = relationship("City", back_populates="country")
@@ -21,7 +21,7 @@ class Region(Base):
     __tablename__ = "regions"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
+    name = Column(String(50), nullable=False)
     country_id = Column(Integer, ForeignKey("countries.id"))
 
     country = relationship("Country", back_populates="regions")
@@ -35,9 +35,9 @@ class City(Base):
     __tablename__ = "cities"
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
-    latitude = Column(Float)
-    longitude = Column(Float)
+    name = Column(String(50), nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
     administrative_code = Column(String(50))
     region_id = Column(Integer, ForeignKey("regions.id"))
     country_id = Column(Integer, ForeignKey("countries.id"))
@@ -58,4 +58,6 @@ class City(Base):
     news = relationship("News", back_populates="location")
 
     def __repr__(self) -> str:
-        return f"{self.name}, {self.region}, {self.administrative_code}"
+        return f"{self.name}, {self.region}" + (
+            f", {self.administrative_code}" if self.administrative_code else ""
+        )

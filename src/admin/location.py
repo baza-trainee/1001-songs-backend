@@ -11,6 +11,7 @@ class CountryAdmin(BaseAdmin, model=Country):
     category = "Локації"
     name_plural = "Країни"
     icon = "fa-solid fa-earth-europe"
+    can_view_details = True
 
     column_list = form_columns = column_details_list = [
         Country.name,
@@ -24,6 +25,7 @@ class RegionAdmin(BaseAdmin, model=Region):
     category = "Локації"
     name_plural = "Області та регіони"
     icon = "fa-solid fa-map-location-dot"
+    can_view_details = True
 
     column_list = form_columns = [
         Region.country,
@@ -31,13 +33,12 @@ class RegionAdmin(BaseAdmin, model=Region):
     ]
     column_labels = {
         Region.country: "Країна",
-        Region.name: "Область",
+        Region.name: "Область / Регіон",
         Region.cities: "Міста / Поселення",
     }
     column_details_list = [
         Region.country,
         Region.name,
-        # Region.cities,
     ]
     form_args = {
         "country": {
@@ -59,11 +60,12 @@ class CityAdmin(BaseAdmin, model=City):
     category = "Локації"
     name_plural = "Міста та поселення"
     icon = "fa-solid fa-location-dot"
+    can_view_details = True
 
     column_labels = {
         City.country: "Країна",
-        City.region: "Область",
-        City.name: "Населений пункт",
+        City.region: "Область / Регіон",
+        City.name: "Місто / Поселення",
         City.latitude: "Широта",
         City.longitude: "Довгота",
         City.administrative_code: "Адміністративний код",
@@ -81,12 +83,6 @@ class CityAdmin(BaseAdmin, model=City):
             "validators": [DataRequired()],
         },
         "region": {
-            "validators": [DataRequired()],
-        },
-        "latitude": {
-            "validators": [DataRequired()],
-        },
-        "longitude": {
             "validators": [DataRequired()],
         },
     }

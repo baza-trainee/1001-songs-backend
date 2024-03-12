@@ -4,6 +4,7 @@ from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
+from src.admin.commons.exceptions import IMG_REQ
 from src.admin.commons.formatters import (
     MediaFormatter,
     PhotoSplitFormatter,
@@ -11,7 +12,7 @@ from src.admin.commons.formatters import (
     format_quill,
 )
 from src.admin.commons.utils import MediaInputWidget
-from src.admin.commons.validators import MediaValidator
+from src.admin.commons.validators import MediaValidator, QuillValidator
 from src.config import IMAGE_TYPES, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache
 from src.education.models import (
@@ -21,28 +22,31 @@ from src.education.models import (
     EducationPageSongGenre,
 )
 
+CATEGORY_MEDIA_RES = (820, 560)
 EDUCATION_PAGE_PHOTO_FIELDS = [
     "media1",
     "media2",
     "media3",
+    "media4",
+    "media5",
 ]
 
 
 class EducationAdmin(BaseAdmin, model=EducationPage):
     category = "Освітний розділ"
-    name_plural = "Загальна інформація"
+    name_plural = "Освітний розділ"
     icon = "fa-solid fa-user-graduate"
 
     can_create = False
     can_delete = False
 
     column_labels = {
-        EducationPage.title: "Заголовок розділу",
+        EducationPage.title: "Заголовок",
         EducationPage.description: "Опис",
         EducationPage.recommendations: "Рекомендації",
         EducationPage.recommended_sources: "Рекомендовані джерела",
     }
-    column_list = column_details_list = form_columns = [
+    column_list = form_columns = [
         EducationPage.title,
         EducationPage.description,
         EducationPage.recommendations,
@@ -63,11 +67,8 @@ class EducationAdmin(BaseAdmin, model=EducationPage):
                 "rows": 7,
                 "maxlength": EducationPage.description.type.length,
             },
-            "validators": [DataRequired()],
         },
-        "title": {
-            "validators": [DataRequired()],
-        },
+        "recommended_sources": {"validators": [QuillValidator(max_text_len=600)]},
     }
     form_quill_list = [
         EducationPage.recommendations,
@@ -127,11 +128,7 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
         "description": TextAreaField,
     }
     form_args = {
-        "title": {
-            "validators": [DataRequired()],
-        },
         "description": {
-            "validators": [DataRequired()],
             "render_kw": {
                 "class": "form-control",
                 "rows": 7,
@@ -147,6 +144,7 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
                     is_required=True,
                 )
             ],
+            "description": IMG_REQ % CATEGORY_MEDIA_RES,
         },
     }
 
@@ -166,10 +164,10 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
     column_labels = {
         SongSubcategory.title: "Назва під-категорії",
         SongSubcategory.media: "Фото",
-        SongSubcategory.main_category: "Розділ",
+        SongSubcategory.main_category: "Категорія",
         SongSubcategory.education_genres: "Жанри",
     }
-    column_list = column_details_list = [
+    column_list = [
         SongSubcategory.title,
         SongSubcategory.media,
         SongSubcategory.main_category,
@@ -231,6 +229,8 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
         EducationPageSongGenre.media1: "Фото",
         EducationPageSongGenre.media2: "Фото",
         EducationPageSongGenre.media3: "Фото",
+        EducationPageSongGenre.media4: "Фото",
+        EducationPageSongGenre.media5: "Фото",
     }
     column_list = [
         EducationPageSongGenre.title,
@@ -238,13 +238,15 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
         EducationPageSongGenre.sub_category,
         EducationPageSongGenre.media1,
     ]
-    form_columns = column_details_list = [
+    form_columns = [
         EducationPageSongGenre.title,
         EducationPageSongGenre.sub_category,
         EducationPageSongGenre.description,
         EducationPageSongGenre.media1,
         EducationPageSongGenre.media2,
         EducationPageSongGenre.media3,
+        EducationPageSongGenre.media4,
+        EducationPageSongGenre.media5,
     ]
 
     column_formatters = {
@@ -267,7 +269,19 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
                 "rows": 7,
                 "maxlength": EducationPageSongGenre.description.type.length,
             },
-            "validators": [DataRequired()],
+        },
+        **{
+            field: {
+                "widget": MediaInputWidget(is_required=True),
+                "validators": [
+                    MediaValidator(
+                        media_types=IMAGE_TYPES,
+                        max_size=MAX_IMAGE_SIZE_MB,
+                        is_required=True,
+                    )
+                ],
+            }
+            for field in EDUCATION_PAGE_PHOTO_FIELDS[:3]
         },
         **{
             field: {
@@ -276,7 +290,7 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
                     MediaValidator(media_types=IMAGE_TYPES, max_size=MAX_IMAGE_SIZE_MB)
                 ],
             }
-            for field in EDUCATION_PAGE_PHOTO_FIELDS
+            for field in EDUCATION_PAGE_PHOTO_FIELDS[3:]
         },
     }
     form_ajax_refs = {

@@ -69,12 +69,14 @@ async def scaffold_form_for_quill(self, form):
         if not isinstance(quil_field, str):
             quil_field = quil_field.name
             validators = getattr(form, quil_field).kwargs["validators"]
-            [
-                validators.remove(validator)
-                for validator in validators
-                if isinstance(validator, Length)
-            ]
-            validators.append(QuillValidator())
+            quill_avalaible = False
+            for validator in validators:
+                if isinstance(validator, Length):
+                    validators.remove(validator)
+                if isinstance(validator, QuillValidator):
+                    quill_avalaible = True
+            if not quill_avalaible:
+                validators.append(QuillValidator())
         form.quill_list.append(quil_field)
     return form
 
