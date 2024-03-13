@@ -13,7 +13,7 @@ class OurProject(Base):
     __tablename__ = "our_projects"
 
     id: int = Column(Integer, primary_key=True)
-    title: str = Column(String(70), nullable=False)
+    title: str = Column(String(60), nullable=False)
     short_description: str = Column(String(200), nullable=False)
     preview_photo: str = Column(FileType(storage=storage), nullable=False)
     project_date = Column(Date, nullable=False)
