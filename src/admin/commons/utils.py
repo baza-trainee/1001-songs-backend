@@ -42,7 +42,7 @@ class MediaInputWidget(widgets.FileInput):
         checkbox_label = Markup(
             f'<label class="form-check-label" for="{checkbox_id}">Clear</label>'
         )
-        widget_data = formatter(field, "model_data") + file_input
+        widget_data = formatter(field.model_data, field.name) + file_input
         if not self.is_required:
             checkbox_input = Markup(
                 f'<input class="form-check-input" type="checkbox" id="{checkbox_id}" name="{checkbox_id}">'  # noqa: E501
