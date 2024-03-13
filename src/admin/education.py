@@ -116,7 +116,9 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
         CalendarAndRitualCategory.education_genres: "Жанри",
         CalendarAndRitualCategory.song_subcategories: "Підкатегорії",
     }
-
+    column_searchable_list = [
+        CalendarAndRitualCategory.title,
+    ]
     column_formatters = {
         CalendarAndRitualCategory.recommended_sources: format_quill,
         CalendarAndRitualCategory.media: MediaFormatter(),
@@ -203,6 +205,9 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
             ],
         },
     }
+    column_searchable_list = [
+        SongSubcategory.title,
+    ]
     form_ajax_refs = {
         "main_category": {
             "fields": ("title",),
@@ -259,6 +264,9 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
         ),
         EducationPageSongGenre.media1: PhotoSplitFormatter(EDUCATION_PAGE_PHOTO_FIELDS),
     }
+    column_searchable_list = [
+        EducationPageSongGenre.title,
+    ]
     form_files_list = EDUCATION_PAGE_PHOTO_FIELDS
     form_overrides = {
         "description": TextAreaField,

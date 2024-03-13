@@ -26,7 +26,7 @@ class MediaFormatter:
                 case "audio":
                     grid_html += (
                         f'<audio controls class="grid-audio">'
-                        f'<source src="{settings.BASE_URL}/{media}" type="audio/mp3">'
+                        f'<source src="{settings.BASE_URL}/{media}" type="audio/mpeg">'
                         f"Your browser does not support the audio element.</audio>"
                     )
         return Markup(grid_html)
