@@ -72,6 +72,9 @@ class GenreAdmin(BaseAdmin, model=Genre):
         Genre.genre_name,
         Genre.songs,
     ]
+    column_searchable_list = [
+        Genre.genre_name,
+    ]
 
     async def after_model_delete(self, model: Any, request: Request) -> None:
         await invalidate_cache_partial(["filter_songs"])
@@ -93,6 +96,9 @@ class FundAdmin(BaseAdmin, model=Fund):
     column_details_list = [
         Fund.title,
         Fund.songs,
+    ]
+    column_searchable_list = [
+        Fund.title,
     ]
 
 

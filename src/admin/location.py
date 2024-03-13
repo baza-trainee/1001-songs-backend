@@ -19,6 +19,9 @@ class CountryAdmin(BaseAdmin, model=Country):
     column_labels = {
         Country.name: "Країна",
     }
+    column_searchable_list = [
+        Country.name,
+    ]
 
 
 class RegionAdmin(BaseAdmin, model=Region):
@@ -38,6 +41,9 @@ class RegionAdmin(BaseAdmin, model=Region):
     }
     column_details_list = [
         Region.country,
+        Region.name,
+    ]
+    column_searchable_list = [
         Region.name,
     ]
     form_args = {
@@ -78,6 +84,9 @@ class CityAdmin(BaseAdmin, model=City):
         City.longitude,
         City.administrative_code,
     ]
+    column_searchable_list = [
+        City.name,
+    ]
     form_args = {
         "country": {
             "validators": [DataRequired()],
@@ -96,9 +105,6 @@ class CityAdmin(BaseAdmin, model=City):
             "order_by": "name",
         },
     }
-    column_searchable_list = [
-        City.name,
-    ]
 
     async def after_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
