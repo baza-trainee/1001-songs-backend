@@ -116,7 +116,8 @@ async def on_model_change_for_files(
                             data[field].filename = file_name
                             delete_photo(model_data)
                 elif request._form.get(f"save", None) == "Save as new":
-                    data[field] = await write_filetype_field(field_data.file.name)
+                    if field_data.file.name:
+                        data[field] = await write_filetype_field(field_data.file.name)
                 else:
                     fields_do_not_del.append(field)
         for field in fields_do_not_del:
