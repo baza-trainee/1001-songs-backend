@@ -24,7 +24,7 @@ class ExpeditionInfo(Base):
     __tablename__ = "expedition_info"
 
     id: int = Column(Integer, primary_key=True)
-    title: str = Column(String(length=70), nullable=False)
+    title: str = Column(String(length=60), nullable=False)
     description: str = Column(String(length=600), nullable=False)
 
 
@@ -32,7 +32,7 @@ class Expedition(Base):
     __tablename__ = "expedition"
 
     id: int = Column(Integer, primary_key=True)
-    title: str = Column(String(70), nullable=False, index=True)
+    title: str = Column(String(60), nullable=False, index=True)
     short_description: str = Column(String(200), nullable=False, index=True)
     map_photo: str = Column(FileType(storage=storage), nullable=False)
     preview_photo: str = Column(FileType(storage=storage), nullable=False)

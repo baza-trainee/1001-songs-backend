@@ -43,6 +43,11 @@ class BaseAdmin(ModelView, metaclass=ModelViewMeta):
         form.model_instance = self.model_instance
         if self.form_quill_list:
             form = await scaffold_form_for_quill(self, form)
+        for file_key in self.form_files_list:
+            if not isinstance(file_key, str):
+                file_key = file_key.name
+            field_class = getattr(form, file_key).field_class
+            field_class.model_data = getattr(self.model_instance, file_key, None)
         for ajax_key in self.form_ajax_refs.keys():
             field_class = getattr(form, ajax_key).field_class
             field_class.widget = CustomAjaxSelect2Widget(field_class.widget.multiple)

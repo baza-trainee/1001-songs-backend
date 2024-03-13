@@ -69,6 +69,7 @@ div[class^="ql-editor"] p img,
 .ql-container.ql-snow {
     border: none !important;
 }
+.ql-container.ql-snow iframe.ql-video, 
 .ql-container.ql-snow p img {
     height: 200px;
     display: inline;

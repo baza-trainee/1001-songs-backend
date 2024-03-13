@@ -30,14 +30,19 @@ class MediaInputWidget(widgets.FileInput):
 
     def __call__(self, field: Field, **kwargs: Any) -> str:
         file_input = super().__call__(
-            field, **kwargs, required=(self.is_required and not field.data)
+            field,
+            **kwargs,
+            required=bool(
+                (self.is_required and not field.data)
+                or (self.is_required and field.errors and not field.model_data)
+            ),
         )
         checkbox_id = f"{field.id}_checkbox"
         formatter = MediaFormatter(self.file_type)
         checkbox_label = Markup(
             f'<label class="form-check-label" for="{checkbox_id}">Clear</label>'
         )
-        widget_data = formatter(field, "object_data") + file_input
+        widget_data = formatter(field, "model_data") + file_input
         if not self.is_required:
             checkbox_input = Markup(
                 f'<input class="form-check-input" type="checkbox" id="{checkbox_id}" name="{checkbox_id}">'  # noqa: E501

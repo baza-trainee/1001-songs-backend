@@ -25,7 +25,7 @@ class News(Base):
     __tablename__ = "news"
 
     id: int = Column(Integer, primary_key=True)
-    title: str = Column(String(70), nullable=False)
+    title: str = Column(String(60), nullable=False)
     content: str = Column(String(10000), nullable=False)
     short_description: str = Column(String(200), nullable=False)
     authors: list[str] = Column(ARRAY(String(25)), nullable=False)
