@@ -1,5 +1,8 @@
 from typing import Any
+
 from fastapi import Request
+from sqlalchemy import select
+from wtforms import ValidationError
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
@@ -88,6 +91,7 @@ class CityAdmin(BaseAdmin, model=City):
         City.name,
     ]
     form_args = {
+        "administrative_code": {"validators": [DataRequired()]},
         "country": {
             "validators": [DataRequired()],
         },
@@ -105,6 +109,17 @@ class CityAdmin(BaseAdmin, model=City):
             "order_by": "name",
         },
     }
+
+    async def on_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        stmt = select(self.model.administrative_code).filter_by(
+            administrative_code=data["administrative_code"]
+        )
+        records = await self._run_query(stmt)
+        if records and model.administrative_code not in records:
+            raise ValidationError(message="Administrative code must be unique.")
+        return await super().on_model_change(data, model, is_created, request)
 
     async def after_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request

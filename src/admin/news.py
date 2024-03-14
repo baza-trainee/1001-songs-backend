@@ -63,7 +63,6 @@ class NewsAdmin(BaseAdmin, model=News):
     column_sortable_list = [
         News.created_at,
     ]
-    column_default_sort = ("created_at", True)
     form_columns = [
         News.title,
         News.short_description,

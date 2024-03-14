@@ -163,3 +163,22 @@ class ArrayStringValidator(object):
                 if not data_len <= self.max_string_len:
                     message += f"Items must have maximum {self.max_string_len} characters. You entered {data_len} characters."
                     raise ValidationError(message)
+
+
+class MultipleAjaxValidator(object):
+    def __init__(self, max_len: int = 10):
+        self.max_len = max_len
+
+    def __call__(self, form, field):
+        if field.data:
+            array_len = len(field.data)
+            if array_len > self.max_len:
+                message = f"Field must have {self.max_len} items. You entered {array_len} items."
+                raise ValidationError(message)
+
+
+def validate_url(form, field):
+    if field.data:
+        if not field.data.startswith(("https://", "http://")):
+            message = "URL address is incorrect."
+            raise ValidationError(message)

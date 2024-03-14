@@ -7,7 +7,11 @@ from src.admin.commons.base import BaseAdmin
 from src.admin.commons.exceptions import IMG_REQ
 from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.utils import MediaInputWidget
-from src.admin.commons.validators import IntegerLengthValidator, MediaValidator
+from src.admin.commons.validators import (
+    IntegerLengthValidator,
+    MediaValidator,
+    validate_url,
+)
 from src.config import MAX_IMAGE_SIZE_MB, IMAGE_TYPES
 from src.database.redis import invalidate_cache
 from src.payment.models import PaymentDetails
@@ -46,6 +50,8 @@ class PaymentAdmin(BaseAdmin, model=PaymentDetails):
         "coffee_url": URLField,
     }
     form_args = {
+        "patreon_url": {"validators": [validate_url]},
+        "coffee_url": {"validators": [validate_url]},
         "edrpou": {
             "validators": [IntegerLengthValidator(min_len=8, max_len=8)],
         },

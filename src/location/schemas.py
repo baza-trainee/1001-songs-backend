@@ -77,7 +77,7 @@ class FilterSongSchema(BaseModel):
     recording_date: date
     stereo_audio: Optional[str] = Field(None)
     video_url: Optional[str] = Field(None)
-    ethnographic_district: Optional[str]
+    ethnographic_district: str
     photos: Optional[List[AnyHttpUrl]] = Field(None)
     city: str
     genres: List[str]
@@ -135,7 +135,7 @@ class SongMapPageSchema(BaseModel):
     genres: List[str]
     video_url: Optional[AnyHttpUrl] = Field(None)
     location: str = Field(..., validation_alias="city")
-    ethnographic_district: Optional[str]
+    ethnographic_district: str
     collectors: Optional[List[str]] = Field(None)
     performers: Optional[str] = Field(None)
     recording_date: date

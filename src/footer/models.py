@@ -14,6 +14,6 @@ class Footer(Base):
     reporting: str = Column(FileType(storage=storage), nullable=False)
     privacy_policy: str = Column(FileType(storage=storage), nullable=False)
     rules_and_terms: str = Column(FileType(storage=storage), nullable=False)
-    email: str = Column(String(length=35), nullable=False)
+    email: str = Column(String(length=30), nullable=False)
     facebook_url: str = Column(String(length=500))
     youtube_url: str = Column(String(length=500))

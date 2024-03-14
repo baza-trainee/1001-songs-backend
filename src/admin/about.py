@@ -7,7 +7,7 @@ from src.database.redis import invalidate_cache
 
 
 class AboutAdmin(BaseAdmin, model=About):
-    name_plural = "Про нас"
+    name_plural = "Сторінка розділу"
     category = "Про проєкт"
     icon = "fa-regular fa-address-card"
 

@@ -7,7 +7,7 @@ from src.admin.commons.base import BaseAdmin
 from src.admin.commons.exceptions import IMG_REQ
 from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.utils import MediaInputWidget
-from src.admin.commons.validators import MediaValidator
+from src.admin.commons.validators import MediaValidator, validate_url
 from src.config import EXTENDED_IMAGE_TYPE, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache
 from src.partners.models import Partners
@@ -37,6 +37,7 @@ class PartnersAdmin(BaseAdmin, model=Partners):
         Partners.photo,
     ]
     form_args = {
+        "link": {"validators": [validate_url]},
         "photo": {
             "widget": MediaInputWidget(is_required=True),
             "validators": [

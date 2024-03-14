@@ -96,7 +96,6 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         Expedition.short_description,
     ]
     column_sortable_list = [Expedition.expedition_date]
-    column_default_sort = ("expedition_date", True)
     form_files_list = [
         Expedition.preview_photo,
         Expedition.map_photo,
@@ -171,7 +170,7 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
 
 class ExpeditionInfoAdmin(BaseAdmin, model=ExpeditionInfo):
     category = "Експедиції"
-    name_plural = "Інформація"
+    name_plural = "Сторінка розділу"
     icon = "fa-solid fa-user-graduate"
 
     can_create = False

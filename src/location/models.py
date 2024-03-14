@@ -38,7 +38,7 @@ class City(Base):
     name = Column(String(50), nullable=False)
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
-    administrative_code = Column(String(50))
+    administrative_code = Column(String(50), nullable=False, unique=True)
     region_id = Column(Integer, ForeignKey("regions.id"))
     country_id = Column(Integer, ForeignKey("countries.id"))
 
@@ -58,6 +58,4 @@ class City(Base):
     news = relationship("News", back_populates="location")
 
     def __repr__(self) -> str:
-        return f"{self.name}, {self.region}" + (
-            f", {self.administrative_code}" if self.administrative_code else ""
-        )
+        return f"{self.name}, {self.region}, {self.administrative_code}"
