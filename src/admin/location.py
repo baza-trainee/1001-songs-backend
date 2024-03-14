@@ -72,7 +72,6 @@ class CityAdmin(BaseAdmin, model=City):
     can_view_details = True
 
     column_labels = {
-        City.country: "Країна",
         City.region: "Область / Регіон",
         City.name: "Місто / Поселення",
         City.latitude: "Широта",
@@ -80,7 +79,6 @@ class CityAdmin(BaseAdmin, model=City):
         City.administrative_code: "Адміністративний код",
     }
     column_list = column_details_list = form_columns = [
-        City.country,
         City.region,
         City.name,
         City.latitude,
@@ -89,21 +87,15 @@ class CityAdmin(BaseAdmin, model=City):
     ]
     column_searchable_list = [
         City.name,
+        City.administrative_code,
     ]
     form_args = {
         "administrative_code": {"validators": [DataRequired()]},
-        "country": {
-            "validators": [DataRequired()],
-        },
         "region": {
             "validators": [DataRequired()],
         },
     }
     form_ajax_refs = {
-        "country": {
-            "fields": ("name",),
-            "order_by": "name",
-        },
         "region": {
             "fields": ("name",),
             "order_by": "name",
@@ -113,6 +105,7 @@ class CityAdmin(BaseAdmin, model=City):
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
+        model.country_id = model.region.country_id
         stmt = select(self.model.administrative_code).filter_by(
             administrative_code=data["administrative_code"]
         )
