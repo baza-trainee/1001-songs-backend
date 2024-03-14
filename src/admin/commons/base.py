@@ -51,6 +51,7 @@ class BaseAdmin(ModelView, metaclass=ModelViewMeta):
         for ajax_key in self.form_ajax_refs.keys():
             field_class = getattr(form, ajax_key).field_class
             field_class.widget = CustomAjaxSelect2Widget(field_class.widget.multiple)
+        self.model_instance = None
         return form
 
     async def get_object_for_edit(self, value: Any) -> Any:

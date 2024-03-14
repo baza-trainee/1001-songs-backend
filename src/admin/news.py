@@ -95,13 +95,13 @@ class NewsAdmin(BaseAdmin, model=News):
         **{field: CustomSelect2TagsField for field in MODEL_TEAM_FIELDS},
     }
     form_args = {
-        "authors": {"validators": [ArrayStringValidator()]},
-        "editors": {"validators": [ArrayStringValidator()]},
-        "photographers": {"validators": [ArrayStringValidator()]},
         "created_at": {"validators": [PastDateValidator()]},
         "location": {"validators": [DataRequired()]},
         "category": {"validators": [DataRequired()]},
-        **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
+        **{
+            field: {"model": OurTeam, "validators": [ArrayStringValidator()]}
+            for field in MODEL_TEAM_FIELDS
+        },
         "preview_photo": {
             "widget": MediaInputWidget(is_required=True),
             "validators": [

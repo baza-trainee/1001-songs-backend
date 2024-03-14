@@ -134,6 +134,7 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
         "description": TextAreaField,
     }
     form_args = {
+        "recommended_sources": {"validators": [QuillValidator(max_text_len=600)]},
         "description": {
             "render_kw": {
                 "class": "form-control",
