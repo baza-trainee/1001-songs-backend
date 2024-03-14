@@ -4,6 +4,7 @@ from typing import Any
 from fastapi import Request
 from wtforms import TextAreaField, URLField, ValidationError
 from wtforms.validators import DataRequired
+
 # from mutagen.mp3 import MP3
 
 from src.admin.commons.base import BaseAdmin
