@@ -312,6 +312,12 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
         },
     }
 
+    async def on_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        model.main_category_id = model.sub_category.main_category_id
+        return await super().on_model_change(data, model, is_created, request)
+
     async def after_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:

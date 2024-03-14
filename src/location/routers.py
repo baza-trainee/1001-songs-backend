@@ -219,7 +219,7 @@ async def get_cities(
                 City.name,
                 City.country_id,
                 City.region_id,
-                func.count(Song.id).label("count"),
+                func.count(distinct(Song.id)).label("count"),
             )
             .join(Song, City.id == Song.city_id)
             .join(Song.genres)
@@ -290,7 +290,11 @@ async def get_genres(
             filters.append(Song.fund_id.in_(fund_id))
 
         query = (
-            select(Genre.id, Genre.genre_name, func.count(Song.id).label("count"))
+            select(
+                Genre.id,
+                Genre.genre_name,
+                func.count(distinct(Song.id)).label("count"),
+            )
             .join(Song.genres)
             .join(City, Song.city_id == City.id)
             .join(Region, City.region_id == Region.id)
@@ -359,7 +363,7 @@ async def get_funds(
             filters.append(Genre.id.in_(genre_id))
 
         query = (
-            select(Fund.id, Fund.title, func.count(Song.id).label("count"))
+            select(Fund.id, Fund.title, func.count(distinct(Song.id)).label("count"))
             .join(Song, Fund.id == Song.fund_id)
             .join(City, Song.city_id == City.id)
             .join(Region, City.region_id == Region.id)
@@ -502,7 +506,7 @@ async def filter_song_geotags(
                 City.latitude,
                 City.longitude,
                 Region.name.label("region_name"),
-                func.count(Song.id).label("count"),
+                func.count(distinct(Song.id)).label("count"),
             )
             .join(Song)
             .join(Region)
