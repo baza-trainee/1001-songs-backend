@@ -1,8 +1,10 @@
+import io
 from typing import Any
 
 from fastapi import Request
-from wtforms import TextAreaField, URLField, BooleanField
+from wtforms import TextAreaField, URLField, ValidationError
 from wtforms.validators import DataRequired
+from mutagen.mp3 import MP3
 
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.exceptions import IMG_REQ
@@ -343,6 +345,23 @@ class SongAdmin(BaseAdmin, model=Song):
         "get_genres",
         "get_funds",
     ]
+
+    async def on_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        song_duration = None
+        for song_field in SONG_FIELDS:
+            song = data.get(song_field, None)
+            if song.size:
+                audio = MP3(song.file)
+                temp_len = int(audio.info.length)
+                if not song_duration:
+                    song_duration = temp_len
+                elif (margin_of_error := abs(temp_len - song_duration)) >= 2:
+                    raise ValidationError(
+                        f"Difference between the durations of audio files - {margin_of_error} seconds, Allowable difference - 2 seconds."
+                    )
+        return await super().on_model_change(data, model, is_created, request)
 
     async def after_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request

@@ -12,7 +12,7 @@ from src.admin.commons.validators import (
     MediaValidator,
     validate_url,
 )
-from src.config import MAX_IMAGE_SIZE_MB, IMAGE_TYPES
+from src.config import EXTENDED_IMAGE_TYPE, MAX_IMAGE_SIZE_MB, IMAGE_TYPES
 from src.database.redis import invalidate_cache
 from src.payment.models import PaymentDetails
 
@@ -58,7 +58,7 @@ class PaymentAdmin(BaseAdmin, model=PaymentDetails):
         "qr_code_url": {
             "validators": [
                 MediaValidator(
-                    media_types=IMAGE_TYPES,
+                    media_types=EXTENDED_IMAGE_TYPE,
                     max_size=MAX_IMAGE_SIZE_MB,
                     is_required=True,
                 )

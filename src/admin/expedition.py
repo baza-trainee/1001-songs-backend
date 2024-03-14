@@ -107,10 +107,6 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         **{field: CustomSelect2TagsField for field in MODEL_TEAM_FIELDS},
     }
     form_args = {
-        "authors": {"validators": [ArrayStringValidator()]},
-        "editors": {"validators": [ArrayStringValidator()]},
-        "photographers": {"validators": [ArrayStringValidator()]},
-        "recording": {"validators": [ArrayStringValidator()]},
         "category": {"validators": [DataRequired()]},
         "location": {"validators": [DataRequired()]},
         "expedition_date": {"validators": [PastDateValidator()]},
@@ -139,7 +135,10 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
         "content": {
             "description": IMG_REQ % CONTENT_PHOTO_RES,
         },
-        **{field: {"model": OurTeam} for field in MODEL_TEAM_FIELDS},
+        **{
+            field: {"model": OurTeam, "validators": [ArrayStringValidator()]}
+            for field in MODEL_TEAM_FIELDS
+        },
     }
 
     form_ajax_refs = {

@@ -83,7 +83,8 @@ class QuillValidator:
 
             span_tags = soup.find_all("span")
             for span_tag in span_tags:
-                span_tag.unwrap()
+                if "style" not in span_tag.attrs.keys():
+                    span_tag.unwrap()
             result = str(soup)
             result_len = len(result)
             if result_len > self.max_len:
@@ -162,7 +163,9 @@ class ArrayStringValidator(object):
                 data_len = len(item)
                 if not data_len <= self.max_string_len:
                     message += f"Items must have maximum {self.max_string_len} characters. You entered {data_len} characters."
-                    raise ValidationError(message)
+                    break
+        if message:
+            raise ValidationError(message)
 
 
 class MultipleAjaxValidator(object):
