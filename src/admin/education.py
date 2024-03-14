@@ -35,7 +35,7 @@ EDUCATION_PAGE_PHOTO_FIELDS = [
 
 class EducationAdmin(BaseAdmin, model=EducationPage):
     category = "Освітний розділ"
-    name_plural = "Інформація"
+    name_plural = "Сторінка розділу"
     icon = "fa-solid fa-user-graduate"
 
     can_create = False

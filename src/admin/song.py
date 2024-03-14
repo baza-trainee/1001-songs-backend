@@ -1,7 +1,7 @@
 from typing import Any
 
 from fastapi import Request
-from wtforms import TextAreaField, URLField
+from wtforms import TextAreaField, URLField, BooleanField
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
@@ -16,7 +16,9 @@ from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
 from src.admin.commons.validators import (
     ArrayStringValidator,
     MediaValidator,
+    MultipleAjaxValidator,
     PastDateValidator,
+    validate_url,
 )
 from src.config import AUDIO_TYPES, MAX_AUDIO_SIZE_MB, MAX_IMAGE_SIZE_MB, IMAGE_TYPES
 from src.database.redis import invalidate_cache_partial
@@ -119,7 +121,7 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.city: "Місто / Поселення",
         Song.ethnographic_district: "Етнографічний регіон",
         Song.song_description: "Інформація",
-        Song.collectors: "Збирачі",
+        Song.collectors: "Запис",
         Song.fund: "Фонд",
         Song.is_active: "Активна",
         Song.recording_date: "Дата",
@@ -202,7 +204,6 @@ class SongAdmin(BaseAdmin, model=Song):
         Song.recording_date,
         Song.is_active,
     ]
-    column_default_sort = ("recording_date", True)
     column_formatters = {
         Song.song_text: TextFormatter(to_bool=True),
         Song.song_description: TextFormatter(to_bool=True),
@@ -223,6 +224,8 @@ class SongAdmin(BaseAdmin, model=Song):
         "video_url": URLField,
     }
     form_args = {
+        "is_active": {"render_kw": {"checked": True}},
+        "video_url": {"validators": [validate_url]},
         "collectors": {
             "validators": [ArrayStringValidator()],
             "model": OurTeam,
@@ -243,7 +246,10 @@ class SongAdmin(BaseAdmin, model=Song):
             },
         },
         "genres": {
-            "validators": [DataRequired()],
+            "validators": [DataRequired(), MultipleAjaxValidator(max_len=5)],
+        },
+        "education_genres": {
+            "validators": [MultipleAjaxValidator(max_len=5)],
         },
         "fund": {
             "validators": [DataRequired()],

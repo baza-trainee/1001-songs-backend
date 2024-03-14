@@ -267,13 +267,13 @@ input[type="password"]::-webkit-reveal {
 .nav-link.keychainify-checked {
     padding: 5px 10px !important;
 }
-a.btn.btn-secondary.btn-icon.keychainify-checked {
+a.btn.btn-secondary.btn-icon {
     position: fixed;
     bottom: 14px;
     height: 30px;
     width: 225px;
 }
-a.btn.btn-secondary.btn-icon.keychainify-checked::before {
+a.btn.btn-secondary.btn-icon::before {
     content: "";
     top: 100%;
     position: absolute;

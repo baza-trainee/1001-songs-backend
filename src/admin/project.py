@@ -79,7 +79,6 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
     column_sortable_list = [
         OurProject.project_date,
     ]
-    column_default_sort = ("project_date", True)
     form_args = {
         "location": {"validators": [DataRequired()]},
         "authors": {"validators": [ArrayStringValidator()]},
