@@ -1,10 +1,8 @@
-import io
 from typing import Any
 
 from fastapi import Request
 from wtforms import TextAreaField, URLField, ValidationError
 from wtforms.validators import DataRequired
-
 from mutagen.mp3 import MP3
 
 from src.admin.commons.base import BaseAdmin
@@ -228,7 +226,13 @@ class SongAdmin(BaseAdmin, model=Song):
     }
     form_args = {
         "is_active": {"render_kw": {"checked": True}},
-        "video_url": {"validators": [validate_url]},
+        "video_url": {
+            "validators": [validate_url],
+            "render_kw": {
+                "class": "form-control",
+                "maxlength": Song.video_url.type.length,
+            },
+        },
         "collectors": {
             "validators": [ArrayStringValidator()],
             "model": OurTeam,
@@ -350,17 +354,23 @@ class SongAdmin(BaseAdmin, model=Song):
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
-        song_duration = None
+        compare_duration = None
+        compare_field = None
         for song_field in SONG_FIELDS:
             song = data.get(song_field, None)
-            if song.size:
-                audio = MP3(song.file)
+            if song.filename:
+                if song.size:
+                    audio = MP3(song.file)
+                else:
+                    with open(song.file.name, "rb") as file:
+                        audio = MP3(file)
                 temp_len = int(audio.info.length)
-                if not song_duration:
-                    song_duration = temp_len
-                elif (margin_of_error := abs(temp_len - song_duration)) >= 2:
+                if not compare_duration:
+                    compare_duration = temp_len
+                    compare_field = song_field
+                elif (margin_of_error := abs(temp_len - compare_duration)) >= 2:
                     raise ValidationError(
-                        f"Difference between the durations of audio files - {margin_of_error} seconds, Allowable difference - 2 seconds."
+                        f"Difference between the durations of [{compare_field}] and [{song_field}] ~ {margin_of_error} seconds. Allowable difference ~ 2 seconds."
                     )
         return await super().on_model_change(data, model, is_created, request)
 

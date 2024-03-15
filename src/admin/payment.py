@@ -50,8 +50,20 @@ class PaymentAdmin(BaseAdmin, model=PaymentDetails):
         "coffee_url": URLField,
     }
     form_args = {
-        "patreon_url": {"validators": [validate_url]},
-        "coffee_url": {"validators": [validate_url]},
+        "patreon_url": {
+            "validators": [validate_url],
+            "render_kw": {
+                "class": "form-control",
+                "maxlength": PaymentDetails.patreon_url.type.length,
+            },
+        },
+        "coffee_url": {
+            "validators": [validate_url],
+            "render_kw": {
+                "class": "form-control",
+                "maxlength": PaymentDetails.coffee_url.type.length,
+            },
+        },
         "edrpou": {
             "validators": [IntegerLengthValidator(min_len=8, max_len=8)],
         },
