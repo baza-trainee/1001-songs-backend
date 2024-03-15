@@ -1,4 +1,3 @@
-import asyncio
 import os
 from contextlib import asynccontextmanager
 from subprocess import run as sp_run
@@ -89,8 +88,6 @@ async def admin_data(ac: AsyncClient):
         "is_superuser": True,
         "is_active": True,
         "is_verified": True,
-        "name": "Test",
-        "phone": "+38000000000",
     }
     async with async_session_maker() as session:
         stmt = insert(User).values(**admin_data)

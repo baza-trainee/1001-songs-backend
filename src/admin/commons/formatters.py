@@ -25,7 +25,7 @@ class MediaFormatter:
                     grid_html = f'<a href="{settings.BASE_URL}/{media}" target="_blank"><img class="grid-pdf" src="{icon_url}"></a>'
                 case "audio":
                     grid_html += (
-                        f'<audio controls class="grid-audio">'
+                        f'<audio controls class="grid-audio" preload="none">'
                         f'<source src="{settings.BASE_URL}/{media}" type="audio/mpeg">'
                         f"Your browser does not support the audio element.</audio>"
                     )

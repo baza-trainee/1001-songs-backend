@@ -15,7 +15,7 @@ from wtforms.validators import Length
 from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.validators import QuillValidator
 from src.database.database import async_session_maker
-from src.utils import delete_photo, generate_file_name, write_filetype_field
+from src.utils import delete_photo, generate_file_name, create_file_field
 
 
 class MediaInputWidget(widgets.FileInput):
@@ -117,7 +117,7 @@ async def on_model_change_for_files(
                             delete_photo(model_data)
                 elif request._form.get(f"save", None) == "Save as new":
                     if field_data.file.name:
-                        data[field] = await write_filetype_field(field_data.file.name)
+                        data[field] = await create_file_field(field_data.file.name)
                 else:
                     fields_do_not_del.append(field)
         for field in fields_do_not_del:

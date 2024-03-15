@@ -1,6 +1,5 @@
-.PHONY: prod start build run down clean drop_db prune auto_backup stop_backup backup restore frontend_build frontend_export
+.PHONY: prod start build run down clean drop_db prune fake_data open-redis
 
-BACKUP_COMMAND := "0 0 * * * cd \"$(PWD)\" && python3 scripts/backup.py"
 DB_CONTAINER := postgres_songs
 REDIS_CONTAINER := redis_songs
 DB_VOLUME := $$(basename "$$(pwd)")_postgres_data
@@ -27,37 +26,21 @@ run: down
 		fi; \
 	done
 	alembic upgrade head
+	make fake_data
 	make start
 
 start:
 	uvicorn src.main:app --reload
+
+fake_data:
+	python3 -m scripts.initial_db
+	@echo "fake data has added successfully"
 
 open-redis:
 	docker exec -it $(REDIS_CONTAINER) redis-cli
 
 clean:
 	sudo find . | grep -E "(__pycache__|\.pyc|\.pyo$$)" | xargs sudo rm -rf
-
-auto_backup:
-	@if crontab -l ; then \
-		crontab -l > mycron ; \
-	else \
-		touch mycron ; \
-	fi
-	@echo $(BACKUP_COMMAND) >> mycron
-	@crontab mycron
-	@rm mycron
-	@echo "Backup script added to cron"
-	
-stop_backup:
-	crontab -l | grep -v -F $(BACKUP_COMMAND) | crontab -
-
-backup:
-	python3 scripts/backup.py
-	@echo "Backup complete"
-
-restore:
-	python3 scripts/restore.py
 
 drop_db: down 
 	if docker volume ls -q | grep -q $(DB_VOLUME); then \

@@ -1,18 +1,19 @@
 from httpx import AsyncClient
 import pytest
 
-from src.database.fake_data import FAKE_TEAM
 from src.database.redis import invalidate_cache
-from src.our_team.utils import create_fake_team
+from scripts.fake_data import FAKE_TEAM
+from scripts.initial_db import add_instances
+from src.our_team.models import OurTeam
 from tests.conftest import get_session_context
 
 
 @pytest.fixture(autouse=True, scope="session")
 async def team_data():
     data = map(lambda self: self.copy(), FAKE_TEAM)
-    async with get_session_context() as session:
-        await create_fake_team(data, session)
-        await session.commit()
+    async with get_session_context() as s:
+        add_instances(model=OurTeam, data=data, session=s)
+        await s.commit()
 
 
 async def test_get_list_team(ac: AsyncClient):
