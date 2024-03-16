@@ -19,9 +19,6 @@ $(document).on('click', '#modal-delete-button', function () {
       modal.modal('hide');
       if (result.error_message) {
         $('<div class="alert alert-danger" role="alert" id="errorAlert">' + result.error_message + '</div>').insertBefore('.card-header');
-        setTimeout(function() {
-          $('#errorAlert').remove();
-        }, 10000);
       } else {
         window.location.href = result;
       }
