@@ -10,11 +10,22 @@ $(document).on('shown.bs.modal', '#modal-delete', function (event) {
 });
 
 $(document).on('click', '#modal-delete-button', function () {
+  var modal = $('#modal-delete'); 
+
   $.ajax({
     url: $(this).attr('data-url'),
     method: 'DELETE',
     success: function (result) {
-      window.location.href = result;
+      modal.modal('hide');
+      if (result.error_message) {
+        $('<div class="alert alert-danger" role="alert" id="errorAlert">' + result.error_message + '</div>').insertBefore('.card-header');
+        setTimeout(function() {
+          $('#errorAlert').remove();
+        }, 10000);
+      } else {
+        window.location.href = result;
+      }
+      $('html, body').animate({ scrollTop: 0 }, 'fast');
     },
     error: function (request, status, error) {
       alert(request.responseText);

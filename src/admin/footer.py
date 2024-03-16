@@ -41,8 +41,26 @@ class FooterAdmin(BaseAdmin, model=Footer):
         "youtube_url": URLField,
     }
     form_args = {
-        "facebook_url": {"validators": [validate_url]},
-        "youtube_url": {"validators": [validate_url]},
+        "email": {
+            "render_kw": {
+                "class": "form-control",
+                "maxlength": Footer.email.type.length,
+            },
+        },
+        "facebook_url": {
+            "validators": [validate_url],
+            "render_kw": {
+                "class": "form-control",
+                "maxlength": Footer.facebook_url.type.length,
+            },
+        },
+        "youtube_url": {
+            "validators": [validate_url],
+            "render_kw": {
+                "class": "form-control",
+                "maxlength": Footer.youtube_url.type.length,
+            },
+        },
         **{
             field: {
                 "widget": MediaInputWidget(file_type="document", is_required=True),

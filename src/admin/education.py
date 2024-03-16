@@ -93,6 +93,7 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
 
     can_create = False
     can_delete = False
+    can_view_details = True
 
     column_list = column_details_list = [
         CalendarAndRitualCategory.title,
@@ -167,6 +168,7 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
     name_plural = "Освітні під-категорії"
     category = "Освітний розділ"
     icon = "fa-solid fa-layer-group"
+    can_view_details = True
 
     column_labels = {
         SongSubcategory.title: "Назва під-категорії",
@@ -180,7 +182,7 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
         SongSubcategory.main_category,
         SongSubcategory.education_genres,
     ]
-    form_columns = [
+    form_columns = column_details_list = [
         SongSubcategory.title,
         SongSubcategory.media,
         SongSubcategory.main_category,
@@ -232,6 +234,8 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
     category = "Освітний розділ"
     icon = "fa-solid fa-layer-group"
 
+    can_view_details = True
+
     column_labels = {
         EducationPageSongGenre.title: "Назва жанру",
         EducationPageSongGenre.sub_category: "Під-категорія",
@@ -241,12 +245,19 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
         EducationPageSongGenre.media3: "Фото",
         EducationPageSongGenre.media4: "Фото",
         EducationPageSongGenre.media5: "Фото",
+        EducationPageSongGenre.main_category: "Освітня категорія",
+        EducationPageSongGenre.songs: "Пісні",
     }
     column_list = [
         EducationPageSongGenre.title,
         EducationPageSongGenre.description,
         EducationPageSongGenre.sub_category,
         EducationPageSongGenre.media1,
+    ]
+    column_details_exclude_list = [
+        EducationPageSongGenre.main_category_id,
+        EducationPageSongGenre.sub_category_id,
+        EducationPageSongGenre.id,
     ]
     form_columns = [
         EducationPageSongGenre.title,
@@ -258,7 +269,6 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
         EducationPageSongGenre.media4,
         EducationPageSongGenre.media5,
     ]
-
     column_formatters = {
         EducationPageSongGenre.description: TextFormatter(
             text_align="left", min_width=250

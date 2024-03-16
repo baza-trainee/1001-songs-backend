@@ -37,7 +37,13 @@ class PartnersAdmin(BaseAdmin, model=Partners):
         Partners.photo,
     ]
     form_args = {
-        "link": {"validators": [validate_url]},
+        "link": {
+            "validators": [validate_url],
+            "render_kw": {
+                "class": "form-control",
+                "maxlength": Partners.link.type.length,
+            },
+        },
         "photo": {
             "widget": MediaInputWidget(is_required=True),
             "validators": [

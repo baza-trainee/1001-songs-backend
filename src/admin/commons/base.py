@@ -1,13 +1,25 @@
 from typing import Any, ClassVar, Union
+from urllib.parse import urlencode
 
 from fastapi import HTTPException, Request, Response
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, RedirectResponse
 from sqladmin import BaseView, ModelView, expose
 from sqladmin.models import ModelViewMeta
 from sqladmin.ajax import QueryAjaxModelLoader
 from sqlalchemy import Sequence
 from sqlalchemy.orm import InstrumentedAttribute
 from wtforms import Form
+from sqladmin.authentication import login_required
+from sqladmin.helpers import (
+    Writer,
+    get_object_identifier,
+    get_primary_keys,
+    object_identifier_values,
+    prettify_class_name,
+    secure_filename,
+    slugify_class_name,
+    stream_to_csv,
+)
 
 from src.admin.commons.utils import (
     CustomAjaxSelect2Widget,
@@ -74,6 +86,14 @@ class BaseAdmin(ModelView, metaclass=ModelViewMeta):
             await on_model_delete_for_quill(self, model)
         return await super().on_model_delete(model, request)
 
+    def _url_for_delete(self, request: Request, obj: Any) -> str:
+        pk = get_object_identifier(obj)
+        query_params = urlencode({"pks": pk})
+        url = request.url_for(
+            "admin:new_delete", identity=slugify_class_name(obj.__class__.__name__)
+        )
+        return str(url) + "?" + query_params
+
 
 class CustomAjaxAdmin(BaseView):
     name = "custom_ajax"
@@ -106,3 +126,28 @@ class CustomAjaxAdmin(BaseView):
 
         data = [loader.format(m) for m in await loader.get_list(term, limit=100)]
         return JSONResponse({"results": data})
+
+    @expose("/{identity}/new_delete", methods=["DELETE"])
+    @login_required
+    async def new_delete(self, request: Request) -> Response:
+        """Delete route."""
+
+        await self._admin_ref._delete(request)
+
+        identity = request.path_params["identity"]
+        model_view = self._admin_ref._find_model_view(identity)
+
+        params = request.query_params.get("pks", "")
+        pks = params.split(",") if params else []
+        for pk in pks:
+            model = await model_view.get_object_for_delete(pk)
+            if not model:
+                raise HTTPException(status_code=404)
+
+            result = await model_view.delete_model(request, pk)
+        if isinstance(result, dict):
+            return JSONResponse(result)
+        else:
+            return Response(
+                content=str(request.url_for("admin:list", identity=identity))
+            )

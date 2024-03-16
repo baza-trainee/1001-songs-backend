@@ -1,11 +1,10 @@
-import io
 from typing import Any
 
 from fastapi import Request
+from sqlalchemy import select
 from wtforms import TextAreaField, URLField, ValidationError
 from wtforms.validators import DataRequired
-
-# from mutagen.mp3 import MP3
+from mutagen.mp3 import MP3
 
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.exceptions import IMG_REQ
@@ -85,6 +84,17 @@ class GenreAdmin(BaseAdmin, model=Genre):
         await invalidate_cache_partial(["filter_songs"])
         return await super().after_model_delete(model, request)
 
+    async def delete_model(self, request: Request, pk: Any) -> None:
+        stmt = select(self.model).filter_by(id=int(pk))
+        records = await self._run_query(stmt)
+        if records:
+            songs = records[0].songs
+            if songs:
+                message = f"Неможливо видалити жанр <b>{records[0]}</b>"
+                message += f", оскільки з ним пов'язані пісні: <b>{', '.join(map(str, songs))}</b>."
+                return {"error_message": message}
+        return await super().delete_model(request, pk)
+
 
 class FundAdmin(BaseAdmin, model=Fund):
     category = "Пісенний розділ"
@@ -105,6 +115,17 @@ class FundAdmin(BaseAdmin, model=Fund):
     column_searchable_list = [
         Fund.title,
     ]
+
+    async def delete_model(self, request: Request, pk: Any) -> None:
+        stmt = select(self.model).filter_by(id=int(pk))
+        records = await self._run_query(stmt)
+        if records:
+            songs = records[0].songs
+            if songs:
+                message = f"Неможливо видалити фонд <b>{records[0]}</b>"
+                message += f", оскільки з ним пов'язані пісні: <b>{', '.join(map(str, songs))}</b>."
+                return {"error_message": message}
+        return await super().delete_model(request, pk)
 
 
 class SongAdmin(BaseAdmin, model=Song):
@@ -228,7 +249,13 @@ class SongAdmin(BaseAdmin, model=Song):
     }
     form_args = {
         "is_active": {"render_kw": {"checked": True}},
-        "video_url": {"validators": [validate_url]},
+        "video_url": {
+            "validators": [validate_url],
+            "render_kw": {
+                "class": "form-control",
+                "maxlength": Song.video_url.type.length,
+            },
+        },
         "collectors": {
             "validators": [ArrayStringValidator()],
             "model": OurTeam,
@@ -347,22 +374,28 @@ class SongAdmin(BaseAdmin, model=Song):
         "get_funds",
     ]
 
-    # async def on_model_change(
-    #     self, data: dict, model: Any, is_created: bool, request: Request
-    # ) -> None:
-    #     song_duration = None
-    #     for song_field in SONG_FIELDS:
-    #         song = data.get(song_field, None)
-    #         if song.size:
-    #             audio = MP3(song.file)
-    #             temp_len = int(audio.info.length)
-    #             if not song_duration:
-    #                 song_duration = temp_len
-    #             elif (margin_of_error := abs(temp_len - song_duration)) >= 2:
-    #                 raise ValidationError(
-    #                     f"Difference between the durations of audio files - {margin_of_error} seconds, Allowable difference - 2 seconds."
-    #                 )
-    #     return await super().on_model_change(data, model, is_created, request)
+    async def on_model_change(
+        self, data: dict, model: Any, is_created: bool, request: Request
+    ) -> None:
+        compare_duration = None
+        compare_field = None
+        for song_field in SONG_FIELDS:
+            song = data.get(song_field, None)
+            if song.filename:
+                if song.size:
+                    audio = MP3(song.file)
+                else:
+                    with open(song.file.name, "rb") as file:
+                        audio = MP3(file)
+                temp_len = int(audio.info.length)
+                if not compare_duration:
+                    compare_duration = temp_len
+                    compare_field = song_field
+                elif (margin_of_error := abs(temp_len - compare_duration)) >= 2:
+                    raise ValidationError(
+                        f"Difference between the durations of [{compare_field}] and [{song_field}] ~ {margin_of_error} seconds. Allowable difference ~ 2 seconds."
+                    )
+        return await super().on_model_change(data, model, is_created, request)
 
     async def after_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request

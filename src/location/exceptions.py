@@ -1,6 +1,3 @@
-AFTER_COUNTRY_CREATE = "Country create successfuly."
-AFTER_CITY_CREATE = "City create successfuly."
-AFTER_REGION_CREATE = "Region create successfuly."
 NO_COUNTRY_FOUND = "No country found for the given criteria."
 NO_REGION_FOUND = "No regions found for the given criteria."
 NO_CITIES_FOUND = "No cities found for the given criteria."
