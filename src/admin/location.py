@@ -6,6 +6,7 @@ from wtforms import ValidationError
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
+from src.admin.commons.exceptions import REGION_ERROR
 from src.database.redis import invalidate_cache_partial
 from src.location.models import City, Country, Region
 
@@ -130,7 +131,12 @@ class CityAdmin(BaseAdmin, model=City):
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
-        model.country_id = model.region.country_id
+        stmt = select(Region).filter_by(id=int(data.get("region")))
+        record = await self._run_query(stmt)
+        if len(record) > 0:
+            model.country_id = record[0].country_id
+        else:
+            raise ValidationError(message=REGION_ERROR)
         stmt = select(self.model.administrative_code).filter_by(
             administrative_code=data["administrative_code"]
         )
