@@ -1,10 +1,12 @@
 from typing import Any
 from fastapi import Request
+from wtforms import ValidationError
+from sqlalchemy import select
 from wtforms import TextAreaField
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
-from src.admin.commons.exceptions import IMG_REQ
+from src.admin.commons.exceptions import IMG_REQ, SUB_CATEGORY_ERROR
 from src.admin.commons.formatters import (
     MediaFormatter,
     PhotoSplitFormatter,
@@ -326,7 +328,12 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
-        model.main_category_id = model.sub_category.main_category_id
+        stmt = select(SongSubcategory).filter_by(id=int(data.get("sub_category")))
+        record = await self._run_query(stmt)
+        if len(record) > 0:
+            model.main_category_id = record[0].main_category_id
+        else:
+            raise ValidationError(message=SUB_CATEGORY_ERROR)
         return await super().on_model_change(data, model, is_created, request)
 
     async def after_model_change(
