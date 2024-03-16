@@ -143,7 +143,7 @@ class Fund(Base):
     id = Column(Integer, primary_key=True)
     title = Column(String(50), nullable=False)
 
-    songs = relationship("Song", back_populates="fund")
+    songs = relationship("Song", back_populates="fund", lazy="selectin")
 
     def __repr__(self) -> str:
         return f"{self.title}"

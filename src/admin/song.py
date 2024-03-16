@@ -1,6 +1,7 @@
 from typing import Any
 
 from fastapi import Request
+from sqlalchemy import select
 from wtforms import TextAreaField, URLField, ValidationError
 from wtforms.validators import DataRequired
 from mutagen.mp3 import MP3
@@ -83,6 +84,17 @@ class GenreAdmin(BaseAdmin, model=Genre):
         await invalidate_cache_partial(["filter_songs"])
         return await super().after_model_delete(model, request)
 
+    async def delete_model(self, request: Request, pk: Any) -> None:
+        stmt = select(self.model).filter_by(id=int(pk))
+        records = await self._run_query(stmt)
+        if records:
+            songs = records[0].songs
+            if songs:
+                message = f"Неможливо видалити жанр <b>{records[0]}</b>"
+                message += f", оскільки з ним пов'язані пісні: <b>{', '.join(map(str, songs))}</b>."
+                return {"error_message": message}
+        return await super().delete_model(request, pk)
+
 
 class FundAdmin(BaseAdmin, model=Fund):
     category = "Пісенний розділ"
@@ -103,6 +115,17 @@ class FundAdmin(BaseAdmin, model=Fund):
     column_searchable_list = [
         Fund.title,
     ]
+
+    async def delete_model(self, request: Request, pk: Any) -> None:
+        stmt = select(self.model).filter_by(id=int(pk))
+        records = await self._run_query(stmt)
+        if records:
+            songs = records[0].songs
+            if songs:
+                message = f"Неможливо видалити фонд <b>{records[0]}</b>"
+                message += f", оскільки з ним пов'язані пісні: <b>{', '.join(map(str, songs))}</b>."
+                return {"error_message": message}
+        return await super().delete_model(request, pk)
 
 
 class SongAdmin(BaseAdmin, model=Song):

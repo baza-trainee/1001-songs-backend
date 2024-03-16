@@ -26,6 +26,17 @@ class CountryAdmin(BaseAdmin, model=Country):
         Country.name,
     ]
 
+    async def delete_model(self, request: Request, pk: Any) -> None:
+        stmt = select(self.model).filter_by(id=int(pk))
+        records = await self._run_query(stmt)
+        if records:
+            regions = records[0].regions
+            if regions:
+                message = f"Неможливо видалити країну <b>{records[0]}</b>"
+                message += f", оскільки з нею пов'язані регіони: <b>{', '.join(map(str, regions))}</b>."
+                return {"error_message": message}
+        return await super().delete_model(request, pk)
+
 
 class RegionAdmin(BaseAdmin, model=Region):
     category = "Локації"
@@ -63,6 +74,20 @@ class RegionAdmin(BaseAdmin, model=Region):
     column_searchable_list = [
         Region.name,
     ]
+
+    async def delete_model(self, request: Request, pk: Any) -> None:
+        stmt = select(self.model).filter_by(id=int(pk))
+        records = await self._run_query(stmt)
+        if records:
+            cities = records[0].cities
+            if cities:
+                cities = [city.name for city in cities]
+                message = f"Неможливо видалити регіон <b>{records[0]}</b>"
+                message += (
+                    f", оскільки з ним пов'язані міста: <b>{', '.join(cities)}</b>."
+                )
+                return {"error_message": message}
+        return await super().delete_model(request, pk)
 
 
 class CityAdmin(BaseAdmin, model=City):
@@ -123,3 +148,24 @@ class CityAdmin(BaseAdmin, model=City):
     async def after_model_delete(self, model: Any, request: Request) -> None:
         await invalidate_cache_partial(["filter_song_geotags"])
         return await super().after_model_delete(model, request)
+
+    async def delete_model(self, request: Request, pk: Any) -> None:
+        stmt = select(self.model).filter_by(id=int(pk))
+        records = await self._run_query(stmt)
+        if records:
+            message = f"Неможливо видалити місто <b>{records[0]}</b>, оскільки з ним пов'язані:"
+            songs = records[0].songs
+            expeditions = records[0].expeditions
+            news = records[0].news
+            projects = records[0].projects
+            if songs:
+                message += f"<br>пісні: <b>{', '.join(map(str, songs))}</b>."
+            if expeditions:
+                message += f"<br>експедиції: <b>{', '.join(map(str, expeditions))}</b>."
+            if news:
+                message += f"<br>новини: <b>{', '.join(map(str, news))}</b>."
+            if projects:
+                message += f"<br>проєкти: <b>{', '.join(map(str, projects))}</b>."
+            if songs or expeditions or news or projects:
+                return {"error_message": message}
+        return await super().delete_model(request, pk)
