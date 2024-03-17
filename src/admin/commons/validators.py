@@ -154,8 +154,8 @@ class ArrayStringValidator(object):
         self.max_string_len = max_string_len
 
     def __call__(self, form, field):
+        message = ""
         if field.data:
-            message = ""
             array_len = len(field.data)
             if array_len > self.max_array_len:
                 message += f"Field must have {self.max_array_len} items. You entered {array_len} items. "
