@@ -45,8 +45,6 @@ class Settings(BaseSettings):
     BASE_URL: str
     SITE_URL: str
 
-    SENTRY_KEY: str
-
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
