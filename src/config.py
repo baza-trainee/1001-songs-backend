@@ -1,6 +1,5 @@
 from fastapi_mail import ConnectionConfig
 from pydantic_settings import BaseSettings, SettingsConfigDict
-import sentry_sdk
 
 
 IMAGE_TYPES = [
@@ -52,14 +51,6 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
-sentry_sdk.set_level("debug")
-sentry_sdk.init(
-    dsn=settings.SENTRY_KEY,
-    traces_sample_rate=1.0,
-    profiles_sample_rate=1.0,
-    enable_tracing=True,
-)
 
 PROJECT_NAME = "1000 and 1 songs"
 API_PREFIX = "/api/v1"

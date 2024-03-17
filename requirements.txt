@@ -77,4 +77,3 @@ beautifulsoup4==4.12.3
 lxml==5.1.0
 pytest-asyncio==0.23.4
 fastapi-limiter==0.1.6
-sentry-sdk[fastapi]==1.40.6
