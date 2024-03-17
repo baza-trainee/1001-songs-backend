@@ -1,11 +1,12 @@
 from typing import Any
+
 from fastapi import Request
 from wtforms.validators import DataRequired
 
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.exceptions import IMG_REQ
 from src.admin.commons.formatters import MediaFormatter, format_quill, ArrayFormatter
-from src.admin.commons.utils import MediaInputWidget
+from src.admin.commons.utils import CustomSelect2TagsField, MediaInputWidget
 from src.admin.commons.validators import (
     ArrayStringValidator,
     MediaValidator,
@@ -14,6 +15,7 @@ from src.admin.commons.validators import (
 from src.config import MAX_IMAGE_SIZE_MB, IMAGE_TYPES
 from src.database.redis import invalidate_cache, invalidate_cache_partial
 from src.our_project.models import OurProject
+from src.our_team.models import OurTeam
 
 PREVIEW_PHOTO_RES = (300, 180)
 CONTENT_PHOTO_RES = (1780, 1090)
@@ -79,11 +81,25 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
     column_sortable_list = [
         OurProject.project_date,
     ]
+    form_overrides = {
+        "authors": CustomSelect2TagsField,
+        "editors": CustomSelect2TagsField,
+        "photographers": CustomSelect2TagsField,
+    }
     form_args = {
+        "authors": {
+            "model": OurTeam,
+            "validators": [DataRequired(), ArrayStringValidator()],
+        },
+        "editors": {
+            "model": OurTeam,
+            "validators": [ArrayStringValidator()],
+        },
+        "photographers": {
+            "model": OurTeam,
+            "validators": [ArrayStringValidator()],
+        },
         "location": {"validators": [DataRequired()]},
-        "authors": {"validators": [ArrayStringValidator()]},
-        "editors": {"validators": [ArrayStringValidator()]},
-        "photographers": {"validators": [ArrayStringValidator()]},
         "project_date": {"validators": [PastDateValidator()]},
         "preview_photo": {
             "widget": MediaInputWidget(is_required=True),
