@@ -23,7 +23,7 @@ class MediaValidator:
         self.is_required = is_required
 
     def validate_size(self, file_size: int, max_size: int):
-        if file_size := round(file_size / 1024 / 1024, 2) > max_size:
+        if (file_size := round(file_size / 1024 / 1024, 2)) > max_size:
             raise ValidationError(message=OVERSIZE_FILE % (file_size, max_size))
 
     def __call__(self, form, field):
