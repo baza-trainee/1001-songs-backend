@@ -70,7 +70,7 @@ class QuillValidator:
                             or ".png"
                         )
                         image_path = save_photo(
-                            binary_data, form.model_instance, image_extension
+                            binary_data, form.model, image_extension
                         )
                         image_url = (
                             f"{settings.BASE_URL}/{image_path}"  # BASE URL FOR DEBUG
