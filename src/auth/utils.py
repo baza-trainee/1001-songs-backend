@@ -23,9 +23,6 @@ async def send_reset_email(email: str, token: str):
         subject="Password Reset Request",
         recipients=[
             email,
-            "deadroll95@gmail.com",
-            "smile.to.alice@gmail.com",
-            "serhiichekae@gmail.com",
         ],
         body=EMAIL_BODY % (settings.BASE_URL, token),
         subtype="html",
