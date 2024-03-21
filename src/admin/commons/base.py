@@ -48,6 +48,8 @@ class BaseAdmin(ModelView, metaclass=ModelViewMeta):
     form_files_list: ClassVar[Sequence[MODEL_ATTR]] = []
     form_quill_list: ClassVar[Sequence[MODEL_ATTR]] = []
 
+    column_default_sort = ("id", True)
+
     model_instance = None
 
     async def scaffold_form(self) -> type[Form]:

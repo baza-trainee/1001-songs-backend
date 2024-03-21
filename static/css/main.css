@@ -53,7 +53,15 @@ div[class^="ql-editor"]:focus {
     min-width: 500px;
     text-align: left;
 }
-
+.quill-column .ql-align-right {
+    text-align: right;
+}
+.quill-column .ql-align-center {
+    text-align: center;
+}
+.quill-column .ql-align-justify {
+    text-align: justify;
+}
 div[class^="ql-editor"],
 .quill-column p,
 .ql-editor p {
