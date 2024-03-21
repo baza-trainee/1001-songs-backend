@@ -1,0 +1,6 @@
+NO_COUNTRY_FOUND = "No country found for the given criteria."
+NO_REGION_FOUND = "No regions found for the given criteria."
+NO_CITIES_FOUND = "No cities found for the given criteria."
+NO_SONG_FOUND = "No songs found for the given criteria."
+NO_GENRES_FOUND = "No genres found for the given criteria."
+NO_FUND_FOUND = "No fund found for the given criteria."

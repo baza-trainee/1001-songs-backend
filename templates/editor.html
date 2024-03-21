@@ -1,0 +1,44 @@
+<link href="https://cdn.quilljs.com/1.0.0/quill.snow.css" rel="stylesheet">
+<div class="form-group mb-3">
+    <input type="text" class="form-control" name="{{ field.name }}" value="{{ field.data }}" hidden>
+    <div id="editor-{{ field.name }}">
+    </div>
+</div>
+<script src="https://cdn.quilljs.com/1.0.0/quill.js"></script>
+<script>
+    Quill.prototype.getHTML = function () {
+        return this.container.querySelector('.ql-editor').innerHTML;
+    };
+    Quill.prototype.setHTML = function (html) {
+        this.container.querySelector('.ql-editor').innerHTML = html;
+    };
+    let toolbarOptions{{ field.name }} = [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote'],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'script': 'sub' }, { 'script': 'super' }],
+        [{ 'header': [2, 3, 4, 5, 6, false] }],
+        [{ 'color': [] }, { 'background': [] }],
+        [{ 'align': [] }],
+        ["link", "image", "video"],
+        ['clean']
+    ]
+
+    let quill{{ field.name }} = new Quill('#editor-{{ field.name }}', {
+        modules: {
+            toolbar: toolbarOptions{{ field.name }}
+        },
+        theme: 'snow'
+    });
+    {% if field.data %}
+    quill{{ field.name }}.setHTML('{{ field.data|safe }}');
+    {% endif %}
+
+    quill{{ field.name }}.on('text-change', function (delta, oldDelta, source) {
+        $('input[name={{ field.name }}]').val(quill{{ field.name }}.getHTML())
+    });
+    
+    {% if field.errors %}
+    $('#editor-{{ field.name }} .ql-editor.ql-blank').addClass('is-invalid');
+    {% endif %}
+</script>
