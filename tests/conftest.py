@@ -6,7 +6,7 @@ from typing import AsyncGenerator
 
 import pytest
 from fastapi_users.password import PasswordHelper
-from httpx import AsyncClient
+from httpx import AsyncClient, ASGITransport
 from sqlalchemy import NullPool, insert
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
@@ -75,7 +75,7 @@ async def prepare_database():
 @pytest.fixture(scope="session")
 async def ac():
     app.dependency_overrides[get_async_session] = override_get_async_session
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+    async with AsyncClient(ASGITransport(app), base_url="http://test") as ac:
         yield ac
 
 
