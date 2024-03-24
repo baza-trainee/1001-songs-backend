@@ -34,7 +34,8 @@ class MediaInputWidget(widgets.FileInput):
             **kwargs,
             required=bool(
                 (self.is_required and not field.data)
-                or (self.is_required and field.errors and not field.model_data)
+                or (self.is_required and not field.model_data)
+                or (self.is_required and field.errors)
             ),
         )
         checkbox_id = f"{field.id}_checkbox"

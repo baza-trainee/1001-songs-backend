@@ -44,7 +44,6 @@ admin = Admin(
     engine,
     authentication_backend=authentication_backend,
     logo_url="/static/interface/logo.svg",
-    debug=True,
     session_maker=async_session_maker,
 )
 admin.site_url = settings.SITE_URL
