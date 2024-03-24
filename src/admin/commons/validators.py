@@ -185,3 +185,10 @@ def validate_url(form, field):
         if not field.data.startswith(("https://", "http://")):
             message = "URL address is incorrect."
             raise ValidationError(message)
+
+
+def validate_ethnographic_photo1(form, field):
+    file = field.data
+    if not file or not file.filename:
+        if form.data["education_genres"]:
+            raise ValidationError(message=DATA_REQUIRED)
