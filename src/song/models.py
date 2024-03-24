@@ -37,7 +37,7 @@ class Song(Base):
     photo3: str = Column(FileType(storage=storage))
     photo4: str = Column(FileType(storage=storage))
     photo5: str = Column(FileType(storage=storage))
-    ethnographic_photo1: str = Column(FileType(storage=storage), nullable=False)
+    ethnographic_photo1: str = Column(FileType(storage=storage))
     ethnographic_photo2: str = Column(FileType(storage=storage))
     ethnographic_photo3: str = Column(FileType(storage=storage))
     ethnographic_photo4: str = Column(FileType(storage=storage))

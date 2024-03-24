@@ -2,8 +2,9 @@ from typing import Any
 
 from fastapi import Request
 from sqlalchemy import select
-from wtforms import TextAreaField, URLField, ValidationError
+from wtforms import TextAreaField, URLField
 from wtforms.validators import DataRequired
+from markupsafe import Markup
 
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.exceptions import IMG_REQ
@@ -19,6 +20,7 @@ from src.admin.commons.validators import (
     MediaValidator,
     MultipleAjaxValidator,
     PastDateValidator,
+    validate_ethnographic_photo1,
     validate_url,
 )
 from src.config import AUDIO_TYPES, MAX_AUDIO_SIZE_MB, MAX_IMAGE_SIZE_MB, IMAGE_TYPES
@@ -26,10 +28,15 @@ from src.database.redis import invalidate_cache_partial
 from src.our_team.models import OurTeam
 from src.song.models import Genre, Song, Fund
 
-
 SONG_PHOTO_RES = (1230, 690)
 SONG_ETHNOGRAPHIC_PHOTO_RES = (1024, 1015)
 SONG_MAP_PHOTO_RES = (820, 485)
+ETHNOGRAPHIC_PHOTO1_DESCR = Markup(
+    "<br>**Поле обов'язкове, якщо обрано <b>Жанри освітнього розділу</b>"
+)
+EDUCATION_GENRES_DESCR = Markup(
+    "<br>**Необхідно буде завантажити мінімум одне <b>Етнографічне фото</b>"
+)
 
 PHOTO_FIELDS = [
     "photo1",
@@ -279,6 +286,7 @@ class SongAdmin(BaseAdmin, model=Song):
         },
         "education_genres": {
             "validators": [MultipleAjaxValidator(max_len=5)],
+            "description": EDUCATION_GENRES_DESCR,
         },
         "fund": {
             "validators": [DataRequired()],
@@ -298,15 +306,16 @@ class SongAdmin(BaseAdmin, model=Song):
             "description": IMG_REQ % SONG_PHOTO_RES,
         },
         ETHNOGRAPHIC_PHOTO_FIELDS[0]: {
-            "widget": MediaInputWidget(is_required=True),
+            "widget": MediaInputWidget(),
             "validators": [
                 MediaValidator(
                     media_types=IMAGE_TYPES,
                     max_size=MAX_IMAGE_SIZE_MB,
-                    is_required=True,
                 ),
+                validate_ethnographic_photo1,
             ],
-            "description": IMG_REQ % SONG_ETHNOGRAPHIC_PHOTO_RES,
+            "description": IMG_REQ % SONG_ETHNOGRAPHIC_PHOTO_RES
+            + ETHNOGRAPHIC_PHOTO1_DESCR,
         },
         **{
             field: {
@@ -349,6 +358,10 @@ class SongAdmin(BaseAdmin, model=Song):
         },
     }
     form_ajax_refs = {
+        "fund": {
+            "fields": ("title",),
+            "order_by": "title",
+        },
         "genres": {
             "fields": ("genre_name",),
             "order_by": "genre_name",
