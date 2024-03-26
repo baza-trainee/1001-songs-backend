@@ -66,7 +66,14 @@ class FilterMapSchema(BaseModel):
     city: str
     latitude: float = Field(..., examples=[51.53694777241224])
     longitude: Optional[float] = Field(..., examples=[26.98664264])
+    photo: Optional[AnyHttpUrl] = Field(None)
     song_count: int = Field(..., ge=1)
+
+    @field_validator("photo", mode="before")
+    @classmethod
+    def add_base_url(cls, value: str, info: ValidationInfo) -> str:
+        if value and not value.startswith(("https://", "http://")):
+            return f"{settings.BASE_URL}/{value}"
 
 
 class FilterSongSchema(BaseModel):

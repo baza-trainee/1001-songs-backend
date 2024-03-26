@@ -465,7 +465,7 @@ async def filter_songs(
 
 
 @map_router.get("/filter/geotag", response_model=List[FilterMapSchema])
-@cache(expire=HOUR, key_builder=my_key_builder)
+@cache(expire=10, key_builder=my_key_builder)
 async def filter_song_geotags(
     search: Optional[str] = Query(None),
     country_id: List[int] = Query(None),
@@ -503,6 +503,7 @@ async def filter_song_geotags(
             select(
                 City.id.label("id"),
                 City.name,
+                City.photo,
                 City.latitude,
                 City.longitude,
                 Region.name.label("region_name"),
@@ -539,6 +540,7 @@ async def filter_song_geotags(
                 "city": f"{record.name}, {record.region_name}",
                 "latitude": record.latitude,
                 "longitude": record.longitude,
+                "photo": record.photo,
                 "song_count": record.count,
             }
             for record in result
