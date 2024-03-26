@@ -132,7 +132,6 @@ class CityAdmin(BaseAdmin, model=City):
                 MediaValidator(
                     media_types=IMAGE_TYPES,
                     max_size=MAX_IMAGE_SIZE_MB,
-                    is_required=True,
                 ),
             ],
         },
