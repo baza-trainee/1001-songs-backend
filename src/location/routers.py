@@ -465,7 +465,7 @@ async def filter_songs(
 
 
 @map_router.get("/filter/geotag", response_model=List[FilterMapSchema])
-@cache(expire=10, key_builder=my_key_builder)
+@cache(expire=HOUR, key_builder=my_key_builder)
 async def filter_song_geotags(
     search: Optional[str] = Query(None),
     country_id: List[int] = Query(None),
