@@ -9,10 +9,12 @@ from src.admin.commons.formatters import MediaFormatter
 from src.admin.commons.utils import MediaInputWidget
 from src.admin.commons.validators import MediaValidator
 from src.admin.commons.base import BaseAdmin
-from src.admin.commons.exceptions import REGION_ERROR
+from src.admin.commons.exceptions import IMG_REQ, REGION_ERROR
 from src.config import IMAGE_TYPES, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache_partial
 from src.location.models import City, Country, Region
+
+CITY_PHOTO_RES = (604, 380)
 
 
 class CountryAdmin(BaseAdmin, model=Country):
@@ -134,6 +136,7 @@ class CityAdmin(BaseAdmin, model=City):
                     max_size=MAX_IMAGE_SIZE_MB,
                 ),
             ],
+            "description": IMG_REQ % CITY_PHOTO_RES,
         },
     }
     form_ajax_refs = {
