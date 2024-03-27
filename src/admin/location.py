@@ -5,8 +5,12 @@ from sqlalchemy import select
 from wtforms import ValidationError
 from wtforms.validators import DataRequired
 
+from src.admin.commons.formatters import MediaFormatter
+from src.admin.commons.utils import MediaInputWidget
+from src.admin.commons.validators import MediaValidator
 from src.admin.commons.base import BaseAdmin
 from src.admin.commons.exceptions import REGION_ERROR
+from src.config import IMAGE_TYPES, MAX_IMAGE_SIZE_MB
 from src.database.redis import invalidate_cache_partial
 from src.location.models import City, Country, Region
 
@@ -103,6 +107,7 @@ class CityAdmin(BaseAdmin, model=City):
         City.latitude: "Широта",
         City.longitude: "Довгота",
         City.administrative_code: "Адміністративний код",
+        City.photo: "Етнічне фото",
     }
     column_list = column_details_list = form_columns = [
         City.region,
@@ -110,6 +115,7 @@ class CityAdmin(BaseAdmin, model=City):
         City.latitude,
         City.longitude,
         City.administrative_code,
+        City.photo,
     ]
     column_searchable_list = [
         City.name,
@@ -120,6 +126,15 @@ class CityAdmin(BaseAdmin, model=City):
         "region": {
             "validators": [DataRequired()],
         },
+        "photo": {
+            "widget": MediaInputWidget(),
+            "validators": [
+                MediaValidator(
+                    media_types=IMAGE_TYPES,
+                    max_size=MAX_IMAGE_SIZE_MB,
+                ),
+            ],
+        },
     }
     form_ajax_refs = {
         "region": {
@@ -127,6 +142,14 @@ class CityAdmin(BaseAdmin, model=City):
             "order_by": "name",
         },
     }
+
+    column_formatters = {
+        City.photo: MediaFormatter(),
+    }
+
+    form_files_list = [
+        City.photo,
+    ]
 
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
