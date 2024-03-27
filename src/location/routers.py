@@ -503,6 +503,7 @@ async def filter_song_geotags(
             select(
                 City.id.label("id"),
                 City.name,
+                City.photo,
                 City.latitude,
                 City.longitude,
                 Region.name.label("region_name"),
@@ -539,6 +540,7 @@ async def filter_song_geotags(
                 "city": f"{record.name}, {record.region_name}",
                 "latitude": record.latitude,
                 "longitude": record.longitude,
+                "photo": record.photo,
                 "song_count": record.count,
             }
             for record in result

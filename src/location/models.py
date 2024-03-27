@@ -1,7 +1,12 @@
+from fastapi_storages import FileSystemStorage
 from sqlalchemy import Column, String, ForeignKey, Integer, Float
 from sqlalchemy.orm import relationship
+from fastapi_storages.integrations.sqlalchemy import FileType
 
 from src.database.database import Base
+
+
+storage = FileSystemStorage(path="static/media/cities")
 
 
 class Country(Base):
@@ -39,6 +44,7 @@ class City(Base):
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     administrative_code = Column(String(50), nullable=False, unique=True)
+    photo: str = Column(FileType(storage=storage))
     region_id = Column(Integer, ForeignKey("regions.id"))
     country_id = Column(Integer, ForeignKey("countries.id"))
 
