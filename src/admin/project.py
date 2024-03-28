@@ -25,7 +25,7 @@ class OurProjectAdmin(BaseAdmin, model=OurProject):
     name_plural = "Актуальні проєкти"
     icon = "fa-solid fa-hands-holding-circle"
     category = "Про проєкт"
-    save_as = True
+    save_as = False
 
     column_labels = {
         OurProject.title: "Заголовок",

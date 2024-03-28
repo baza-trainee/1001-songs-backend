@@ -93,39 +93,46 @@ async def on_model_change_for_files(
     model: Any,
     is_created: bool,
     request: Request,
-):
-    fields_name = []
+) -> None:
+    """processing files from the admin_view.form_files_list fields when creating and updating records."""
+
+    is_save_as_new = request._form.get(f"save", None) == "Save as new"
+    file_felds_list = []
     for field in self.form_files_list:
         if not isinstance(field, str):
             field = field.name
-        fields_name.append(field)
+        file_felds_list.append(field)
 
     fields_do_not_del = []
-    if fields_name:
-        for field, field_data in data.items():
-            if field in fields_name:
-                model_data = getattr(model, field, None)
-                if request._form.get(f"{field}_checkbox", None) == "on":
-                    delete_photo(model_data)
-                    continue
-                if field_data.size:
-                    file_name = generate_file_name(field_data.filename)
-                    if is_created:
-                        data[field].filename = file_name
-                    else:
-                        if model_data and model_data != field_data.filename:
-                            data[field].filename = file_name
-                            delete_photo(model_data)
-                elif request._form.get(f"save", None) == "Save as new":
-                    if field_data.file.name:
-                        data[field] = create_file_field(field_data.file.name)
-                else:
-                    fields_do_not_del.append(field)
-        for field in fields_do_not_del:
-            if is_created:
-                pass
+    for field, field_data in data.items():
+        if field in file_felds_list:
+            # drop file if checkbox "clear" == True and not "save as new
+            field_object_data = getattr(model, field, None)
+            if (
+                not is_save_as_new
+                and request._form.get(f"{field}_checkbox", None) == "on"
+            ):
+                delete_photo(field_object_data)
+                continue
+            # if file is new then generate uuid filename for file
+            if field_data.size:
+                file_name = generate_file_name(field_data.filename)
+                data[field].filename = file_name
+                if not is_created and field_data.file.name != field_object_data:
+                    delete_photo(field_object_data)
+            # if "save as new" then get file from storage and put to formdata
+            elif is_save_as_new:
+                if field_data.filename and field_data.file.name:
+                    data[field] = create_file_field(field_data.file.name)
             else:
-                del data[field]
+                # fix situation when save empty files (fastapi_storages bug)
+                fields_do_not_del.append(field)
+    # fix fastapi_storages bug
+    for field in fields_do_not_del:
+        if is_created:
+            continue
+        else:
+            del data[field]
 
 
 class CustomSelect2TagsField(Select2TagsField):
