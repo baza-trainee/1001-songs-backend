@@ -30,7 +30,7 @@ MODEL_TEAM_FIELDS = ["authors", "editors", "photographers"]
 class NewsAdmin(BaseAdmin, model=News):
     name_plural = "Новини"
     icon = "fa-solid fa-kiwi-bird"
-    save_as = True
+    save_as = False
 
     column_labels = {
         News.title: "Заголовок",
