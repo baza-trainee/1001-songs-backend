@@ -35,7 +35,7 @@ class ExpeditionAdmin(BaseAdmin, model=Expedition):
     name_plural = "Експедиції"
     icon = "fa-solid fa-route"
 
-    save_as = True
+    save_as = False
 
     column_labels = {
         Expedition.title: "Заголовок",

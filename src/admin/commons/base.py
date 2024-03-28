@@ -67,7 +67,8 @@ class BaseAdmin(ModelView, metaclass=ModelViewMeta):
     async def on_model_change(
         self, data: dict, model: Any, is_created: bool, request: Request
     ) -> None:
-        await on_model_change_for_files(self, data, model, is_created, request)
+        if self.form_files_list:
+            await on_model_change_for_files(self, data, model, is_created, request)
         return await super().on_model_change(data, model, is_created, request)
 
     async def on_model_delete(self, model: Any, request: Request) -> None:
