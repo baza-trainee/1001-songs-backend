@@ -16,7 +16,7 @@ class EducationPage(Base):
 
     id: int = Column(Integer, primary_key=True)
     title: str = Column(String(60), nullable=False)
-    description: str = Column(String(600), nullable=False)
+    description: str = Column(String(1000), nullable=False)
     recommendations: str = Column(String(10000), nullable=False)
     recommended_sources: str = Column(String(10000), nullable=False)
 

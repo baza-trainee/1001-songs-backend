@@ -19,8 +19,9 @@ from src.admin.commons.validators import (
     ArrayStringValidator,
     MediaValidator,
     MultipleAjaxValidator,
+    OrFieldRequiredValidator,
     PastDateValidator,
-    validate_ethnographic_photo1,
+    DependsOnFieldValidator,
     validate_url,
 )
 from src.config import AUDIO_TYPES, MAX_AUDIO_SIZE_MB, MAX_IMAGE_SIZE_MB, IMAGE_TYPES
@@ -34,10 +35,11 @@ SONG_MAP_PHOTO_RES = (820, 485)
 ETHNOGRAPHIC_PHOTO1_DESCR = Markup(
     "<br>**Поле обов'язкове, якщо обрано <b>Жанри освітнього розділу</b>"
 )
+PHOTO1_DESCR = Markup("<br>**Поле обов'язкове, якщо обрано <b>Жанри</b>")
 EDUCATION_GENRES_DESCR = Markup(
     "<br>**Необхідно буде завантажити мінімум одне <b>Етнографічне фото</b>"
 )
-
+GENRES_DESCR = Markup("<br>**Необхідно буде завантажити мінімум одне <b>Фото</b>")
 PHOTO_FIELDS = [
     "photo1",
     "photo2",
@@ -282,10 +284,17 @@ class SongAdmin(BaseAdmin, model=Song):
             },
         },
         "genres": {
-            "validators": [DataRequired(), MultipleAjaxValidator(max_len=5)],
+            "validators": [
+                OrFieldRequiredValidator("education_genres"),
+                MultipleAjaxValidator(max_len=5),
+            ],
+            "description": GENRES_DESCR,
         },
         "education_genres": {
-            "validators": [MultipleAjaxValidator(max_len=5)],
+            "validators": [
+                OrFieldRequiredValidator("genres"),
+                MultipleAjaxValidator(max_len=5),
+            ],
             "description": EDUCATION_GENRES_DESCR,
         },
         "fund": {
@@ -295,15 +304,15 @@ class SongAdmin(BaseAdmin, model=Song):
             "validators": [DataRequired()],
         },
         PHOTO_FIELDS[0]: {
-            "widget": MediaInputWidget(is_required=True),
+            "widget": MediaInputWidget(),
             "validators": [
                 MediaValidator(
                     media_types=IMAGE_TYPES,
                     max_size=MAX_IMAGE_SIZE_MB,
-                    is_required=True,
                 ),
+                DependsOnFieldValidator("genres"),
             ],
-            "description": IMG_REQ % SONG_PHOTO_RES,
+            "description": IMG_REQ % SONG_PHOTO_RES + PHOTO1_DESCR,
         },
         ETHNOGRAPHIC_PHOTO_FIELDS[0]: {
             "widget": MediaInputWidget(),
@@ -312,7 +321,7 @@ class SongAdmin(BaseAdmin, model=Song):
                     media_types=IMAGE_TYPES,
                     max_size=MAX_IMAGE_SIZE_MB,
                 ),
-                validate_ethnographic_photo1,
+                DependsOnFieldValidator("education_genres"),
             ],
             "description": IMG_REQ % SONG_ETHNOGRAPHIC_PHOTO_RES
             + ETHNOGRAPHIC_PHOTO1_DESCR,
