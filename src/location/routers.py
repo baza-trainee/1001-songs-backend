@@ -13,6 +13,7 @@ from src.database.redis import my_key_builder
 from src.database.database import get_async_session
 from src.exceptions import NO_DATA_FOUND
 from src.song.models import Fund, Song, Genre
+from .models import Country, Region, City
 from .exceptions import (
     NO_COUNTRY_FOUND,
     NO_FUND_FOUND,
@@ -21,7 +22,6 @@ from .exceptions import (
     NO_CITIES_FOUND,
     NO_SONG_FOUND,
 )
-from .models import Country, Region, City
 from .schemas import (
     CountrySchema,
     GenreFilterSchema,
@@ -427,27 +427,30 @@ async def filter_songs(
     - If an internal server error occurs during processing, a 500 Internal Server Error status code will be returned.
     """
     try:
+        filters = [Song.is_active, ~Song.education_genres.any()]
+
+        if country_id:
+            filters.append(Country.id.in_(country_id))
+        if region_id:
+            filters.append(Region.id.in_(region_id))
+        if city_id:
+            filters.append(City.id.in_(city_id))
+        if fund_id:
+            filters.append(Song.fund_id.in_(fund_id))
+        if genre_id:
+            filters.append(Genre.id.in_(genre_id))
+        if search:
+            filters.append(Song.title.ilike(f"%{search}%"))
+
         query = (
             select(Song)
             .join(City)
             .join(Region)
             .join(Country)
-            .filter(Song.is_active, ~Song.education_genres.any())
+            .join(Song.genres)
+            .filter(*filters)
             .order_by(desc(Song.id))
         )
-
-        if country_id:
-            query = query.filter(Country.id.in_(country_id))
-        if region_id:
-            query = query.filter(Region.id.in_(region_id))
-        if city_id:
-            query = query.filter(City.id.in_(city_id))
-        if fund_id:
-            query = query.filter(Song.fund_id.in_(fund_id))
-        if genre_id:
-            query = query.join(Song.genres).filter(Genre.id.in_(genre_id))
-        if search:
-            query = query.filter(Song.title.ilike(f"%{search}%"))
 
         result = await paginate(session, query)
         if not result.items:
@@ -499,6 +502,21 @@ async def filter_song_geotags(
     - If an internal server error occurs during processing, a 500 Internal Server Error status code will be returned.
     """
     try:
+        filters = [Song.is_active, ~Song.education_genres.any()]
+
+        if country_id:
+            filters.append(Country.id.in_(country_id))
+        if region_id:
+            filters.append(Region.id.in_(region_id))
+        if city_id:
+            filters.append(City.id.in_(city_id))
+        if fund_id:
+            filters.append(Song.fund_id.in_(fund_id))
+        if genre_id:
+            filters.append(Genre.id.in_(genre_id))
+        if search:
+            filters.append(Song.title.ilike(f"%{search}%"))
+
         query = (
             select(
                 City.id.label("id"),
@@ -512,23 +530,11 @@ async def filter_song_geotags(
             .join(Song)
             .join(Region)
             .join(Country)
-            .filter(Song.is_active, ~Song.education_genres.any())
+            .join(Song.genres)
+            .filter(*filters)
             .group_by(City.id, Region.name)
             .order_by(City.id)
         )
-
-        if country_id:
-            query = query.filter(Country.id.in_(country_id))
-        if region_id:
-            query = query.filter(Region.id.in_(region_id))
-        if city_id:
-            query = query.filter(City.id.in_(city_id))
-        if fund_id:
-            query = query.filter(Song.fund_id.in_(fund_id))
-        if genre_id:
-            query = query.join(Song.genres).filter(Genre.id.in_(genre_id))
-        if search:
-            query = query.filter(Song.title.ilike(f"%{search}%"))
 
         records = await session.execute(query)
         result = records.all()
@@ -565,7 +571,7 @@ async def get_song_on_map_by_id(
     """
     try:
         record = await session.get(Song, id)
-        if not record or not record.is_active:
+        if not all([record, record.is_active, not record.education_genres]):
             raise NoResultFound
         return record
     except NoResultFound:
