@@ -187,8 +187,24 @@ def validate_url(form, field):
             raise ValidationError(message)
 
 
-def validate_ethnographic_photo1(form, field):
-    file = field.data
-    if not file or not file.filename:
-        if form.data["education_genres"]:
-            raise ValidationError(message=DATA_REQUIRED)
+class DependsOnFieldValidator(object):
+    def __init__(self, depends_field: str):
+        self.depends_field = depends_field
+
+    def __call__(self, form, field):
+        file = field.data
+        if not file or not file.filename:
+            if form.data[self.depends_field]:
+                raise ValidationError(message=DATA_REQUIRED)
+
+
+class OrFieldRequiredValidator(object):
+    def __init__(self, second_field: str):
+        self.second_field = second_field
+
+    def __call__(self, form, field):
+        fields = [field.name, self.second_field]
+        if not any([getattr(form, field).data for field in fields]):
+            raise ValidationError(
+                message=f"Оберіть принаймні одне поле з перелічених: {[getattr(form, field).label.text for field in fields]}"
+            )
