@@ -24,6 +24,8 @@ from src.education.models import (
     EducationPageSongGenre,
 )
 
+EDUCATION_SUB_PHOTO_RES = (630, 385)
+EDUCATION_GENRE_PHOTO_RES = (1050, 590)
 RECOMMENDATIONS_PHOTO_RES = (1780, 1090)
 CATEGORY_MEDIA_RES = (820, 560)
 EDUCATION_PAGE_PHOTO_FIELDS = [
@@ -74,7 +76,7 @@ class EducationAdmin(BaseAdmin, model=EducationPage):
         "recommendations": {
             "description": IMG_REQ % RECOMMENDATIONS_PHOTO_RES,
         },
-        "recommended_sources": {"validators": [QuillValidator(max_text_len=600)]},
+        "recommended_sources": {"validators": [QuillValidator(max_text_len=5000)]},
     }
     form_quill_list = [
         EducationPage.recommendations,
@@ -137,7 +139,7 @@ class CalendarAndRitualCategoryAdmin(BaseAdmin, model=CalendarAndRitualCategory)
         "description": TextAreaField,
     }
     form_args = {
-        "recommended_sources": {"validators": [QuillValidator(max_text_len=600)]},
+        "recommended_sources": {"validators": [QuillValidator(max_text_len=5000)]},
         "description": {
             "render_kw": {
                 "class": "form-control",
@@ -208,6 +210,7 @@ class SongSubcategoryAdmin(BaseAdmin, model=SongSubcategory):
                     is_required=True,
                 )
             ],
+            "description": IMG_REQ % EDUCATION_SUB_PHOTO_RES,
         },
     }
     column_searchable_list = [
@@ -305,6 +308,7 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
                         is_required=True,
                     )
                 ],
+                "description": IMG_REQ % EDUCATION_GENRE_PHOTO_RES,
             }
             for field in EDUCATION_PAGE_PHOTO_FIELDS[:3]
         },
@@ -314,6 +318,7 @@ class EducationPageSongGenreAdmin(BaseAdmin, model=EducationPageSongGenre):
                 "validators": [
                     MediaValidator(media_types=IMAGE_TYPES, max_size=MAX_IMAGE_SIZE_MB)
                 ],
+                "description": IMG_REQ % EDUCATION_GENRE_PHOTO_RES,
             }
             for field in EDUCATION_PAGE_PHOTO_FIELDS[3:]
         },
