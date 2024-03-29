@@ -88,7 +88,6 @@ class FilterSongSchema(BaseModel):
     photos: Optional[List[AnyHttpUrl]] = Field(None)
     city: str
     genres: List[str]
-    education_genres: List[str]
     fund: str
 
     @field_validator(
@@ -96,7 +95,6 @@ class FilterSongSchema(BaseModel):
         "photos",
         "genres",
         "fund",
-        "education_genres",
         "stereo_audio",
         mode="before",
     )
@@ -124,11 +122,6 @@ class FilterSongSchema(BaseModel):
                 if value and not isinstance(value, str):
                     return value.title
                 return value
-            case "education_genres":
-                return [
-                    genre.title if not isinstance(genre, str) else genre
-                    for genre in value
-                ]
             case "stereo_audio":
                 if value and not value.startswith(("https://", "http://")):
                     return f"{settings.BASE_URL}/{value}"

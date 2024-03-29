@@ -60,7 +60,7 @@ async def get_countries(
     - **song_count** (int): The number of songs available in the country that meet the specified criteria.
     """
     try:
-        filters = [Song.is_active]
+        filters = [Song.is_active, ~Song.education_genres.any()]
         if city_id:
             filters.append(City.id.in_(city_id))
         if region_id:
@@ -129,7 +129,7 @@ async def get_regions(
     - **song_count** (int): The number of songs available in the region that meet the specified criteria.
     """
     try:
-        filters = [Song.is_active]
+        filters = [Song.is_active, ~Song.education_genres.any()]
         if country_id:
             filters.append(Region.country_id.in_(country_id))
         if city_id:
@@ -203,7 +203,7 @@ async def get_cities(
     - **region_id** (int): The ID of the region to which the city belongs.
     """
     try:
-        filters = [Song.is_active]
+        filters = [Song.is_active, ~Song.education_genres.any()]
         if country_id:
             filters.append(City.country_id.in_(country_id))
         if region_id:
@@ -279,7 +279,7 @@ async def get_genres(
 
     """
     try:
-        filters = [Song.is_active]
+        filters = [Song.is_active, ~Song.education_genres.any()]
         if country_id:
             filters.append(Country.id.in_(country_id))
         if region_id:
@@ -352,7 +352,7 @@ async def get_funds(
         - **song_count** (int): The number of songs supported by the fund within the specified criteria.
     """
     try:
-        filters = [Song.is_active]
+        filters = [Song.is_active, ~Song.education_genres.any()]
         if country_id:
             filters.append(Country.id.in_(country_id))
         if region_id:
@@ -432,7 +432,7 @@ async def filter_songs(
             .join(City)
             .join(Region)
             .join(Country)
-            .filter(Song.is_active)
+            .filter(Song.is_active, ~Song.education_genres.any())
             .order_by(desc(Song.id))
         )
 
@@ -512,7 +512,7 @@ async def filter_song_geotags(
             .join(Song)
             .join(Region)
             .join(Country)
-            .filter(Song.is_active)
+            .filter(Song.is_active, ~Song.education_genres.any())
             .group_by(City.id, Region.name)
             .order_by(City.id)
         )
