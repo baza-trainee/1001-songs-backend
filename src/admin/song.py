@@ -254,8 +254,16 @@ class SongAdmin(BaseAdmin, model=Song):
         "song_description": TextAreaField,
         "collectors": CustomSelect2TagsField,
         "video_url": URLField,
+        "comment_map": TextAreaField,
     }
     form_args = {
+        "comment_map": {
+            "render_kw": {
+                "class": "form-control",
+                "rows": 5,
+                "maxlength": Song.comment_map.type.length,
+            },
+        },
         "is_active": {"render_kw": {"checked": True}},
         "video_url": {
             "validators": [validate_url],
