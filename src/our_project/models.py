@@ -17,7 +17,7 @@ class OurProject(Base):
     short_description: str = Column(String(200), nullable=False)
     preview_photo: str = Column(FileType(storage=storage), nullable=False)
     project_date = Column(Date, nullable=False)
-    content: str = Column(String(10000), nullable=False)
+    content: str = Column(String(30000), nullable=False)
     authors: list[str] = Column(ARRAY(String(25)), nullable=False)
     editors: list[str] = Column(ARRAY(String(25)))
     photographers: list[str] = Column(ARRAY(String(25)))
