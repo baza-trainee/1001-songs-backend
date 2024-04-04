@@ -43,8 +43,7 @@ class MediaValidator:
 class QuillValidator:
     "max_len with html tags"
 
-    def __init__(self, max_length: int = 10000, max_text_len: int = None) -> None:
-        self.max_len = max_length
+    def __init__(self, max_text_len: int = 20000) -> None:
         self.max_text_len = max_text_len
 
     def __call__(self, form, field):
@@ -85,12 +84,12 @@ class QuillValidator:
             for span_tag in span_tags:
                 if "style" not in span_tag.attrs.keys():
                     span_tag.unwrap()
+            p_tags = soup.find_all("p")
+            for p_tag in p_tags:
+                if p_tag.next.name == "br":
+                    p_tag.next.decompose()
+                    p_tag["class"] = "quill_p_separator"
             result = str(soup)
-            result_len = len(result)
-            if result_len > self.max_len:
-                raise ValidationError(
-                    message=MAX_FIELD_LENTH % (field.name, result_len, self.max_len)
-                )
             if self.max_text_len:
                 if (text_len := len(soup.get_text())) > self.max_text_len:
                     raise ValidationError(
