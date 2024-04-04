@@ -8,4 +8,4 @@ class About(Base):
 
     id: int = Column(Integer, primary_key=True)
     title: str = Column(String(length=60), nullable=False)
-    content: str = Column(String(length=10000), nullable=False)
+    content: str = Column(String(length=30000), nullable=False)

@@ -33,9 +33,6 @@ div[class^="ql-editor"] {
     width: 100%;
 }
 
-div[class^="ql-editor"] p {
-    margin: 0 0 12px 0;
-}
 
 div[class^="ql-editor"]:focus {
     color: inherit;
@@ -65,7 +62,10 @@ div[class^="ql-editor"]:focus {
 div[class^="ql-editor"],
 .quill-column p,
 .ql-editor p {
-    margin: 0 0 15px 0;
+    margin: 0;
+}
+.quill_p_separator {
+    height: 15px;
 }
 div[class^="ql-editor"] p img,
 .quill-column p img {
