@@ -64,9 +64,6 @@ div[class^="ql-editor"],
 .ql-editor p {
     margin: 0;
 }
-.quill_p_separator {
-    height: 15px;
-}
 div[class^="ql-editor"] p img,
 .quill-column p img {
     display: block;

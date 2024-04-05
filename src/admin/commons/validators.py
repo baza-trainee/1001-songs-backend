@@ -85,10 +85,20 @@ class QuillValidator:
                 if "style" not in span_tag.attrs.keys():
                     span_tag.unwrap()
             p_tags = soup.find_all("p")
+            separator_class = "quill_p_separator"
             for p_tag in p_tags:
-                if p_tag.next.name == "br":
-                    p_tag.next.decompose()
-                    p_tag["class"] = "quill_p_separator"
+                if (
+                    not p_tag.get_text(strip=True)
+                    and not p_tag.find_all("img")
+                    and not p_tag.find_all("iframe")
+                ):
+                    if p_tag.next.name == "br":
+                        p_tag.next.decompose()
+                    p_tag["class"] = separator_class
+                elif p_tag.get("class", None):
+                    if separator_class in p_tag["class"]:
+                        del p_tag["class"]
+
             result = str(soup)
             if self.max_text_len:
                 if (text_len := len(soup.get_text())) > self.max_text_len:
