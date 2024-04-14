@@ -1,7 +1,7 @@
 #custom backend
 sandbox*
 frontend
-backup*
+backup_*
 docs
 static/media
 

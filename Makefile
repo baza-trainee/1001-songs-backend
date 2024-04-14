@@ -1,4 +1,4 @@
-.PHONY: prod start build run down clean drop_db prune fake_data open-redis
+.PHONY: prod start build run down clean backup fake_data open-redis _drop_db _prune
 
 DB_CONTAINER := postgres_songs
 REDIS_CONTAINER := redis_songs
@@ -12,8 +12,8 @@ down:
 	docker compose down
 
 build:
-	docker compose up -d --build --scale postgres_tests=0 --scale postgres=0
-	
+	docker compose up -d --build --scale postgres_tests=0
+
 run: down
 	docker compose up postgres redis -d
 	@while true; do \
@@ -42,7 +42,15 @@ open-redis:
 clean:
 	sudo find . | grep -E "(__pycache__|\.pyc|\.pyo$$)" | xargs sudo rm -rf
 
-drop_db: down 
+backup:
+	python3 scripts/backup.py
+	@echo "Backup complete"
+
+restore:
+	python3 scripts/restore.py
+	@echo "Restore backup complete"
+
+_drop_db: down 
 	if docker volume ls -q | grep -q $(DB_VOLUME); then \
 		docker volume rm $(DB_VOLUME); \
 		echo "successfully drop_db 1";\
@@ -56,6 +64,6 @@ drop_db: down
 		echo "successfully drop_db 3";\
 	fi
 
-prune: down
+_prune: down
 	docker system prune -a
 	docker volume prune -a
